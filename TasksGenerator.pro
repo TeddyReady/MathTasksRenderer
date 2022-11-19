@@ -17,16 +17,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     basemath.cpp \
+    dialogeulerfunction.cpp \
+    dialogmebiusfunction.cpp \
     eulerfunction.cpp \
     main.cpp \
-    generatorwindow.cpp
+    generatorwindow.cpp \
+    mebiusfunction.cpp
 
 HEADERS += \
     basemath.h \
+    dialogeulerfunction.h \
+    dialogmebiusfunction.h \
     eulerfunction.h \
-    generatorwindow.h
+    generatorwindow.h \
+    mebiusfunction.h
 
 FORMS += \
+    dialogeulerfunction.ui \
+    dialogmebiusfunction.ui \
     generatorwindow.ui
 
 # Default rules for deployment.

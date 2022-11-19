@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>705</width>
-    <height>656</height>
+    <width>728</width>
+    <height>544</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,23 +16,24 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0" colspan="2">
-     <widget class="QListWidget" name="tasksList"/>
-    </item>
-    <item row="0" column="2">
-     <widget class="QTextBrowser" name="tasksView"/>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="taskLabel">
-      <property name="text">
-       <string>Количество заданий:</string>
-      </property>
+     <widget class="QListWidget" name="tasksList">
+      <item>
+       <property name="text">
+        <string>Функция Мёбиуса</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Функция Эйлера</string>
+       </property>
+      </item>
      </widget>
     </item>
-    <item row="1" column="1">
-     <widget class="QSpinBox" name="countSpin"/>
+    <item row="0" column="2">
+     <widget class="QListWidget" name="taskView"/>
     </item>
-    <item row="1" column="2">
-     <widget class="QPushButton" name="generateBtn">
+    <item row="1" column="0" colspan="3">
+     <widget class="QPushButton" name="genButton">
       <property name="text">
        <string>Сгенерировать Задания</string>
       </property>
@@ -45,12 +46,31 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>705</width>
+     <width>728</width>
      <height>20</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Настройки</string>
+    </property>
+    <addaction name="actionTXT"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionTXT">
+   <property name="text">
+    <string>Сгенерировать txt файл...</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Выйти из приложения</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

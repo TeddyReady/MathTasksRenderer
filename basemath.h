@@ -1,6 +1,5 @@
 #ifndef BASEMATH_H
 #define BASEMATH_H
-#include <iostream>
 #include <cmath>
 #include <QDebug>
 #include <QVector>

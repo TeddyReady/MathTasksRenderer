@@ -49,6 +49,10 @@ void GeneratorWindow::on_actionTXT_triggered()
     }
     file.close();
 }
+void GeneratorWindow::on_actionQuit_triggered()
+{
+    qApp->exit();    
+}
 
 void GeneratorWindow::slotDialogEulerFunctionMeta(int countOfTasks){
     QListWidgetItem *item = new QListWidgetItem("Генерируем задания на функцию Эйлера...", ui->taskView);

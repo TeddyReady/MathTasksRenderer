@@ -30,6 +30,8 @@ public slots:
 private slots:
     void on_genButton_clicked();
     void on_actionTXT_triggered();
+    void on_actionQuit_triggered();
+    
 private:
     QVector<int> generatedData;
     QFile file;

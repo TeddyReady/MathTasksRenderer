@@ -1,9 +1,6 @@
 #include "basemath.h"
 
-BaseMath::BaseMath()
-{
-
-}
+BaseMath::BaseMath() {}
 
 QVector<std::pair<int, int>> decompositionToSimple(int num){
     QVector<std::pair<int, int>> deviders;
@@ -12,8 +9,7 @@ QVector<std::pair<int, int>> decompositionToSimple(int num){
     } else {
         int count = 0;
         int localNum = num;
-        for (int i = 2; i < num/2;){
-            std::cout << i << count << std::endl;
+        for (int i = 2; i <= num / 2 + 1;){
             if (localNum % i == 0){
                 localNum /= i;
                 count++;
@@ -29,10 +25,10 @@ QVector<std::pair<int, int>> decompositionToSimple(int num){
 }
 
 bool isPrime(int num) {
-    if (num % 2 == 0) {
+    if (num % 2 == 0 || num == 1) {
         return false;
     }
-    for (int i = 3; i < sqrt(num); i+= 2){
+    for (int i = 3; i <= sqrt(num); i+= 2){
           if (num % i == 0) {
               return false;
           }
