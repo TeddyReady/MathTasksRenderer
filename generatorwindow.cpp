@@ -34,6 +34,14 @@ void GeneratorWindow::on_genButton_clicked()
                 this, SLOT(slotDialogMebiusFunctionMeta(int)));
         connect(window, SIGNAL(dialogMebiusFunction(int, int, int, MebiusFunctionOptions)),
                 this, SLOT(slotDialogMebiusFunction(int, int, int, MebiusFunctionOptions)));
+    } else if (ui->tasksList->currentItem()->text() == "Символ Лежандра") {
+        DialogSymbolLegandre *window = new DialogSymbolLegandre(this);
+        window->setWindowTitle("Выберите настройки генерации");
+        window->show();
+        connect(window, SIGNAL(dialogSymbolLegandreMeta(int)),
+                this, SLOT(slotDialogSymbolLegandreMeta(int)));
+        connect(window, SIGNAL(dialogSymbolLegandre(int, std::pair<int, int>, std::pair<int, int>, SymbolLegandreOptions)),
+                this, SLOT(slotDialogSymbolLegandre(int, std::pair<int, int>, std::pair<int, int>, SymbolLegandreOptions)));
     }
 }
 void GeneratorWindow::on_actionTXT_triggered()
@@ -43,18 +51,43 @@ void GeneratorWindow::on_actionTXT_triggered()
     file.setFileName(path);
     if (file.open(QIODevice::WriteOnly)) {
         QTextStream out(&file);
-        for (int i = 0; i < generatedData.size() - 1; i += 2) {
-            out << generatedData[i] << " " << generatedData[i + 1] << "\n";
+        int taskIndex = 0;
+        for (int i = 0; i < generatedTasks.size(); i += 2) {
+            int task = generatedTasks[i];
+            int countOfTasks = generatedTasks[i + 1];
+            out << task << " " << countOfTasks << "\n";
+            switch (task) {
+            case TaskEulerFunction:
+                for (int j = 0; j < countOfTasks; j++) {
+                    out << generatedData[taskIndex] << " " << generatedData[taskIndex + 1] << "\n";
+                    taskIndex += 2;
+                } break;
+            case TaskMebiusFunction:
+                for (int j = 0; j < countOfTasks; j++) {
+                    out << generatedData[taskIndex] << " " << generatedData[taskIndex + 1] << "\n";
+                    taskIndex += 2;
+                } break;
+            case TaskSymbolLegandre:
+                for (int j = 0; j < countOfTasks; j++) {
+                    out << generatedData[taskIndex] << " " << generatedData[taskIndex + 1]
+                        << " " << generatedData[taskIndex + 2] << "\n";
+                    taskIndex += 3;
+                } break;
+            }
         }
     }
     file.close();
+}
+void GeneratorWindow::on_actionQuit_triggered()
+{
+    qApp->exit();
 }
 
 void GeneratorWindow::slotDialogEulerFunctionMeta(int countOfTasks){
     QListWidgetItem *item = new QListWidgetItem("Генерируем задания на функцию Эйлера...", ui->taskView);
     ui->taskView->addItem(item);
-    generatedData.push_back(TaskEulerFunction);
-    generatedData.push_back(countOfTasks);
+    generatedTasks.push_back(TaskEulerFunction);
+    generatedTasks.push_back(countOfTasks);
 }
 void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int maxNum, EulerFunctionOptions option)
 {
@@ -131,8 +164,8 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
 void GeneratorWindow::slotDialogMebiusFunctionMeta(int countOfTasks){
     QListWidgetItem *item = new QListWidgetItem("Генерируем задания на функцию Мёбиуса...", ui->taskView);
     ui->taskView->addItem(item);
-    generatedData.push_back(TaskMebiusFunction);
-    generatedData.push_back(countOfTasks);
+    generatedTasks.push_back(TaskMebiusFunction);
+    generatedTasks.push_back(countOfTasks);
 }
 void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int maxNum, MebiusFunctionOptions option){
     MebiusFunction task;
@@ -210,6 +243,73 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
                 QListWidgetItem *item = new QListWidgetItem("m(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
                 generatedData.push_back(task.getTask());
+                generatedData.push_back(task.solve());
+            }
+        } break;
+    }
+}
+
+void GeneratorWindow::slotDialogSymbolLegandreMeta(int countOfTasks){
+    QListWidgetItem *item = new QListWidgetItem("Генерируем задания на символ Лежандра...", ui->taskView);
+    ui->taskView->addItem(item);
+    generatedTasks.push_back(TaskSymbolLegandre);
+    generatedTasks.push_back(countOfTasks);
+}
+void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, int> a, std::pair<int, int> p, SymbolLegandreOptions option){
+    SymbolLegandre task;
+    switch (option) {
+    case SymbolLegandreOptions::Default:
+        for (int i = 0; i < countOfTasks;) {
+            task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
+            if (isPrime(task.getTask().second)) {
+                QListWidgetItem *item = new QListWidgetItem("L(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
+                ui->taskView->addItem(item); i++;
+                generatedData.push_back(task.getTask().first);
+                generatedData.push_back(task.getTask().second);
+                generatedData.push_back(task.solve());
+            }
+        } break;
+    case SymbolLegandreOptions::Primes:
+        for (int i = 0; i < countOfTasks;) {
+            task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
+            if (isPrime(task.getTask().second) && !isPrime(task.getTask().first)) {
+                QListWidgetItem *item = new QListWidgetItem("L(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
+                ui->taskView->addItem(item); i++;
+                generatedData.push_back(task.getTask().first);
+                generatedData.push_back(task.getTask().second);
+                generatedData.push_back(task.solve());
+            }
+        } break;
+    case SymbolLegandreOptions::aEqual_1:
+        for (int i = 0; i < countOfTasks;) {
+            task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
+            if (isPrime(task.getTask().second)) {
+                QListWidgetItem *item = new QListWidgetItem("L(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
+                ui->taskView->addItem(item); i++;
+                generatedData.push_back(task.getTask().first);
+                generatedData.push_back(task.getTask().second);
+                generatedData.push_back(task.solve());
+            }
+        } break;
+    case SymbolLegandreOptions::aEqual2:
+        for (int i = 0; i < countOfTasks;) {
+            task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
+            if (isPrime(task.getTask().second)) {
+                QListWidgetItem *item = new QListWidgetItem("L(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
+                ui->taskView->addItem(item); i++;
+                generatedData.push_back(task.getTask().first);
+                generatedData.push_back(task.getTask().second);
+                generatedData.push_back(task.solve());
+            }
+        } break;
+    case SymbolLegandreOptions::NotEvenPrimes:
+        for (int i = 0; i < countOfTasks;) {
+            task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
+            if (isPrime(task.getTask().second) && !isPrime(task.getTask().first) && task.getTask().first % 2 != 0) {
+                QListWidgetItem *item = new QListWidgetItem("L(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
+                ui->taskView->addItem(item); i++;
+                generatedData.push_back(task.getTask().first);
+                generatedData.push_back(task.getTask().second);
                 generatedData.push_back(task.solve());
             }
         } break;

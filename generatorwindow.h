@@ -4,6 +4,7 @@
 #include <QTextStream>
 #include <QFileDialog>
 #include <QMainWindow>
+#include "dialogsymbollegandre.h"
 #include "dialogmebiusfunction.h"
 #include "dialogeulerfunction.h"
 
@@ -12,7 +13,8 @@ namespace Ui { class GeneratorWindow; }
 QT_END_NAMESPACE
 
 enum AllTasks {
-    TaskEulerFunction, TaskMebiusFunction
+    TaskEulerFunction, TaskMebiusFunction,
+    TaskSymbolLegandre
 };
 
 class GeneratorWindow : public QMainWindow {
@@ -27,11 +29,16 @@ public slots:
     //Мёбиус
     void slotDialogMebiusFunctionMeta(int);
     void slotDialogMebiusFunction(int, int, int, MebiusFunctionOptions);
+    //Лежандр
+    void slotDialogSymbolLegandreMeta(int);
+    void slotDialogSymbolLegandre(int, std::pair<int, int>, std::pair<int, int>, SymbolLegandreOptions);
 private slots:
     void on_genButton_clicked();
     void on_actionTXT_triggered();
+    void on_actionQuit_triggered();
+
 private:
-    QVector<int> generatedData;
+    QVector<int> generatedTasks, generatedData;
     QFile file;
     QRandomGenerator *random;
     Ui::GeneratorWindow *ui;

@@ -19,22 +19,27 @@ SOURCES += \
     basemath.cpp \
     dialogeulerfunction.cpp \
     dialogmebiusfunction.cpp \
+    dialogsymbollegandre.cpp \
     eulerfunction.cpp \
     main.cpp \
     generatorwindow.cpp \
-    mebiusfunction.cpp
+    mebiusfunction.cpp \
+    symbollegandre.cpp
 
 HEADERS += \
     basemath.h \
     dialogeulerfunction.h \
     dialogmebiusfunction.h \
+    dialogsymbollegandre.h \
     eulerfunction.h \
     generatorwindow.h \
-    mebiusfunction.h
+    mebiusfunction.h \
+    symbollegandre.h
 
 FORMS += \
     dialogeulerfunction.ui \
     dialogmebiusfunction.ui \
+    dialogsymbollegandre.ui \
     generatorwindow.ui
 
 # Default rules for deployment.
