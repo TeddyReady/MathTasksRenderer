@@ -42,6 +42,14 @@ void GeneratorWindow::on_genButton_clicked()
                 this, SLOT(slotDialogSymbolLegandreMeta(int)));
         connect(window, SIGNAL(dialogSymbolLegandre(int, std::pair<int, int>, std::pair<int, int>, SymbolLegandreOptions)),
                 this, SLOT(slotDialogSymbolLegandre(int, std::pair<int, int>, std::pair<int, int>, SymbolLegandreOptions)));
+    } else if (ui->tasksList->currentItem()->text() == "Символ Якоби") {
+        DialogSymbolJacobi *window = new DialogSymbolJacobi(this);
+        window->setWindowTitle("Выберите настройки генерации");
+        window->show();
+        connect(window, SIGNAL(dialogSymbolJacobiMeta(int)),
+                this, SLOT(slotDialogSymbolJacobiMeta(int)));
+        connect(window, SIGNAL(dialogSymbolJacobi(int, std::pair<int, int>, std::pair<int, int>, SymbolJacobiOptions)),
+                this, SLOT(slotDialogSymbolJacobi(int, std::pair<int, int>, std::pair<int, int>, SymbolJacobiOptions)));
     }
 }
 void GeneratorWindow::on_actionTXT_triggered()
@@ -68,6 +76,12 @@ void GeneratorWindow::on_actionTXT_triggered()
                     taskIndex += 2;
                 } break;
             case TaskSymbolLegandre:
+                for (int j = 0; j < countOfTasks; j++) {
+                    out << generatedData[taskIndex] << " " << generatedData[taskIndex + 1]
+                        << " " << generatedData[taskIndex + 2] << "\n";
+                    taskIndex += 3;
+                } break;
+            case TaskSymbolJacobi:
                 for (int j = 0; j < countOfTasks; j++) {
                     out << generatedData[taskIndex] << " " << generatedData[taskIndex + 1]
                         << " " << generatedData[taskIndex + 2] << "\n";
@@ -307,6 +321,73 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (isPrime(task.getTask().second) && !isPrime(task.getTask().first) && task.getTask().first % 2 != 0) {
                 QListWidgetItem *item = new QListWidgetItem("L(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
+                ui->taskView->addItem(item); i++;
+                generatedData.push_back(task.getTask().first);
+                generatedData.push_back(task.getTask().second);
+                generatedData.push_back(task.solve());
+            }
+        } break;
+    }
+}
+
+void GeneratorWindow::slotDialogSymbolJacobiMeta(int countOfTasks){
+    QListWidgetItem *item = new QListWidgetItem("Генерируем задания на символ Якоби...", ui->taskView);
+    ui->taskView->addItem(item);
+    generatedTasks.push_back(TaskSymbolJacobi);
+    generatedTasks.push_back(countOfTasks);
+}
+void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, int> a, std::pair<int, int> p, SymbolJacobiOptions option){
+    SymbolJacobi task;
+    switch (option) {
+    case SymbolJacobiOptions::Default:
+        for (int i = 0; i < countOfTasks;) {
+            task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
+            if (!isPrime(task.getTask().second) && task.getTask().second % 2 != 0) {
+                QListWidgetItem *item = new QListWidgetItem("J(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
+                ui->taskView->addItem(item); i++;
+                generatedData.push_back(task.getTask().first);
+                generatedData.push_back(task.getTask().second);
+                generatedData.push_back(task.solve());
+            }
+        } break;
+    case SymbolJacobiOptions::Primes:
+        for (int i = 0; i < countOfTasks;) {
+            task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
+            if (!isPrime(task.getTask().second) && !isPrime(task.getTask().first) && task.getTask().second % 2 != 0) {
+                QListWidgetItem *item = new QListWidgetItem("J(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
+                ui->taskView->addItem(item); i++;
+                generatedData.push_back(task.getTask().first);
+                generatedData.push_back(task.getTask().second);
+                generatedData.push_back(task.solve());
+            }
+        } break;
+    case SymbolJacobiOptions::aEqual_1:
+        for (int i = 0; i < countOfTasks;) {
+            task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
+            if (!isPrime(task.getTask().second) && task.getTask().second % 2 != 0) {
+                QListWidgetItem *item = new QListWidgetItem("J(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
+                ui->taskView->addItem(item); i++;
+                generatedData.push_back(task.getTask().first);
+                generatedData.push_back(task.getTask().second);
+                generatedData.push_back(task.solve());
+            }
+        } break;
+    case SymbolJacobiOptions::aEqual2:
+        for (int i = 0; i < countOfTasks;) {
+            task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
+            if (!isPrime(task.getTask().second) && task.getTask().second % 2 != 0) {
+                QListWidgetItem *item = new QListWidgetItem("J(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
+                ui->taskView->addItem(item); i++;
+                generatedData.push_back(task.getTask().first);
+                generatedData.push_back(task.getTask().second);
+                generatedData.push_back(task.solve());
+            }
+        } break;
+    case SymbolJacobiOptions::NotEvenPrimes:
+        for (int i = 0; i < countOfTasks;) {
+            task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
+            if (!isPrime(task.getTask().second) && !isPrime(task.getTask().first) && task.getTask().first % 2 != 0 && task.getTask().second % 2 != 0) {
+                QListWidgetItem *item = new QListWidgetItem("J(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
                 generatedData.push_back(task.getTask().first);
                 generatedData.push_back(task.getTask().second);

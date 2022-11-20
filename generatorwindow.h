@@ -7,6 +7,7 @@
 #include "dialogsymbollegandre.h"
 #include "dialogmebiusfunction.h"
 #include "dialogeulerfunction.h"
+#include "dialogsymboljacobi.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GeneratorWindow; }
@@ -14,7 +15,7 @@ QT_END_NAMESPACE
 
 enum AllTasks {
     TaskEulerFunction, TaskMebiusFunction,
-    TaskSymbolLegandre
+    TaskSymbolLegandre, TaskSymbolJacobi
 };
 
 class GeneratorWindow : public QMainWindow {
@@ -32,6 +33,9 @@ public slots:
     //Лежандр
     void slotDialogSymbolLegandreMeta(int);
     void slotDialogSymbolLegandre(int, std::pair<int, int>, std::pair<int, int>, SymbolLegandreOptions);
+    //Якоби
+    void slotDialogSymbolJacobiMeta(int);
+    void slotDialogSymbolJacobi(int, std::pair<int, int>, std::pair<int, int>, SymbolJacobiOptions);
 private slots:
     void on_genButton_clicked();
     void on_actionTXT_triggered();

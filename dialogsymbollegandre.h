@@ -13,7 +13,6 @@ enum class SymbolLegandreOptions {
     NotEvenPrimes
 };
 
-
 class DialogSymbolLegandre : public QDialog {
     Q_OBJECT
 public:
