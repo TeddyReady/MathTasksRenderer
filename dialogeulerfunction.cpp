@@ -8,8 +8,8 @@ DialogEulerFunction::DialogEulerFunction(QWidget *parent) :
     ui->setupUi(this);
     ui->lineMin->setText(QString::number(1));
     ui->lineMax->setText(QString::number(1000));
-    ui->btnDefault->setChecked(true);
-    ui->spinDefault->setEnabled(true);
+    ui->btnDefault->setChecked(false);
+    ui->spinDefault->setDisabled(true);
     ui->btnPrime->setChecked(false);
     ui->spinPrime->setDisabled(true);
     ui->btnPrimeDegree->setChecked(false);

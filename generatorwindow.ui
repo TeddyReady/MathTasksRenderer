@@ -19,6 +19,11 @@
      <widget class="QListWidget" name="tasksList">
       <item>
        <property name="text">
+        <string>Группа Перестановок</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
         <string>Символ Лежандра</string>
        </property>
       </item>

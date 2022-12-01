@@ -21,12 +21,14 @@ SOURCES += \
     dialogmebiusfunction.cpp \
     dialogsymboljacobi.cpp \
     dialogsymbollegandre.cpp \
+    dialogtranspositiongroup.cpp \
     eulerfunction.cpp \
     main.cpp \
     generatorwindow.cpp \
     mebiusfunction.cpp \
     symboljacobi.cpp \
-    symbollegandre.cpp
+    symbollegandre.cpp \
+    transpositiongroup.cpp
 
 HEADERS += \
     basemath.h \
@@ -34,17 +36,20 @@ HEADERS += \
     dialogmebiusfunction.h \
     dialogsymboljacobi.h \
     dialogsymbollegandre.h \
+    dialogtranspositiongroup.h \
     eulerfunction.h \
     generatorwindow.h \
     mebiusfunction.h \
     symboljacobi.h \
-    symbollegandre.h
+    symbollegandre.h \
+    transpositiongroup.h
 
 FORMS += \
     dialogeulerfunction.ui \
     dialogmebiusfunction.ui \
     dialogsymboljacobi.ui \
     dialogsymbollegandre.ui \
+    dialogtranspositiongroup.ui \
     generatorwindow.ui
 
 # Default rules for deployment.

@@ -10,8 +10,8 @@ DialogSymbolJacobi::DialogSymbolJacobi(QWidget *parent) :
     ui->lineMaxA->setText(QString::number(1000));
     ui->lineMinP->setText(QString::number(3));
     ui->lineMaxP->setText(QString::number(1000));
-    ui->btnDefault->setChecked(true);
-    ui->spinDefault->setEnabled(true);
+    ui->btnDefault->setChecked(false);
+    ui->spinDefault->setDisabled(true);
     ui->btnPrimes->setChecked(false);
     ui->spinPrimes->setDisabled(true);
     ui->btn1->setChecked(false);

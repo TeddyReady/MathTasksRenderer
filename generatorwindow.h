@@ -1,9 +1,9 @@
 #ifndef GENERATORWINDOW_H
 #define GENERATORWINDOW_H
-#include <QRandomGenerator>
 #include <QTextStream>
 #include <QFileDialog>
 #include <QMainWindow>
+#include "dialogtranspositiongroup.h"
 #include "dialogsymbollegandre.h"
 #include "dialogmebiusfunction.h"
 #include "dialogeulerfunction.h"
@@ -15,7 +15,8 @@ QT_END_NAMESPACE
 
 enum AllTasks {
     TaskEulerFunction, TaskMebiusFunction,
-    TaskSymbolLegandre, TaskSymbolJacobi
+    TaskSymbolLegandre, TaskSymbolJacobi,
+    TaskTranspositionGroup
 };
 
 class GeneratorWindow : public QMainWindow {
@@ -36,6 +37,9 @@ public slots:
     //Якоби
     void slotDialogSymbolJacobiMeta(int);
     void slotDialogSymbolJacobi(int, std::pair<int, int>, std::pair<int, int>, SymbolJacobiOptions);
+    //Группа перестановок
+    void slotDialogTranspositionGroupMeta(int);
+    void slotDialogTranspositionGroup(int, int, int, TranspositionGroupOptions);
 private slots:
     void on_genButton_clicked();
     void on_actionTXT_triggered();
