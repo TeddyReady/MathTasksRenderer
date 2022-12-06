@@ -37,15 +37,15 @@ void DialogEulerFunction::on_buttonBox_accepted()
     emit dialogEulerFunctionMeta(count);
 
     if (ui->btnDefault->isChecked())
-        emit dialogEulerFunction(ui->spinDefault->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt(), EulerFunctionOptions::Default);
+        emit dialogEulerFunction(ui->spinDefault->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, EulerFunctionOptions::Default);
     if (ui->btnPrime->isChecked())
-        emit dialogEulerFunction(ui->spinPrime->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt(), EulerFunctionOptions::Primes);
+        emit dialogEulerFunction(ui->spinPrime->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, EulerFunctionOptions::Primes);
     if (ui->btnPrimeDegree->isChecked())
-        emit dialogEulerFunction(ui->spinPrimeDegree->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt(), EulerFunctionOptions::PrimesDegrees);
+        emit dialogEulerFunction(ui->spinPrimeDegree->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, EulerFunctionOptions::PrimesDegrees);
     if (ui->btnMultiplyPrimes->isChecked())
-        emit dialogEulerFunction(ui->spinMultiplyPrimes->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt(), EulerFunctionOptions::MultiplyPrimes);
+        emit dialogEulerFunction(ui->spinMultiplyPrimes->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, EulerFunctionOptions::MultiplyPrimes);
     if (ui->btnMultiplyPrimesDegree->isChecked())
-        emit dialogEulerFunction(ui->spinMultiplyPrimesDegree->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt(), EulerFunctionOptions::MultiplyPrimesDegrees);
+        emit dialogEulerFunction(ui->spinMultiplyPrimesDegree->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, EulerFunctionOptions::MultiplyPrimesDegrees);
     this->close();
 }
 

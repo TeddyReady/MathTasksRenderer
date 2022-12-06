@@ -39,14 +39,14 @@ public slots:
     void slotDialogSymbolJacobi(int, std::pair<int, int>, std::pair<int, int>, SymbolJacobiOptions);
     //Группа перестановок
     void slotDialogTranspositionGroupMeta(int);
-    void slotDialogTranspositionGroup(int, int, int, TranspositionGroupOptions);
+    void slotDialogTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode);
 private slots:
     void on_genButton_clicked();
     void on_actionTXT_triggered();
     void on_actionQuit_triggered();
 
 private:
-    QVector<int> generatedTasks, generatedData;
+    QVector<QString> generatedTasks, generatedData;
     QFile file;
     QRandomGenerator *random;
     Ui::GeneratorWindow *ui;

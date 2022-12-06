@@ -56,21 +56,21 @@ void GeneratorWindow::on_genButton_clicked()
         window->show();
         connect(window, SIGNAL(dialogTranspositionGroupMeta(int)),
                 this, SLOT(slotDialogTranspositionGroupMeta(int)));
-        connect(window, SIGNAL(dialogTranspositionGroup(int, int, int, TranspositionGroupOptions)),
-                this, SLOT(slotDialogTranspositionGroup(int, int, int, TranspositionGroupOptions)));
+        connect(window, SIGNAL(dialogTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode)),
+                this, SLOT(slotDialogTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode)));
     }
 }
 void GeneratorWindow::on_actionTXT_triggered()
 {
-    QString path = QFileDialog::getSaveFileName(0, QObject::tr("Сохранить сгенерированные задания"),
-        QDir::currentPath() + "test.txt", QObject::tr("txt files (*.txt)"));
+    QString path = QFileDialog::getSaveFileName(0, QObject::tr("Сохранить задания"),
+        "/home/kataich75/qtprojects/TasksGenerator/tests/test.txt", QObject::tr("TXT files (*.txt)"));
     file.setFileName(path);
     if (file.open(QIODevice::WriteOnly)) {
         QTextStream out(&file);
         int taskIndex = 0;
         for (int i = 0; i < generatedTasks.size(); i += 2) {
-            int task = generatedTasks[i];
-            int countOfTasks = generatedTasks[i + 1];
+            int task = generatedTasks[i].toInt();
+            int countOfTasks = generatedTasks[i + 1].toInt();
             out << task << " " << countOfTasks << "\n";
             switch (task) {
             case TaskEulerFunction:
@@ -95,6 +95,11 @@ void GeneratorWindow::on_actionTXT_triggered()
                         << " " << generatedData[taskIndex + 2] << "\n";
                     taskIndex += 3;
                 } break;
+            case TaskTranspositionGroup:
+                for (int j = 0; j < countOfTasks; j++) {
+                    out << generatedData[taskIndex] << " " << generatedData[taskIndex + 1] << "\n";
+                    taskIndex += 2;
+                } break;
             }
         }
     }
@@ -108,8 +113,8 @@ void GeneratorWindow::on_actionQuit_triggered()
 void GeneratorWindow::slotDialogEulerFunctionMeta(int countOfTasks){
     QListWidgetItem *item = new QListWidgetItem("Генерируем задания на функцию Эйлера...", ui->taskView);
     ui->taskView->addItem(item);
-    generatedTasks.push_back(TaskEulerFunction);
-    generatedTasks.push_back(countOfTasks);
+    generatedTasks.push_back(QString::number(TaskEulerFunction));
+    generatedTasks.push_back(QString::number(countOfTasks));
 }
 void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int maxNum, EulerFunctionOptions option)
 {
@@ -121,8 +126,8 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
             task.setTask(random->bounded(minNum, maxNum));
             item = new QListWidgetItem("f(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()), ui->taskView);
             ui->taskView->addItem(item);
-            generatedData.push_back(task.getTask());
-            generatedData.push_back(task.solve());
+            generatedData.push_back(QString::number(task.getTask()));
+            generatedData.push_back(QString::number(task.solve()));
         } break;
     case EulerFunctionOptions::Primes:
         for (int i = 0; i < countOfTasks;) {
@@ -130,8 +135,8 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
             if (isPrime(task.getTask())) {
                 item = new QListWidgetItem("f(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask());
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask()));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     case EulerFunctionOptions::PrimesDegrees:
@@ -141,8 +146,8 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
             if (data.size() == 1 && data[0].second > 1) {
                 item = new QListWidgetItem("f(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask());
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask()));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     case EulerFunctionOptions::MultiplyPrimes:
@@ -159,8 +164,8 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
             } if (accessFlag) {
                 item = new QListWidgetItem("f(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask());
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask()));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     case EulerFunctionOptions::MultiplyPrimesDegrees:
@@ -177,8 +182,8 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
             } if (accessFlag) {
                 item = new QListWidgetItem("f(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask());
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask()));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     }
@@ -187,8 +192,8 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
 void GeneratorWindow::slotDialogMebiusFunctionMeta(int countOfTasks){
     QListWidgetItem *item = new QListWidgetItem("Генерируем задания на функцию Мёбиуса...", ui->taskView);
     ui->taskView->addItem(item);
-    generatedTasks.push_back(TaskMebiusFunction);
-    generatedTasks.push_back(countOfTasks);
+    generatedTasks.push_back(QString::number(TaskMebiusFunction));
+    generatedTasks.push_back(QString::number(countOfTasks));
 }
 void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int maxNum, MebiusFunctionOptions option){
     MebiusFunction task;
@@ -199,8 +204,8 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
             task.setTask(random->bounded(minNum, maxNum));
             item = new QListWidgetItem("m(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()), ui->taskView);
             ui->taskView->addItem(item);
-            generatedData.push_back(task.getTask());
-            generatedData.push_back(task.solve());
+            generatedData.push_back(QString::number(task.getTask()));
+            generatedData.push_back(QString::number(task.solve()));
         } break;
     case MebiusFunctionOptions::Primes:
         for (int i = 0; i < countOfTasks;) {
@@ -208,8 +213,8 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
             if (!isPrime(task.getTask())) {
                 item = new QListWidgetItem("m(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask());
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask()));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     case MebiusFunctionOptions::EvenPrimes:
@@ -228,8 +233,8 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
             if (accessFlag) {
                 item = new QListWidgetItem("m(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask());
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask()));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     case MebiusFunctionOptions::NotEvenPrimes:
@@ -248,8 +253,8 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
             if (accessFlag) {
                 item = new QListWidgetItem("m(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask());
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask()));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     case MebiusFunctionOptions::PrimeDegree:
@@ -266,8 +271,8 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
             if (accessFlag) {
                 item = new QListWidgetItem("m(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask());
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask()));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     }
@@ -276,8 +281,8 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
 void GeneratorWindow::slotDialogSymbolLegandreMeta(int countOfTasks){
     QListWidgetItem *item = new QListWidgetItem("Генерируем задания на символ Лежандра...", ui->taskView);
     ui->taskView->addItem(item);
-    generatedTasks.push_back(TaskSymbolLegandre);
-    generatedTasks.push_back(countOfTasks);
+    generatedTasks.push_back(QString::number(TaskSymbolLegandre));
+    generatedTasks.push_back(QString::number(countOfTasks));
 }
 void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, int> a, std::pair<int, int> p, SymbolLegandreOptions option){
     SymbolLegandre task;
@@ -289,9 +294,9 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
             if (isPrime(task.getTask().second)) {
                 item = new QListWidgetItem("L(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask().first);
-                generatedData.push_back(task.getTask().second);
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask().first));
+                generatedData.push_back(QString::number(task.getTask().second));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     case SymbolLegandreOptions::Primes:
@@ -300,9 +305,9 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
             if (isPrime(task.getTask().second) && !isPrime(task.getTask().first)) {
                 item = new QListWidgetItem("L(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask().first);
-                generatedData.push_back(task.getTask().second);
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask().first));
+                generatedData.push_back(QString::number(task.getTask().second));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     case SymbolLegandreOptions::aEqual_1:
@@ -311,9 +316,9 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
             if (isPrime(task.getTask().second)) {
                 item = new QListWidgetItem("L(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask().first);
-                generatedData.push_back(task.getTask().second);
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask().first));
+                generatedData.push_back(QString::number(task.getTask().second));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     case SymbolLegandreOptions::aEqual2:
@@ -322,9 +327,9 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
             if (isPrime(task.getTask().second)) {
                 item = new QListWidgetItem("L(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask().first);
-                generatedData.push_back(task.getTask().second);
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask().first));
+                generatedData.push_back(QString::number(task.getTask().second));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     case SymbolLegandreOptions::NotEvenPrimes:
@@ -333,9 +338,9 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
             if (isPrime(task.getTask().second) && !isPrime(task.getTask().first) && task.getTask().first % 2 != 0) {
                 item = new QListWidgetItem("L(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask().first);
-                generatedData.push_back(task.getTask().second);
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask().first));
+                generatedData.push_back(QString::number(task.getTask().second));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     }
@@ -344,8 +349,8 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
 void GeneratorWindow::slotDialogSymbolJacobiMeta(int countOfTasks){
     QListWidgetItem *item = new QListWidgetItem("Генерируем задания на символ Якоби...", ui->taskView);
     ui->taskView->addItem(item);
-    generatedTasks.push_back(TaskSymbolJacobi);
-    generatedTasks.push_back(countOfTasks);
+    generatedTasks.push_back(QString::number(TaskSymbolJacobi));
+    generatedTasks.push_back(QString::number(countOfTasks));
 }
 void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, int> a, std::pair<int, int> p, SymbolJacobiOptions option){
     SymbolJacobi task;
@@ -357,9 +362,9 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
             if (!isPrime(task.getTask().second) && task.getTask().second % 2 != 0) {
                 item = new QListWidgetItem("J(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask().first);
-                generatedData.push_back(task.getTask().second);
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask().first));
+                generatedData.push_back(QString::number(task.getTask().second));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     case SymbolJacobiOptions::Primes:
@@ -368,9 +373,9 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
             if (!isPrime(task.getTask().second) && !isPrime(task.getTask().first) && task.getTask().second % 2 != 0) {
                 item = new QListWidgetItem("J(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask().first);
-                generatedData.push_back(task.getTask().second);
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask().first));
+                generatedData.push_back(QString::number(task.getTask().second));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     case SymbolJacobiOptions::aEqual_1:
@@ -379,9 +384,9 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
             if (!isPrime(task.getTask().second) && task.getTask().second % 2 != 0) {
                 item = new QListWidgetItem("J(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask().first);
-                generatedData.push_back(task.getTask().second);
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask().first));
+                generatedData.push_back(QString::number(task.getTask().second));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     case SymbolJacobiOptions::aEqual2:
@@ -390,9 +395,9 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
             if (!isPrime(task.getTask().second) && task.getTask().second % 2 != 0) {
                 item = new QListWidgetItem("J(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask().first);
-                generatedData.push_back(task.getTask().second);
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask().first));
+                generatedData.push_back(QString::number(task.getTask().second));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     case SymbolJacobiOptions::NotEvenPrimes:
@@ -401,9 +406,9 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
             if (!isPrime(task.getTask().second) && !isPrime(task.getTask().first) && task.getTask().first % 2 != 0 && task.getTask().second % 2 != 0) {
                 item = new QListWidgetItem("J(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
                 ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask().first);
-                generatedData.push_back(task.getTask().second);
-                generatedData.push_back(task.solve());
+                generatedData.push_back(QString::number(task.getTask().first));
+                generatedData.push_back(QString::number(task.getTask().second));
+                generatedData.push_back(QString::number(task.solve()));
             }
         } break;
     }
@@ -412,28 +417,49 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
 void GeneratorWindow::slotDialogTranspositionGroupMeta(int countOfTasks){
     QListWidgetItem *item = new QListWidgetItem("Генерируем задания на группу перестановок...", ui->taskView);
     ui->taskView->addItem(item);
-    generatedTasks.push_back(TaskSymbolJacobi);
-    generatedTasks.push_back(countOfTasks);
+    generatedTasks.push_back(QString::number(TaskTranspositionGroup));
+    generatedTasks.push_back(QString::number(countOfTasks));
 }
-void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, int maxN, TranspositionGroupOptions option){
+void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, int maxN, TranspositionGroupOptions option, ViewMode mode){
     TranspositionGroup task;
     QListWidgetItem *item;
     switch (option) {
     case TranspositionGroupOptions::Write:
         for (int i = 0; i < countOfTasks;) {
-            task.setTask(random->bounded(minN, maxN), static_cast<ViewMode>(random->bounded(0, 2)));
+            task.setTask(random->bounded(minN, maxN), mode);
+            if (task.getViewMode() == ViewMode::Standart)
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Standart) + " = " + task.writeToMode(ViewMode::Cycle), ui->taskView);
+            else
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Cycle) + " = " + task.writeToMode(ViewMode::Standart), ui->taskView);
+            ui->taskView->addItem(item); i++;
             if (task.getViewMode() == ViewMode::Standart) {
-                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + "[" + task.writeToMode(ViewMode::Standart) + "] = " + task.writeToMode(ViewMode::Cycle), ui->taskView);
-                ui->taskView->addItem(item); i++;
-                //generatedData.push_back(task.getTask().first);
-                //generatedData.push_back(task.getTask().second);
-                //generatedData.push_back(task.solve());
+                generatedData.push_back(task.writeToMode(ViewMode::Standart));
+                generatedData.push_back(task.writeToMode(ViewMode::Cycle));
             } else {
-                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + "[" + task.writeToMode(ViewMode::Cycle) + "] = " + task.writeToMode(ViewMode::Standart), ui->taskView);
-                ui->taskView->addItem(item); i++;
-                //generatedData.push_back(task.getTask().first);
-                //generatedData.push_back(task.getTask().second);
-                //generatedData.push_back(task.solve());
+                generatedData.push_back(task.writeToMode(ViewMode::Cycle));
+                generatedData.push_back(task.writeToMode(ViewMode::Standart));
+            }
+        } break;
+    case TranspositionGroupOptions::Multiply:
+        TranspositionGroup task2, result;
+        for (int i = 0; i < countOfTasks;) {
+            int n = static_cast<int>(random->bounded(minN, maxN));
+            task.setTask(n, mode);
+            task2.setTask(n, mode);
+            result = task * task2;
+            if (task.getViewMode() == ViewMode::Standart)
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Standart) + " * " +
+                     task2.writeToMode(ViewMode::Standart) + " = " + result.writeToMode(ViewMode::Standart), ui->taskView);
+            else
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Cycle) + " * " +
+                     task2.writeToMode(ViewMode::Cycle) + " = " + result.writeToMode(ViewMode::Cycle), ui->taskView);
+            ui->taskView->addItem(item); i++;
+            if (task.getViewMode() == ViewMode::Cycle) {
+                generatedData.push_back(task.writeToMode(ViewMode::Standart) + " " + task2.writeToMode(ViewMode::Standart));
+                generatedData.push_back(result.writeToMode(ViewMode::Standart));
+            } else {
+                generatedData.push_back(task.writeToMode(ViewMode::Cycle) + " " + task2.writeToMode(ViewMode::Cycle));
+                generatedData.push_back(result.writeToMode(ViewMode::Cycle));
             }
         } break;
     /*case SymbolJacobiOptions::Primes:

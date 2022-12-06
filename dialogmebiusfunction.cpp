@@ -38,15 +38,15 @@ void DialogMebiusFunction::on_buttonBox_accepted()
     emit dialogMebiusFunctionMeta(count);
 
     if (ui->btnDefault->isChecked())
-        emit dialogMebiusFunction(ui->spinDefault->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt(), MebiusFunctionOptions::Default);
+        emit dialogMebiusFunction(ui->spinDefault->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, MebiusFunctionOptions::Default);
     if (ui->btnPrimes->isChecked())
-        emit dialogMebiusFunction(ui->spinPrimes->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt(), MebiusFunctionOptions::Primes);
+        emit dialogMebiusFunction(ui->spinPrimes->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, MebiusFunctionOptions::Primes);
     if (ui->btnEvenPrimes->isChecked())
-        emit dialogMebiusFunction(ui->spinEvenPrimes->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt(), MebiusFunctionOptions::EvenPrimes);
+        emit dialogMebiusFunction(ui->spinEvenPrimes->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, MebiusFunctionOptions::EvenPrimes);
     if (ui->btnNotEvenPrimes->isChecked())
-        emit dialogMebiusFunction(ui->spinNotEvenPrimes->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt(), MebiusFunctionOptions::NotEvenPrimes);
+        emit dialogMebiusFunction(ui->spinNotEvenPrimes->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, MebiusFunctionOptions::NotEvenPrimes);
     if (ui->btnPrimeDegree->isChecked())
-        emit dialogMebiusFunction(ui->spinPrimeDegree->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt(), MebiusFunctionOptions::PrimeDegree);
+        emit dialogMebiusFunction(ui->spinPrimeDegree->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, MebiusFunctionOptions::PrimeDegree);
     this->close();
 }
 

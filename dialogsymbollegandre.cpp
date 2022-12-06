@@ -32,8 +32,8 @@ DialogSymbolLegandre::~DialogSymbolLegandre()
 void DialogSymbolLegandre::on_buttonBox_accepted()
 {
     QVector<std::pair<int, int>> tmp;
-    tmp.push_back(std::make_pair(ui->lineMinA->text().toInt(), ui->lineMaxA->text().toInt()));
-    tmp.push_back(std::make_pair(ui->lineMinP->text().toInt(), ui->lineMaxP->text().toInt()));
+    tmp.push_back(std::make_pair(ui->lineMinA->text().toInt(), ui->lineMaxA->text().toInt() + 1));
+    tmp.push_back(std::make_pair(ui->lineMinP->text().toInt(), ui->lineMaxP->text().toInt() + 1));
     if (ui->btnDefault->isChecked()) count += ui->spinDefault->value();
     if (ui->btnPrimes->isChecked()) count += ui->spinPrimes->value();
     if (ui->btn1->isChecked()) count += ui->spin1->value();

@@ -1,6 +1,7 @@
 #ifndef DIALOGTRANSPOSITIONGROUP_H
 #define DIALOGTRANSPOSITIONGROUP_H
 #include <QDialog>
+#include <QMenu>
 #include "transpositiongroup.h"
 
 namespace Ui {
@@ -20,7 +21,7 @@ public:
     ~DialogTranspositionGroup();
 signals:
     void dialogTranspositionGroupMeta(int);
-    void dialogTranspositionGroup(int, int, int, TranspositionGroupOptions);
+    void dialogTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode);
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
@@ -34,6 +35,7 @@ private slots:
     void on_btnOrder_clicked();
 private:
     int count;
+    ViewMode taskWrite, taskMultiply, taskInverse, taskOrder, taskMod2, taskCycle, taskCount;
     Ui::DialogTranspositionGroup *ui;
 };
 

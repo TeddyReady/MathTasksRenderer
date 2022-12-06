@@ -13,11 +13,14 @@ class TranspositionGroup {
     ViewMode mode;
 public:
     explicit TranspositionGroup();
+    explicit TranspositionGroup(QVector<std::pair<int, int>>);
+    TranspositionGroup operator *(TranspositionGroup &trans);
 
     QString writeToMode(ViewMode);
 
     void setTask(int, ViewMode mode);
     int getTask();
+    QVector<QVector<int>>& getTransposition();
     ViewMode getViewMode();
 };
 
