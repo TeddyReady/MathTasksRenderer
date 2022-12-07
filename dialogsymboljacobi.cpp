@@ -51,7 +51,6 @@ void DialogSymbolJacobi::on_buttonBox_accepted()
         emit dialogSymbolJacobi(ui->spinNotEvenPrimes->value(), tmp[0], tmp[1], SymbolJacobiOptions::NotEvenPrimes);
     if (ui->btn2->isChecked())
         emit dialogSymbolJacobi(ui->spin2->value(), std::make_pair(2, 3), tmp[1], SymbolJacobiOptions::aEqual2);
-    close();
 }
 
 void DialogSymbolJacobi::on_buttonBox_rejected()

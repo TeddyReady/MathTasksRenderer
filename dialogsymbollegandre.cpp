@@ -51,7 +51,6 @@ void DialogSymbolLegandre::on_buttonBox_accepted()
         emit dialogSymbolLegandre(ui->spinNotEvenPrimes->value(), tmp[0], tmp[1], SymbolLegandreOptions::NotEvenPrimes);
     if (ui->btn2->isChecked())
         emit dialogSymbolLegandre(ui->spin2->value(), std::make_pair(2, 3), tmp[1], SymbolLegandreOptions::aEqual2);
-    close();
 }
 
 void DialogSymbolLegandre::on_buttonBox_rejected()

@@ -63,7 +63,6 @@ void DialogTranspositionGroup::on_buttonBox_accepted()
         emit dialogTranspositionGroup(ui->spinCount->value(), ui->spinNmin->value(), ui->spinNmax->value() + 1, TranspositionGroupOptions::Count, taskCount);
     if (ui->btnOrder->isChecked())
         emit dialogTranspositionGroup(ui->spinOrder->value(), ui->spinNmin->value(), ui->spinNmax->value() + 1, TranspositionGroupOptions::Order, taskOrder);
-    this->close();
 }
 
 void DialogTranspositionGroup::on_buttonBox_rejected()

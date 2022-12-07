@@ -47,7 +47,6 @@ void DialogMebiusFunction::on_buttonBox_accepted()
         emit dialogMebiusFunction(ui->spinNotEvenPrimes->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, MebiusFunctionOptions::NotEvenPrimes);
     if (ui->btnPrimeDegree->isChecked())
         emit dialogMebiusFunction(ui->spinPrimeDegree->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, MebiusFunctionOptions::PrimeDegree);
-    this->close();
 }
 
 void DialogMebiusFunction::on_buttonBox_rejected()
