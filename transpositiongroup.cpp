@@ -36,7 +36,6 @@ TranspositionGroup::TranspositionGroup(QVector<std::pair<int, int>> data){
             single.clear();
         }
     }
-    tp.push_back(multi);
 }
 
 TranspositionGroup TranspositionGroup::operator *(TranspositionGroup &trans)
@@ -93,6 +92,26 @@ TranspositionGroup TranspositionGroup::operator *(TranspositionGroup &trans)
                 }
             }
         }
+    }
+    TranspositionGroup tmp(result);
+    return tmp;
+}
+
+TranspositionGroup TranspositionGroup::operator ~(){
+    QVector<std::pair<int, int>> result;
+    for (int I = 0; I < tp.size(); I++) {
+        for (int i = 0; i < tp[I].size(); i++) {
+            if (tp[I].size() > 1) {
+                if (i + 1 != tp[I].size())
+                    result.push_back(std::make_pair(tp[I][i], tp[I][i + 1]));
+                else result.push_back(std::make_pair(tp[I][i], tp[I][0]));
+            } else {
+                result.push_back(std::make_pair(tp[I][i], tp[I][i]));
+            }
+        }
+    }
+    for (int i = 0; i < result.size(); i++) {
+        std::swap(result[i].first, result[i].second);
     }
     TranspositionGroup tmp(result);
     return tmp;
@@ -187,4 +206,62 @@ QVector<QVector<int>>& TranspositionGroup::getTransposition()
 ViewMode TranspositionGroup::getViewMode()
 {
     return mode;
+}
+
+QString TranspositionGroup::cycleType(){
+    int maxCycle = 0;
+    for (int i = 0; i < tp.size(); i++) {
+        if (maxCycle < tp[i].size())
+            maxCycle = tp[i].size();
+    }
+    QMap<int, int> result;
+    while (maxCycle != 0) {
+        result.insert(maxCycle, 0);
+        maxCycle--;
+    }
+    for (int i = 0; i < tp.size(); i++) {
+        result[tp[i].size()]++;
+    }
+    QString str = "[";
+    for (int i = 1; i <= result.size(); i++) {
+        if (result[i] != 0) {
+            if (i != result.size())
+                str += QString::number(i) + "^" + QString::number(result[i]) + ", ";
+            else str += QString::number(i) + "^" + QString::number(result[i]);
+        }
+    }
+    str += "]";
+    return str;
+}
+int TranspositionGroup::getHaos(){
+    QVector<std::pair<int, int>> result;
+    for (int I = 0; I < tp.size(); I++) {
+        for (int i = 0; i < tp[I].size(); i++) {
+            if (tp[I].size() > 1) {
+                if (i + 1 != tp[I].size())
+                    result.push_back(std::make_pair(tp[I][i], tp[I][i + 1]));
+                else result.push_back(std::make_pair(tp[I][i], tp[I][0]));
+            } else {
+                result.push_back(std::make_pair(tp[I][i], tp[I][i]));
+            }
+        }
+    } std::sort(result.begin(), result.end());
+    int count = 0;
+    for (int i = 0; i < result.size() - 1; i++) {
+        if (result[i].second > result[i + 1].second)
+            count++;
+    }
+    return count;
+}
+
+QString TranspositionGroup::getEven(){
+    return (getHaos() % 2) ? "Нечетная" : "Четная";
+}
+
+int TranspositionGroup::getOrder(){
+    int order = tp[0].size();
+    for (int i = 0; i < tp.size() - 1; i++) {
+        order = LCM(order, tp[i + 1].size());
+    }
+    return order;
 }

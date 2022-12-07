@@ -35,3 +35,11 @@ bool isPrime(int num) {
     }
     return true;
 }
+
+int GCD(int a, int b){
+    return b ? GCD(b, a % b) : a;
+}
+
+int LCM(int a, int b){
+    return a / GCD(a, b) * b;
+}

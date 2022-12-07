@@ -3,6 +3,7 @@
 #include <QTextStream>
 #include <QFileDialog>
 #include <QMainWindow>
+#include <QDateTime>
 #include "dialogtranspositiongroup.h"
 #include "dialogsymbollegandre.h"
 #include "dialogmebiusfunction.h"

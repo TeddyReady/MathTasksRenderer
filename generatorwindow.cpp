@@ -63,7 +63,9 @@ void GeneratorWindow::on_genButton_clicked()
 void GeneratorWindow::on_actionTXT_triggered()
 {
     QString path = QFileDialog::getSaveFileName(0, QObject::tr("Сохранить задания"),
-        "/home/kataich75/qtprojects/TasksGenerator/tests/test.txt", QObject::tr("TXT files (*.txt)"));
+        "/home/kataich75/qtprojects/TasksGenerator/tests/test_" +
+        QDateTime::currentDateTime().toString("dd.MM.yyyy") + "_" +
+        QDateTime::currentDateTime().toString("hh:mm:ss") + ".txt", QObject::tr("TXT files (*.txt)"));
     file.setFileName(path);
     if (file.open(QIODevice::WriteOnly)) {
         QTextStream out(&file);
@@ -110,11 +112,14 @@ void GeneratorWindow::on_actionQuit_triggered()
     qApp->exit();
 }
 
-void GeneratorWindow::slotDialogEulerFunctionMeta(int countOfTasks){
-    QListWidgetItem *item = new QListWidgetItem("Генерируем задания на функцию Эйлера...", ui->taskView);
-    ui->taskView->addItem(item);
+void GeneratorWindow::slotDialogEulerFunctionMeta(int countOfTasks)
+{
     generatedTasks.push_back(QString::number(TaskEulerFunction));
     generatedTasks.push_back(QString::number(countOfTasks));
+    if (countOfTasks > 0) {
+        QListWidgetItem *item = new QListWidgetItem("Вычислите функцию Эйлера:", ui->taskView);
+        ui->taskView->addItem(item);
+    }
 }
 void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int maxNum, EulerFunctionOptions option)
 {
@@ -190,10 +195,12 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
 }
 
 void GeneratorWindow::slotDialogMebiusFunctionMeta(int countOfTasks){
-    QListWidgetItem *item = new QListWidgetItem("Генерируем задания на функцию Мёбиуса...", ui->taskView);
-    ui->taskView->addItem(item);
     generatedTasks.push_back(QString::number(TaskMebiusFunction));
     generatedTasks.push_back(QString::number(countOfTasks));
+    if (countOfTasks > 0) {
+        QListWidgetItem *item = new QListWidgetItem("Вычислите функцию Мёбиуса:", ui->taskView);
+        ui->taskView->addItem(item);
+    }
 }
 void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int maxNum, MebiusFunctionOptions option){
     MebiusFunction task;
@@ -279,10 +286,12 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
 }
 
 void GeneratorWindow::slotDialogSymbolLegandreMeta(int countOfTasks){
-    QListWidgetItem *item = new QListWidgetItem("Генерируем задания на символ Лежандра...", ui->taskView);
-    ui->taskView->addItem(item);
     generatedTasks.push_back(QString::number(TaskSymbolLegandre));
     generatedTasks.push_back(QString::number(countOfTasks));
+    if (countOfTasks > 0) {
+        QListWidgetItem *item = new QListWidgetItem("Вычислите символ Лежандра:", ui->taskView);
+        ui->taskView->addItem(item);
+    }
 }
 void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, int> a, std::pair<int, int> p, SymbolLegandreOptions option){
     SymbolLegandre task;
@@ -347,10 +356,12 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
 }
 
 void GeneratorWindow::slotDialogSymbolJacobiMeta(int countOfTasks){
-    QListWidgetItem *item = new QListWidgetItem("Генерируем задания на символ Якоби...", ui->taskView);
-    ui->taskView->addItem(item);
     generatedTasks.push_back(QString::number(TaskSymbolJacobi));
     generatedTasks.push_back(QString::number(countOfTasks));
+    if (countOfTasks > 0) {
+        QListWidgetItem *item = new QListWidgetItem("Вычислите символ Якоби:", ui->taskView);
+        ui->taskView->addItem(item);
+    }
 }
 void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, int> a, std::pair<int, int> p, SymbolJacobiOptions option){
     SymbolJacobi task;
@@ -415,96 +426,139 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
 }
 
 void GeneratorWindow::slotDialogTranspositionGroupMeta(int countOfTasks){
-    QListWidgetItem *item = new QListWidgetItem("Генерируем задания на группу перестановок...", ui->taskView);
-    ui->taskView->addItem(item);
     generatedTasks.push_back(QString::number(TaskTranspositionGroup));
     generatedTasks.push_back(QString::number(countOfTasks));
 }
 void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, int maxN, TranspositionGroupOptions option, ViewMode mode){
-    TranspositionGroup task;
+    TranspositionGroup task, task2, result;
     QListWidgetItem *item;
     switch (option) {
     case TranspositionGroupOptions::Write:
+        if (countOfTasks > 0) {
+            item = new QListWidgetItem("Запишите перестановку в каноническом/циклическом виде:", ui->taskView);
+            ui->taskView->addItem(item);
+        }
         for (int i = 0; i < countOfTasks;) {
             task.setTask(random->bounded(minN, maxN), mode);
-            if (task.getViewMode() == ViewMode::Standart)
-                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Standart) + " = " + task.writeToMode(ViewMode::Cycle), ui->taskView);
-            else
-                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Cycle) + " = " + task.writeToMode(ViewMode::Standart), ui->taskView);
-            ui->taskView->addItem(item); i++;
             if (task.getViewMode() == ViewMode::Standart) {
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Standart) + " = " + task.writeToMode(ViewMode::Cycle), ui->taskView);
                 generatedData.push_back(task.writeToMode(ViewMode::Standart));
                 generatedData.push_back(task.writeToMode(ViewMode::Cycle));
             } else {
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Cycle) + " = " + task.writeToMode(ViewMode::Standart), ui->taskView);
                 generatedData.push_back(task.writeToMode(ViewMode::Cycle));
                 generatedData.push_back(task.writeToMode(ViewMode::Standart));
-            }
+            } ui->taskView->addItem(item); i++;
         } break;
     case TranspositionGroupOptions::Multiply:
-        TranspositionGroup task2, result;
+        if (countOfTasks > 0) {
+            item = new QListWidgetItem("Найдите произведение заданных перестановок:", ui->taskView);
+            ui->taskView->addItem(item);
+        }
         for (int i = 0; i < countOfTasks;) {
             int n = static_cast<int>(random->bounded(minN, maxN));
             task.setTask(n, mode);
             task2.setTask(n, mode);
             result = task * task2;
-            if (task.getViewMode() == ViewMode::Standart)
+            if (task.getViewMode() == ViewMode::Standart) {
                 item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Standart) + " * " +
                      task2.writeToMode(ViewMode::Standart) + " = " + result.writeToMode(ViewMode::Standart), ui->taskView);
-            else
-                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Cycle) + " * " +
-                     task2.writeToMode(ViewMode::Cycle) + " = " + result.writeToMode(ViewMode::Cycle), ui->taskView);
-            ui->taskView->addItem(item); i++;
-            if (task.getViewMode() == ViewMode::Cycle) {
                 generatedData.push_back(task.writeToMode(ViewMode::Standart) + " " + task2.writeToMode(ViewMode::Standart));
                 generatedData.push_back(result.writeToMode(ViewMode::Standart));
             } else {
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Cycle) + " * " +
+                     task2.writeToMode(ViewMode::Cycle) + " = " + result.writeToMode(ViewMode::Cycle), ui->taskView);
                 generatedData.push_back(task.writeToMode(ViewMode::Cycle) + " " + task2.writeToMode(ViewMode::Cycle));
                 generatedData.push_back(result.writeToMode(ViewMode::Cycle));
-            }
+            } ui->taskView->addItem(item); i++;
         } break;
-    /*case SymbolJacobiOptions::Primes:
+    case TranspositionGroupOptions::Inverse:
+        if (countOfTasks > 0) {
+            item = new QListWidgetItem("Найдите обратную к данной перестановке:", ui->taskView);
+            ui->taskView->addItem(item);
+        }
         for (int i = 0; i < countOfTasks;) {
-            task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
-            if (!isPrime(task.getTask().second) && !isPrime(task.getTask().first) && task.getTask().second % 2 != 0) {
-                QListWidgetItem *item = new QListWidgetItem("J(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
-                ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask().first);
-                generatedData.push_back(task.getTask().second);
-                generatedData.push_back(task.solve());
-            }
+            task.setTask(random->bounded(minN, maxN), mode);
+            result = ~task;
+            if (task.getViewMode() == ViewMode::Standart) {
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": ~" + task.writeToMode(ViewMode::Standart) + " = " +
+                     result.writeToMode(ViewMode::Standart), ui->taskView);
+                generatedData.push_back(task.writeToMode(ViewMode::Standart));
+                generatedData.push_back(result.writeToMode(ViewMode::Standart));
+            } else {
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": ~" + task.writeToMode(ViewMode::Cycle) + " = " +
+                     result.writeToMode(ViewMode::Cycle), ui->taskView);
+                generatedData.push_back(task.writeToMode(ViewMode::Cycle));
+                generatedData.push_back(result.writeToMode(ViewMode::Cycle));
+            } ui->taskView->addItem(item); i++;
         } break;
-    case SymbolJacobiOptions::aEqual_1:
+    case TranspositionGroupOptions::Cycle:
+        if (countOfTasks > 0) {
+            item = new QListWidgetItem("Вычислите цикловой тип подстановки:", ui->taskView);
+            ui->taskView->addItem(item);
+        }
         for (int i = 0; i < countOfTasks;) {
-            task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
-            if (!isPrime(task.getTask().second) && task.getTask().second % 2 != 0) {
-                QListWidgetItem *item = new QListWidgetItem("J(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
-                ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask().first);
-                generatedData.push_back(task.getTask().second);
-                generatedData.push_back(task.solve());
-            }
+            task.setTask(random->bounded(minN, maxN), mode);
+            if (task.getViewMode() == ViewMode::Standart) {
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Standart) + " = " +
+                     task.cycleType(), ui->taskView);
+                generatedData.push_back(task.writeToMode(ViewMode::Standart));
+            } else {
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Cycle) + " = " +
+                     task.cycleType(), ui->taskView);
+                generatedData.push_back(task.writeToMode(ViewMode::Cycle));
+            } ui->taskView->addItem(item); i++; generatedData.push_back(task.cycleType());
         } break;
-    case SymbolJacobiOptions::aEqual2:
+    case TranspositionGroupOptions::Count:
+        if (countOfTasks > 0) {
+            item = new QListWidgetItem("Вычислите количество беспорядков подстановки:", ui->taskView);
+            ui->taskView->addItem(item);
+        }
         for (int i = 0; i < countOfTasks;) {
-            task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
-            if (!isPrime(task.getTask().second) && task.getTask().second % 2 != 0) {
-                QListWidgetItem *item = new QListWidgetItem("J(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
-                ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask().first);
-                generatedData.push_back(task.getTask().second);
-                generatedData.push_back(task.solve());
-            }
+            task.setTask(random->bounded(minN, maxN), mode);
+            if (task.getViewMode() == ViewMode::Standart) {
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Standart) + " = " +
+                     QString::number(task.getHaos()), ui->taskView);
+                generatedData.push_back(task.writeToMode(ViewMode::Standart));
+            } else {
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Cycle) + " = " +
+                     QString::number(task.getHaos()), ui->taskView);
+                generatedData.push_back(task.writeToMode(ViewMode::Cycle));
+            } ui->taskView->addItem(item); i++; generatedData.push_back(QString::number(task.getHaos()));
         } break;
-    case SymbolJacobiOptions::NotEvenPrimes:
+    case TranspositionGroupOptions::Mod2:
+        if (countOfTasks > 0) {
+            item = new QListWidgetItem("Определите честность подстановки:", ui->taskView);
+            ui->taskView->addItem(item);
+        }
         for (int i = 0; i < countOfTasks;) {
-            task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
-            if (!isPrime(task.getTask().second) && !isPrime(task.getTask().first) && task.getTask().first % 2 != 0 && task.getTask().second % 2 != 0) {
-                QListWidgetItem *item = new QListWidgetItem("J(" + QString::number(task.getTask().first) + ", " + QString::number(task.getTask().second) + ") = " + QString::number(task.solve()), ui->taskView);
-                ui->taskView->addItem(item); i++;
-                generatedData.push_back(task.getTask().first);
-                generatedData.push_back(task.getTask().second);
-                generatedData.push_back(task.solve());
-            }
-        } break;*/
+            task.setTask(random->bounded(minN, maxN), mode);
+            if (task.getViewMode() == ViewMode::Standart) {
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Standart) + " - " +
+                     task.getEven(), ui->taskView);
+                generatedData.push_back(task.writeToMode(ViewMode::Standart));
+            } else {
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Cycle) + " - " +
+                     task.getEven(), ui->taskView);
+                generatedData.push_back(task.writeToMode(ViewMode::Cycle));
+            } ui->taskView->addItem(item); i++; generatedData.push_back(task.getEven());
+        } break;
+    case TranspositionGroupOptions::Order:
+        if (countOfTasks > 0) {
+            item = new QListWidgetItem("Определите порядок подстановки:", ui->taskView);
+            ui->taskView->addItem(item);
+        }
+        for (int i = 0; i < countOfTasks;) {
+            task.setTask(random->bounded(minN, maxN), mode);
+            if (task.getViewMode() == ViewMode::Standart) {
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Standart) + " = " +
+                     QString::number(task.getOrder()), ui->taskView);
+                generatedData.push_back(task.writeToMode(ViewMode::Standart));
+            } else {
+                item = new QListWidgetItem("S/" + QString::number(task.getTask()) + ": " + task.writeToMode(ViewMode::Cycle) + " = " +
+                     QString::number(task.getOrder()), ui->taskView);
+                generatedData.push_back(task.writeToMode(ViewMode::Cycle));
+            } ui->taskView->addItem(item); i++; generatedData.push_back(QString::number(task.getOrder()));
+        } break;
     }
 }
