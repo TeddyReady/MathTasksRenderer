@@ -1,5 +1,6 @@
 #ifndef DIALOGTRANSPOSITIONGROUP_H
 #define DIALOGTRANSPOSITIONGROUP_H
+#include <QMouseEvent>
 #include <QDialog>
 #include <QMenu>
 #include "transpositiongroup.h"

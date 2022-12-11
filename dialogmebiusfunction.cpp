@@ -20,7 +20,6 @@ DialogMebiusFunction::DialogMebiusFunction(QWidget *parent) :
     ui->spinPrimes->setDisabled(true);
 
     count = 0;
-
 }
 
 DialogMebiusFunction::~DialogMebiusFunction()
@@ -51,7 +50,7 @@ void DialogMebiusFunction::on_buttonBox_accepted()
 
 void DialogMebiusFunction::on_buttonBox_rejected()
 {
-    this->close();
+    close();
 }
 
 void DialogMebiusFunction::on_btnDefault_clicked()

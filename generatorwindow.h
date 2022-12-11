@@ -1,5 +1,6 @@
 #ifndef GENERATORWINDOW_H
 #define GENERATORWINDOW_H
+#include <QMouseEvent>
 #include <QTextStream>
 #include <QFileDialog>
 #include <QMainWindow>
@@ -23,6 +24,7 @@ enum AllTasks {
 class GeneratorWindow : public QMainWindow {
     Q_OBJECT
 public:
+    QPoint p;
     explicit GeneratorWindow(QWidget *parent = nullptr);
     ~GeneratorWindow();
 public slots:
@@ -47,6 +49,7 @@ private slots:
     void on_actionQuit_triggered();
 
 private:
+    int count;
     QVector<QString> generatedTasks, generatedData;
     QFile file;
     QRandomGenerator *random;

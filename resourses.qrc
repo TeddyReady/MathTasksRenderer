@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>style.css</file>
+        <file>other/checked.png</file>
+        <file>other/checked_hover.png</file>
+        <file>other/unchecked_hover.png</file>
+    </qresource>
+</RCC>

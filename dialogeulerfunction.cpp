@@ -50,7 +50,7 @@ void DialogEulerFunction::on_buttonBox_accepted()
 
 void DialogEulerFunction::on_buttonBox_rejected()
 {
-    this->close();
+    close();
 }
 
 void DialogEulerFunction::on_btnDefault_clicked()

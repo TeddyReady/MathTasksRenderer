@@ -1,0 +1,116 @@
+QMainWindow, QDialog {
+background-color: Wheat;
+color: SaddleBrown;
+border: 4px solid Tan;
+border-radius: 3px;
+}
+QDialog > QLabel {
+background-color: Wheat;
+color: SaddleBrown;
+font-size: 14px;
+font-weight: bold;
+font-family: "Times New Roman", sans-serif;
+}
+QCheckBox {
+background-color: Wheat;
+color: SaddleBrown;
+font-size: 14px;
+}
+QCheckBox::indicator {
+width: 16px;
+height: 16px;
+background-color: Beige;
+border: 2px solid Tan;
+border-radius: 10px;
+}
+QCheckBox::indicator:checked {
+image: url("://other/checked.png");
+width: 16px;
+height: 16px;
+}
+QCheckBox::indicator:checked:hover {
+image: url("://other/checked_hover.png");
+width: 16px;
+height: 16px;
+}
+QCheckBox::indicator:unchecked:hover {
+image: url("://other/unchecked_hover.png");
+width: 16px;
+height: 16px;
+}
+QMenuBar {
+border: 2px solid Tan;
+background-color: BurlyWood;
+color: SaddleBrown;
+font-size: 14px;
+font-weight: bold;
+font-family: "Times New Roman", sans-serif;
+}
+QMenuBar:item:selected {
+background-color: SaddleBrown;
+color: BurlyWood;
+}
+QMenu {
+background-color: Tan;
+color: White;
+border: 2px solid Cornsilk;
+font-size: 13px;
+font-family: "Times New Roman", sans-serif;
+}
+QMenu::item:selected {
+background-color: White;
+color: Tan;
+}
+QListWidget {
+border: 2px solid Tan;
+border-radius: 8px;
+padding: 3px;
+background-color: Beige;
+color: SaddleBrown;
+font-size: 15px;
+font-weight: 450;
+font-family: "Times New Roman", sans-serif;
+}
+QListWidget::item:hover {
+background-color: Tan;
+color: Beige;
+}
+QListWidget::item:selected {
+background-color: SaddleBrown;
+color: Beige;
+}
+QTextBrowser {
+border: 2px solid Tan;
+border-radius: 8px;
+background-color: Beige;
+color: SaddleBrown;
+font-size: 15px;
+font-family: "Times New Roman", sans-serif;
+}
+QSpinBox, QDialogButtonBox, QPushButton, QLineEdit {
+background-color: Beige;
+color: SaddleBrown;
+font-size: 14px;
+}
+QDialog > .QPushButton {
+font-style: italic;
+}
+QSpinBox:disabled, QDialog > .QPushButton:disabled {
+background-color: Tan;
+color: Beige;
+}
+QDialog > .QPushButton:hover {
+background-color: Beige;
+color: Tan;
+}
+QPushButton#genButton {
+background-color: Beige;
+color: SaddleBrown;
+font-size: 18px;
+font-weight: bold;
+font-family: "Times New Roman", sans-serif;
+}
+QPushButton#genButton:hover {
+background-color: SaddleBrown;
+color: Beige;
+}

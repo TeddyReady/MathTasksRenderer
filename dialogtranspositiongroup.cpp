@@ -105,6 +105,8 @@ void DialogTranspositionGroup::on_btnWrite_clicked()
     } else {
         ui->spinWrite->setDisabled(true);
         ui->typeWrite->setDisabled(true);
+        ui->typeWrite->menu()->deleteLater();
+        ui->typeWrite->setText("Выбрать вид...");
     }
 }
 
@@ -143,6 +145,9 @@ void DialogTranspositionGroup::on_btnMultiply_clicked()
     } else {
         ui->spinMultiply->setDisabled(true);
         ui->typeMultiply->setDisabled(true);
+        ui->typeMultiply->menu()->deleteLater();
+        ui->typeMultiply->setText("Выбрать вид...");
+
     }
 }
 
@@ -181,6 +186,8 @@ void DialogTranspositionGroup::on_btnInverse_clicked()
     } else {
         ui->spinInverse->setDisabled(true);
         ui->typeInverse->setDisabled(true);
+        ui->typeInverse->menu()->deleteLater();
+        ui->typeInverse->setText("Выбрать вид...");
     }
 }
 
@@ -219,6 +226,8 @@ void DialogTranspositionGroup::on_btnCycle_clicked()
     } else {
         ui->spinCycle->setDisabled(true);
         ui->typeCycle->setDisabled(true);
+        ui->typeCycle->menu()->deleteLater();
+        ui->typeCycle->setText("Выбрать вид...");
     }
 }
 
@@ -257,6 +266,8 @@ void DialogTranspositionGroup::on_btnMod2_clicked()
     } else {
         ui->spinMod2->setDisabled(true);
         ui->typeMod2->setDisabled(true);
+        ui->typeMod2->menu()->deleteLater();
+        ui->typeMod2->setText("Выбрать вид...");
     }
 }
 
@@ -295,6 +306,8 @@ void DialogTranspositionGroup::on_btnCount_clicked()
     } else {
         ui->spinCount->setDisabled(true);
         ui->typeCount->setDisabled(true);
+        ui->typeCount->menu()->deleteLater();
+        ui->typeCount->setText("Выбрать вид...");
     }
 }
 
@@ -333,5 +346,7 @@ void DialogTranspositionGroup::on_btnOrder_clicked()
     } else {
         ui->spinOrder->setDisabled(true);
         ui->typeOrder->setDisabled(true);
+        ui->typeOrder->menu()->deleteLater();
+        ui->typeOrder->setText("Выбрать вид...");
     }
 }

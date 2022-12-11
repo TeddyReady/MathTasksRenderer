@@ -226,8 +226,8 @@ QString TranspositionGroup::cycleType(){
     for (int i = 1; i <= result.size(); i++) {
         if (result[i] != 0) {
             if (i != result.size())
-                str += QString::number(i) + "^" + QString::number(result[i]) + ", ";
-            else str += QString::number(i) + "^" + QString::number(result[i]);
+                str += QString::number(i) + "<sup>" + QString::number(result[i]) + "</sup>, ";
+            else str += QString::number(i) + "<sup>" + QString::number(result[i]) + "</sup>";
         }
     }
     str += "]";
