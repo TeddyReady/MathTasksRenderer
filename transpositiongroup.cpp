@@ -247,9 +247,11 @@ int TranspositionGroup::getHaos(){
         }
     } std::sort(result.begin(), result.end());
     int count = 0;
-    for (int i = 0; i < result.size() - 1; i++) {
-        if (result[i].second > result[i + 1].second)
-            count++;
+    for (int i = 0; i < result.size(); i++) {
+        for (int j = i; j < result.size() - 1; j++) {
+            if (result[i].second > result[j + 1].second)
+                count++;
+        }
     }
     return count;
 }
