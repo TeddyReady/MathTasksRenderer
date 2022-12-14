@@ -46,6 +46,7 @@ void DialogEulerFunction::on_buttonBox_accepted()
         emit dialogEulerFunction(ui->spinMultiplyPrimes->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, EulerFunctionOptions::MultiplyPrimes);
     if (ui->btnMultiplyPrimesDegree->isChecked())
         emit dialogEulerFunction(ui->spinMultiplyPrimesDegree->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, EulerFunctionOptions::MultiplyPrimesDegrees);
+    close();
 }
 
 void DialogEulerFunction::on_buttonBox_rejected()

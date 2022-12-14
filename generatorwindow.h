@@ -3,17 +3,22 @@
 #include <QMouseEvent>
 #include <QTextStream>
 #include <QFileDialog>
-#include <QMainWindow>
 #include <QDateTime>
+
 #include "dialogtranspositiongroup.h"
 #include "dialogsymbollegandre.h"
 #include "dialogmebiusfunction.h"
 #include "dialogeulerfunction.h"
 #include "dialogsymboljacobi.h"
+#include "testmode.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GeneratorWindow; }
 QT_END_NAMESPACE
+
+enum WorkMode {
+    Test, Work
+};
 
 enum AllTasks {
     TaskEulerFunction, TaskMebiusFunction,
@@ -44,15 +49,22 @@ public slots:
     void slotDialogTranspositionGroupMeta(int);
     void slotDialogTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode);
 private slots:
+    //Режимы работы
+    void runTestMode();
+    void runWorkMode();
+
     void on_genButton_clicked();
     void on_actionTXT_triggered();
     void on_actionQuit_triggered();
 
 private:
     int count;
+    WorkMode mode;
     QVector<QString> generatedTasks, generatedData;
+    tasks_type *tasksForTest;
     QFile file;
     QRandomGenerator *random;
+    QAction *testMode, *workMode;
     Ui::GeneratorWindow *ui;
 };
 #endif

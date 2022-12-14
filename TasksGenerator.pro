@@ -19,6 +19,7 @@ SOURCES += \
     basemath.cpp \
     dialogeulerfunction.cpp \
     dialogmebiusfunction.cpp \
+    dialogresults.cpp \
     dialogsymboljacobi.cpp \
     dialogsymbollegandre.cpp \
     dialogtranspositiongroup.cpp \
@@ -28,12 +29,14 @@ SOURCES += \
     mebiusfunction.cpp \
     symboljacobi.cpp \
     symbollegandre.cpp \
+    testmode.cpp \
     transpositiongroup.cpp
 
 HEADERS += \
     basemath.h \
     dialogeulerfunction.h \
     dialogmebiusfunction.h \
+    dialogresults.h \
     dialogsymboljacobi.h \
     dialogsymbollegandre.h \
     dialogtranspositiongroup.h \
@@ -42,15 +45,18 @@ HEADERS += \
     mebiusfunction.h \
     symboljacobi.h \
     symbollegandre.h \
+    testmode.h \
     transpositiongroup.h
 
 FORMS += \
     dialogeulerfunction.ui \
     dialogmebiusfunction.ui \
+    dialogresults.ui \
     dialogsymboljacobi.ui \
     dialogsymbollegandre.ui \
     dialogtranspositiongroup.ui \
-    generatorwindow.ui
+    generatorwindow.ui \
+    testmode.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

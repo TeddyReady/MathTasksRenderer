@@ -1,7 +1,7 @@
 QMainWindow, QDialog {
 background-color: Wheat;
 color: SaddleBrown;
-border: 4px solid Tan;
+border: 2px solid Tan;
 border-radius: 3px;
 }
 QDialog > QLabel {
@@ -40,7 +40,7 @@ height: 16px;
 }
 QMenuBar {
 border: 2px solid Tan;
-background-color: BurlyWood;
+background-color: Beige;
 color: SaddleBrown;
 font-size: 14px;
 font-weight: bold;
@@ -60,6 +60,26 @@ font-family: "Times New Roman", sans-serif;
 QMenu::item:selected {
 background-color: White;
 color: Tan;
+}
+QToolBar{
+border: 2px solid Tan;
+background-color: Beige;
+color: SaddleBrown;
+}
+QToolButton {
+background-color: Beige;
+color: SaddleBrown;
+font-size: 14px;
+font-weight: bold;
+font-family: "Times New Roman", sans-serif;
+}
+QToolButton:hover {
+background-color: SaddleBrown;
+color: Beige;
+}
+QToolButton:checked {
+background-color: SaddleBrown;
+color: Beige;
 }
 QListWidget {
 border: 2px solid Tan;
@@ -99,7 +119,7 @@ QSpinBox:disabled, QDialog > .QPushButton:disabled {
 background-color: Tan;
 color: Beige;
 }
-QDialog > .QPushButton:hover {
+QDialog > .QPushButton:hover, QMainWindow > .QPushButton:hover {
 background-color: Beige;
 color: Tan;
 }
