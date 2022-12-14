@@ -37,6 +37,7 @@ void GeneratorWindow::runTestMode(){
         ui->taskView->append("Перед запуском теста, необходимо сгенерировать задания!\n");
     } else {
         TestMode *testWindow = new TestMode(this, tasksForTest);
+        testWindow->setWindowTitle("Тест");
         testWindow->show();
     }
 }

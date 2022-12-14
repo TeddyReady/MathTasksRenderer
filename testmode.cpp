@@ -5,7 +5,6 @@ TestMode::TestMode(QWidget *parent, tasks_type* tasksForTest) :
     QMainWindow(parent),
     ui(new Ui::TestMode)
 {
-    setWindowTitle("Тест");
     ui->setupUi(this);
     tasks = tasksForTest;
     results = new QVector<QString>;
@@ -129,6 +128,7 @@ void TestMode::on_action_triggered()
         ui->lineEdit->clear();
     }
     DialogResults *window = new DialogResults(this, tasks, results);
+    window->setWindowTitle("Результаты теста");
     window->setModal(true);
     window->exec();
     tasks->clear();

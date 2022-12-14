@@ -5,7 +5,6 @@ DialogResults::DialogResults(QWidget *parent, tasks_type *tasks, QVector<QString
     QDialog(parent),
     ui(new Ui::DialogResults)
 {
-    setWindowTitle("Результаты теста");
     ui->setupUi(this);
     userCount = 0;
     maxCount = tasks->size();
