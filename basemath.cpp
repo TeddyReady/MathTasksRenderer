@@ -1,7 +1,5 @@
 #include "basemath.h"
 
-BaseMath::BaseMath() {}
-
 QVector<std::pair<int, int>> decompositionToSimple(int num){
     QVector<std::pair<int, int>> deviders;
     if (isPrime(num)){

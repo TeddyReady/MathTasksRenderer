@@ -22,6 +22,8 @@ GeneratorWindow::GeneratorWindow(QWidget *parent)
 }
 GeneratorWindow::~GeneratorWindow()
 {
+    random = nullptr;
+    delete tasksForTest;
     delete ui;
 }
 
@@ -36,6 +38,13 @@ void GeneratorWindow::runTestMode(){
     } else if (mode == Test && tasksForTest->isEmpty()) {
         ui->taskView->append("Перед запуском теста, необходимо сгенерировать задания!\n");
     } else {
+        //Рандомная сортировка
+        for (int i = 0; i < tasksForTest->size(); i++) {
+            int j = random->bounded(0, tasksForTest->size());
+            auto tmp = (*tasksForTest)[i];
+            (*tasksForTest)[i] = (*tasksForTest)[j];
+            (*tasksForTest)[j] = tmp;
+        }
         TestMode *testWindow = new TestMode(this, tasksForTest);
         testWindow->setWindowTitle("Тест");
         testWindow->show();

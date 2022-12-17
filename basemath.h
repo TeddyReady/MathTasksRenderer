@@ -1,15 +1,10 @@
 #ifndef BASEMATH_H
 #define BASEMATH_H
-#include <cmath>
-#include <QDebug>
+#include <QRandomGenerator>
 #include <QVector>
+#include <cmath>
 
-class BaseMath
-{
-public:
-    BaseMath();
-};
-
+class BaseMath;
 //Разложение на простые
 QVector<std::pair<int, int>> decompositionToSimple(int num);
 //Проверка на простоту

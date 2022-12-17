@@ -26,7 +26,6 @@ private slots:
     void on_prevTask_clicked();
     void on_nextTask_clicked();
     void on_action_triggered();
-
 private:
     tasks_type* tasks;
     QVector<QString> *results;
