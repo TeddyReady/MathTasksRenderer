@@ -4,5 +4,7 @@
         <file>other/checked.png</file>
         <file>other/checked_hover.png</file>
         <file>other/unchecked_hover.png</file>
+        <file>other/appIcon.png</file>
+        <file>other/splash.png</file>
     </qresource>
 </RCC>

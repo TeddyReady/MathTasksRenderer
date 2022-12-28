@@ -15,56 +15,98 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="2">
-     <widget class="QTextBrowser" name="taskView">
-      <property name="font">
-       <font>
-        <family>Sans Serif</family>
-       </font>
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <property name="html">
-       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <property name="elideMode">
+       <enum>Qt::ElideNone</enum>
+      </property>
+      <widget class="QWidget" name="tabTask">
+       <attribute name="title">
+        <string>Задачник</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QListWidget" name="tasksList">
+          <item>
+           <property name="text">
+            <string>Группа Перестановок</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Символ Лежандра</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Символ Якоби</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Функция Мёбиуса</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Функция Эйлера</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QTextBrowser" name="taskView">
+          <property name="font">
+           <font>
+            <family>Sans Serif</family>
+           </font>
+          </property>
+          <property name="html">
+           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0" colspan="2">
-     <widget class="QListWidget" name="tasksList">
-      <item>
-       <property name="text">
-        <string>Группа Перестановок</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Символ Лежандра</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Символ Якоби</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Функция Мёбиуса</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Функция Эйлера</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-    <item row="1" column="0" colspan="3">
-     <widget class="QPushButton" name="genButton">
-      <property name="text">
-       <string>Сгенерировать Задания</string>
-      </property>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="2">
+         <widget class="QPushButton" name="genButton">
+          <property name="text">
+           <string>Сгенерировать Задания</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabTheory">
+       <attribute name="title">
+        <string>Теория</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tabTest">
+       <attribute name="title">
+        <string>Генератор Теста</string>
+       </attribute>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -106,7 +148,7 @@ p, li { white-space: pre-wrap; }
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>false</bool>
+    <bool>true</bool>
    </attribute>
   </widget>
   <action name="actionTXT">

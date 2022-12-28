@@ -40,7 +40,7 @@ height: 16px;
 }
 QMenuBar {
 border: 2px solid Tan;
-background-color: Beige;
+background-color: Cornsilk;
 color: SaddleBrown;
 font-size: 14px;
 font-weight: bold;
@@ -48,7 +48,7 @@ font-family: "Times New Roman", sans-serif;
 }
 QMenuBar:item:selected {
 background-color: SaddleBrown;
-color: BurlyWood;
+color: White;
 }
 QMenu {
 background-color: Tan;
@@ -137,4 +137,36 @@ color: Beige;
 QGroupBox {
 color: SaddleBrown;
 font-size: 15px;
+}
+QTabWidget::pane {
+border: 2px solid Tan;
+background-color: Cornsilk;
+}
+QTabWidget::tab-bar {
+left: 10px;
+}
+QTabBar::tab {
+background-color: CornSilk;
+color: SaddleBrown;
+font-size: 15px;
+font-weight: bold;
+font-family: "Times New Roman", sans-serif;
+border: 2px solid Tan;
+border-bottom-color: Beige;
+border-top-left-radius: 6px;
+border-top-right-radius: 6px;
+min-width: 18ex;
+padding: 3px;
+}
+QTabBar::tab:hover {
+background-color: Tan;
+color: CornSilk;
+}
+QTabBar::tab:selected {
+background-color: SaddleBrown;
+border-bottom-color: CornSilk;
+color: White;
+}
+QTabBar::tab:!selected {
+margin-top: 2px;
 }

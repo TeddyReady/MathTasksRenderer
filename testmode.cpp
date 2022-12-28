@@ -6,16 +6,27 @@ TestMode::TestMode(QWidget *parent, tasks_type* tasksForTest) :
     ui(new Ui::TestMode)
 {
     ui->setupUi(this);
+    isPressed = false;
     tasks = tasksForTest;
     results = new QVector<QString>;
-    for (int i = 0; i < tasks->size(); i++) {
+    if (tasks->size() == 1) {
+        ui->prevTask->setHidden(true);
+        ui->nextTask->setText("Завершить");
+        ui->toolBar->hide();
         results->push_back("");
-        QAction *taskAction = new QAction("№" + QString::number(i + 1), ui->toolBar);
-        ui->toolBar->addAction(taskAction);
-        connect(taskAction, SIGNAL(triggered()), this, SLOT(changeTask()));
-        if (i == 0) {
-            emit taskAction->triggered();
-        }
+        ui->groupBox->setTitle("Задание 1");
+        ui->taskView->append((*tasks)[0].first);
+        curTask = 1;
+    } else {
+        for (int i = 0; i < tasks->size(); i++) {
+            results->push_back("");
+            QAction *taskAction = new QAction("№" + QString::number(i + 1), ui->toolBar);
+            ui->toolBar->addAction(taskAction);
+            connect(taskAction, SIGNAL(triggered()), this, SLOT(changeTask()));
+            if (i == 0) {
+                emit taskAction->triggered();
+            }
+        } ui->prevTask->setDisabled(true);
     }
 }
 
@@ -34,16 +45,12 @@ void TestMode::changeTask()
     curTask = static_cast<QString>(tmp->text().split("№").last()).toInt();
     ui->groupBox->setTitle("Задание " + QString::number(curTask));
     ui->taskView->clear();
-    ui->taskView->append("<!Doctype HTML>");
     ui->taskView->append((*tasks)[curTask - 1].first);
     if ((*results)[curTask - 1] != "") {
         ui->lineEdit->setText((*results)[curTask - 1]);
     }
 
-    if (tasks->size() == 1) {
-        ui->prevTask->setHidden(true);
-        ui->nextTask->setHidden(true);
-    } else {
+    if (tasks->size() > 1) {
         if (curTask  == 1) {
             ui->prevTask->setDisabled(true);
             ui->nextTask->setEnabled(true);
@@ -59,6 +66,7 @@ void TestMode::changeTask()
 
 void TestMode::on_prevTask_clicked()
 {
+    ui->nextTask->setEnabled(true);
     if (ui->lineEdit->text() != "") {
         (*results)[curTask - 1] = ui->lineEdit->text();
         ui->lineEdit->clear();
@@ -66,62 +74,52 @@ void TestMode::on_prevTask_clicked()
     curTask = static_cast<QString>(ui->groupBox->title().split(" ").last()).toInt() - 1;
     ui->groupBox->setTitle("Задание " + QString::number(curTask));
     ui->taskView->clear();
-    ui->taskView->append("<!Doctype HTML>");
     ui->taskView->append((*tasks)[curTask - 1].first);
     if ((*results)[curTask - 1] != "") {
         ui->lineEdit->setText((*results)[curTask - 1]);
     }
-
-    if (tasks->size() == 1) {
-        ui->prevTask->setHidden(true);
-        ui->nextTask->setHidden(true);
-    } else {
-        if (curTask  == 1) {
-            ui->prevTask->setDisabled(true);
-            ui->nextTask->setEnabled(true);
-        } else if (curTask == tasks->size()) {
-            ui->prevTask->setEnabled(true);
-            ui->nextTask->setDisabled(true);
-        } else {
-            ui->prevTask->setEnabled(true);
-            ui->nextTask->setEnabled(true);
-        }
-    }
+    isPressed = false;
+    ui->nextTask->setText("Вперед");
+    if (curTask  != 1)
+        ui->prevTask->setEnabled(true);
+    else ui->prevTask->setDisabled(true);
 }
 
 void TestMode::on_nextTask_clicked()
 {
-    if (ui->lineEdit->text() != "") {
-        (*results)[curTask - 1] = ui->lineEdit->text();
-        ui->lineEdit->clear();
-    }
-    curTask = static_cast<QString>(ui->groupBox->title().split(" ").last()).toInt() + 1;
-    ui->groupBox->setTitle("Задание " + QString::number(curTask));
-    ui->taskView->clear();
-    ui->taskView->append("<!Doctype HTML>");
-    ui->taskView->append((*tasks)[curTask - 1].first);
-    if ((*results)[curTask - 1] != "") {
-        ui->lineEdit->setText((*results)[curTask - 1]);
-    }
-
     if (tasks->size() == 1) {
-        ui->prevTask->setHidden(true);
-        ui->nextTask->setHidden(true);
+        int answer = QMessageBox::question(this, "Завершение тестирования",
+                     "Вы действительно хотите завершить тест?");
+        if (answer == QMessageBox::Yes) finishTest();
     } else {
-        if (curTask  == 1) {
-            ui->prevTask->setDisabled(true);
-            ui->nextTask->setEnabled(true);
-        } else if (curTask == tasks->size()) {
-            ui->prevTask->setEnabled(true);
-            ui->nextTask->setDisabled(true);
+        ui->prevTask->setEnabled(true);
+        if (curTask != tasks->size()) {
+            if (ui->lineEdit->text() != "") {
+                (*results)[curTask - 1] = ui->lineEdit->text();
+                ui->lineEdit->clear();
+            }
+            curTask = static_cast<QString>(ui->groupBox->title().split(" ").last()).toInt() + 1;
+            if (curTask == tasks->size()) {
+                isPressed = true;
+                ui->nextTask->setText("Завершить");
+            }
+            ui->groupBox->setTitle("Задание " + QString::number(curTask));
+            ui->taskView->clear();
+            ui->taskView->append((*tasks)[curTask - 1].first);
+            if ((*results)[curTask - 1] != "") {
+                ui->lineEdit->setText((*results)[curTask - 1]);
+            }
         } else {
-            ui->prevTask->setEnabled(true);
-            ui->nextTask->setEnabled(true);
+            if (isPressed) {
+                int answer = QMessageBox::question(this, "Завершение тестирования",
+                             "Вы действительно хотите завершить тест?");
+                if (answer == QMessageBox::Yes) finishTest();
+            }
         }
     }
 }
 
-void TestMode::on_action_triggered()
+void TestMode::finishTest()
 {
     if (ui->lineEdit->text() != "") {
         (*results)[curTask - 1] = ui->lineEdit->text();
@@ -131,6 +129,12 @@ void TestMode::on_action_triggered()
     window->setWindowTitle("Результаты теста");
     window->setModal(true);
     window->exec();
-    tasks->clear();
     close();
+}
+
+void TestMode::closeEvent(QCloseEvent *event){
+    delete results;
+    tasks->clear();
+    tasks = nullptr;
+    event->accept();
 }

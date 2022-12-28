@@ -19,6 +19,8 @@ GeneratorWindow::GeneratorWindow(QWidget *parent)
     connect(testMode, SIGNAL(triggered()), this, SLOT(runTestMode()));
     connect(workMode, SIGNAL(triggered()), this, SLOT(runWorkMode()));
     emit workMode->triggered();
+
+    setAttribute(Qt::WA_DeleteOnClose);
 }
 GeneratorWindow::~GeneratorWindow()
 {
