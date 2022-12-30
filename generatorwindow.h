@@ -1,9 +1,12 @@
 #ifndef GENERATORWINDOW_H
 #define GENERATORWINDOW_H
+#include <QtWebKitWidgets/QWebView>
 #include <QMouseEvent>
 #include <QTextStream>
 #include <QFileDialog>
+#include <QSettings>
 #include <QDateTime>
+#include <QUrl>
 
 #include "dialogtranspositiongroup.h"
 #include "dialogsymbollegandre.h"
@@ -28,8 +31,10 @@ enum AllTasks {
 
 class GeneratorWindow : public QMainWindow {
     Q_OBJECT
+private:
+    void saveSettings();
+    void uploadSettings();
 public:
-    QPoint p;
     explicit GeneratorWindow(QWidget *parent = nullptr);
     ~GeneratorWindow();
 public slots:
@@ -56,7 +61,6 @@ private slots:
     void on_genButton_clicked();
     void on_actionTXT_triggered();
     void on_actionQuit_triggered();
-
 private:
     int count;
     WorkMode mode;
@@ -65,6 +69,7 @@ private:
     QFile file;
     QRandomGenerator *random;
     QAction *testMode, *workMode;
+    QSettings *settings;
     Ui::GeneratorWindow *ui;
 };
 #endif

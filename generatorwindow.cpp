@@ -5,6 +5,9 @@ GeneratorWindow::GeneratorWindow(QWidget *parent)
     : QMainWindow(parent)
     , mode(Test), ui(new Ui::GeneratorWindow)
 {
+    settings = new QSettings("/home/teddyready/qtprojects/ProjectTasksGenerator/general/settings.ini",
+                QSettings::IniFormat, this);
+    uploadSettings();
     random = QRandomGenerator::global();
     tasksForTest = new tasks_type;
     ui->setupUi(this);
@@ -15,18 +18,28 @@ GeneratorWindow::GeneratorWindow(QWidget *parent)
     ui->toolBar->addAction(workMode);
     ui->genButton->setEnabled(true);
     ui->taskView->append("<!Doctype HTML>");
-    //setWindowFlags(Qt::FramelessWindowHint);
     connect(testMode, SIGNAL(triggered()), this, SLOT(runTestMode()));
     connect(workMode, SIGNAL(triggered()), this, SLOT(runWorkMode()));
     emit workMode->triggered();
+    ui->webView->load(QUrl("qrc:/web/index.html"));
 
     setAttribute(Qt::WA_DeleteOnClose);
 }
 GeneratorWindow::~GeneratorWindow()
 {
+    saveSettings();
     random = nullptr;
     delete tasksForTest;
     delete ui;
+}
+
+void GeneratorWindow::saveSettings()
+{
+    settings->setValue("windowSize", geometry());
+}
+void GeneratorWindow::uploadSettings()
+{
+    setGeometry(settings->value("windowSize").toRect());
 }
 
 void GeneratorWindow::runTestMode(){

@@ -1,10 +1,13 @@
 <RCC>
     <qresource prefix="/">
-        <file>style.css</file>
-        <file>other/checked.png</file>
-        <file>other/checked_hover.png</file>
-        <file>other/unchecked_hover.png</file>
-        <file>other/appIcon.png</file>
-        <file>other/splash.png</file>
+        <file>web/index.html</file>
+        <file>web/styles/style.css</file>
+        <file>img/unchecked_hover.png</file>
+        <file>img/splash.png</file>
+        <file>img/checked_hover.png</file>
+        <file>img/checked.png</file>
+        <file>img/appIcon.png</file>
+        <file>general/style.css</file>
+        <file>general/settings.ini</file>
     </qresource>
 </RCC>
