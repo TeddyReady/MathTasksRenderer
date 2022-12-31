@@ -9,5 +9,6 @@
         <file>img/appIcon.png</file>
         <file>general/style.css</file>
         <file>general/settings.ini</file>
+        <file>web/scripts/main.js</file>
     </qresource>
 </RCC>
