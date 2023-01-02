@@ -1,5 +1,6 @@
 #ifndef DIALOGTRANSPOSITIONGROUP_H
 #define DIALOGTRANSPOSITIONGROUP_H
+#include <QPushButton>
 #include <QMouseEvent>
 #include <QDialog>
 #include <QMenu>
@@ -18,7 +19,7 @@ enum class TranspositionGroupOptions {
 class DialogTranspositionGroup : public QDialog {
     Q_OBJECT
 public:
-    explicit DialogTranspositionGroup(QWidget *parent = nullptr);
+    explicit DialogTranspositionGroup(QWidget *parent = nullptr, bool mode = false);
     ~DialogTranspositionGroup();
 signals:
     void dialogTranspositionGroupMeta(int);
@@ -35,7 +36,7 @@ private slots:
     void on_btnCount_clicked();
     void on_btnOrder_clicked();
 private:
-    int count;
+    int count; bool isCancelExist;
     ViewMode taskWrite, taskMultiply, taskInverse, taskOrder, taskMod2, taskCycle, taskCount;
     Ui::DialogTranspositionGroup *ui;
 };

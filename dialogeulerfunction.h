@@ -1,6 +1,8 @@
 #ifndef DIALOGEULERFUNCTION_H
 #define DIALOGEULERFUNCTION_H
+#include <QPushButton>
 #include <QDialog>
+#include <QIcon>
 #include "eulerfunction.h"
 
 namespace Ui {
@@ -16,7 +18,7 @@ enum class EulerFunctionOptions {
 class DialogEulerFunction : public QDialog {
     Q_OBJECT
 public:
-    explicit DialogEulerFunction(QWidget *parent = nullptr);
+    explicit DialogEulerFunction(QWidget *parent = nullptr, bool mode = false);
     ~DialogEulerFunction();
 signals:
     void dialogEulerFunctionMeta(int);
@@ -31,7 +33,7 @@ private slots:
     void on_btnMultiplyPrimesDegree_clicked();
 
 private:
-    int count;
+    int count; bool isCancelExist;
     Ui::DialogEulerFunction *ui;
 };
 

@@ -1,7 +1,7 @@
 #include "dialogsymboljacobi.h"
 #include "ui_dialogsymboljacobi.h"
 
-DialogSymbolJacobi::DialogSymbolJacobi(QWidget *parent) :
+DialogSymbolJacobi::DialogSymbolJacobi(QWidget *parent, bool mode) :
     QDialog(parent),
     ui(new Ui::DialogSymbolJacobi)
 {
@@ -20,7 +20,12 @@ DialogSymbolJacobi::DialogSymbolJacobi(QWidget *parent) :
     ui->spin2->setDisabled(true);
     ui->btnNotEvenPrimes->setChecked(false);
     ui->spinNotEvenPrimes->setDisabled(true);
-
+    if (mode) {
+        ui->buttonBox->button(QDialogButtonBox::Cancel)->deleteLater();
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Сгенерировать задания");
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setIcon(QIcon());
+        isCancelExist = false;
+    } else isCancelExist = true;
     count = 0;
 }
 
@@ -39,7 +44,7 @@ void DialogSymbolJacobi::on_buttonBox_accepted()
     if (ui->btn1->isChecked()) count += ui->spin1->value();
     if (ui->btn2->isChecked()) count += ui->spin2->value();
     if (ui->btnNotEvenPrimes->isChecked()) count += ui->spinNotEvenPrimes->value();
-    emit dialogSymbolJacobiMeta(count);
+
 
     if (ui->btnDefault->isChecked())
         emit dialogSymbolJacobi(ui->spinDefault->value(), tmp[0], tmp[1], SymbolJacobiOptions::Default);
@@ -51,7 +56,8 @@ void DialogSymbolJacobi::on_buttonBox_accepted()
         emit dialogSymbolJacobi(ui->spinNotEvenPrimes->value(), tmp[0], tmp[1], SymbolJacobiOptions::NotEvenPrimes);
     if (ui->btn2->isChecked())
         emit dialogSymbolJacobi(ui->spin2->value(), std::make_pair(2, 3), tmp[1], SymbolJacobiOptions::aEqual2);
-    close();
+    emit dialogSymbolJacobiMeta(count);
+    if (isCancelExist) close();
 }
 
 void DialogSymbolJacobi::on_buttonBox_rejected()

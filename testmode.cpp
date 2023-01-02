@@ -54,12 +54,14 @@ void TestMode::changeTask()
         if (curTask  == 1) {
             ui->prevTask->setDisabled(true);
             ui->nextTask->setEnabled(true);
+            ui->nextTask->setText("Вперед");
         } else if (curTask == tasks->size()) {
             ui->prevTask->setEnabled(true);
-            ui->nextTask->setDisabled(true);
+            ui->nextTask->setText("Завершить");
         } else {
             ui->prevTask->setEnabled(true);
             ui->nextTask->setEnabled(true);
+            ui->nextTask->setText("Вперед");
         }
     }
 }
@@ -87,7 +89,7 @@ void TestMode::on_prevTask_clicked()
 
 void TestMode::on_nextTask_clicked()
 {
-    if (tasks->size() == 1) {
+    if (tasks->size() == 1 || tasks->size() == curTask) {
         int answer = QMessageBox::question(this, "Завершение тестирования",
                      "Вы действительно хотите завершить тест?");
         if (answer == QMessageBox::Yes) finishTest();

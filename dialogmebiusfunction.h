@@ -1,5 +1,6 @@
 #ifndef DIALOGMEBIUSFUNCTION_H
 #define DIALOGMEBIUSFUNCTION_H
+#include <QPushButton>
 #include <QDialog>
 #include "mebiusfunction.h"
 
@@ -16,7 +17,7 @@ enum class MebiusFunctionOptions {
 class DialogMebiusFunction : public QDialog {
     Q_OBJECT
 public:
-    explicit DialogMebiusFunction(QWidget *parent = nullptr);
+    explicit DialogMebiusFunction(QWidget *parent = nullptr, bool mode = false);
     ~DialogMebiusFunction();
 signals:
     void dialogMebiusFunctionMeta(int);
@@ -31,7 +32,7 @@ private slots:
     void on_btnNotEvenPrimes_clicked();
     void on_btnPrimeDegree_clicked();
 private:
-    int count;
+    int count; bool isCancelExist;
     Ui::DialogMebiusFunction *ui;
 };
 

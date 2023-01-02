@@ -107,7 +107,7 @@ color: SaddleBrown;
 font-size: 15px;
 font-family: "Times New Roman", sans-serif;
 }
-QSpinBox, QDialogButtonBox, QPushButton, QLineEdit {
+QSpinBox, QDialogButtonBox, QPushButton, QLineEdit, QComboBox {
 background-color: Beige;
 color: SaddleBrown;
 font-size: 14px;
@@ -123,7 +123,7 @@ QDialog > .QPushButton:hover, QMainWindow > .QPushButton:hover {
 background-color: Beige;
 color: Tan;
 }
-QPushButton#genButton {
+QPushButton#genButton,  QPushButton#pushButton{
 background-color: Beige;
 color: SaddleBrown;
 font-size: 18px;

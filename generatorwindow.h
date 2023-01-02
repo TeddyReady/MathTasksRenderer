@@ -19,10 +19,6 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class GeneratorWindow; }
 QT_END_NAMESPACE
 
-enum WorkMode {
-    Test, Work
-};
-
 enum AllTasks {
     TaskEulerFunction, TaskMebiusFunction,
     TaskSymbolLegandre, TaskSymbolJacobi,
@@ -54,16 +50,16 @@ public slots:
     void slotDialogTranspositionGroupMeta(int);
     void slotDialogTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode);
 private slots:
-    //Режимы работы
-    void runTestMode();
-    void runWorkMode();
-
     void on_genButton_clicked();
     void on_actionTXT_triggered();
     void on_actionQuit_triggered();
+    void on_comboBox_currentTextChanged(const QString &task);
+    void on_tabWidget_currentChanged(int index);
+    void on_pushButton_clicked();
+
 private:
     int count;
-    WorkMode mode;
+    bool mode;
     QVector<QString> generatedTasks, generatedData;
     tasks_type *tasksForTest;
     QFile file;

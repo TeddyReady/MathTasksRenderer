@@ -1,7 +1,7 @@
 #include "dialogsymbollegandre.h"
 #include "ui_dialogsymbollegandre.h"
 
-DialogSymbolLegandre::DialogSymbolLegandre(QWidget *parent) :
+DialogSymbolLegandre::DialogSymbolLegandre(QWidget *parent, bool mode) :
     QDialog(parent),
     ui(new Ui::DialogSymbolLegandre)
 {
@@ -20,7 +20,12 @@ DialogSymbolLegandre::DialogSymbolLegandre(QWidget *parent) :
     ui->spin2->setDisabled(true);
     ui->btnNotEvenPrimes->setChecked(false);
     ui->spinNotEvenPrimes->setDisabled(true);
-
+    if (mode) {
+        ui->buttonBox->button(QDialogButtonBox::Cancel)->deleteLater();
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Сгенерировать задания");
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setIcon(QIcon());
+        isCancelExist = false;
+    } else isCancelExist = true;
     count = 0;
 }
 
@@ -39,7 +44,7 @@ void DialogSymbolLegandre::on_buttonBox_accepted()
     if (ui->btn1->isChecked()) count += ui->spin1->value();
     if (ui->btn2->isChecked()) count += ui->spin2->value();
     if (ui->btnNotEvenPrimes->isChecked()) count += ui->spinNotEvenPrimes->value();
-    emit dialogSymbolLegandreMeta(count);
+
 
     if (ui->btnDefault->isChecked())
         emit dialogSymbolLegandre(ui->spinDefault->value(), tmp[0], tmp[1], SymbolLegandreOptions::Default);
@@ -51,7 +56,8 @@ void DialogSymbolLegandre::on_buttonBox_accepted()
         emit dialogSymbolLegandre(ui->spinNotEvenPrimes->value(), tmp[0], tmp[1], SymbolLegandreOptions::NotEvenPrimes);
     if (ui->btn2->isChecked())
         emit dialogSymbolLegandre(ui->spin2->value(), std::make_pair(2, 3), tmp[1], SymbolLegandreOptions::aEqual2);
-    close();
+    emit dialogSymbolLegandreMeta(count);
+    if (isCancelExist) close();
 }
 
 void DialogSymbolLegandre::on_buttonBox_rejected()

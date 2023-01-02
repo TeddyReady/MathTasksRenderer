@@ -1,7 +1,7 @@
 #include "dialogtranspositiongroup.h"
 #include "ui_dialogtranspositiongroup.h"
 
-DialogTranspositionGroup::DialogTranspositionGroup(QWidget *parent) :
+DialogTranspositionGroup::DialogTranspositionGroup(QWidget *parent, bool mode) :
     QDialog(parent),
     ui(new Ui::DialogTranspositionGroup)
 {
@@ -29,7 +29,12 @@ DialogTranspositionGroup::DialogTranspositionGroup(QWidget *parent) :
     ui->btnCount->setChecked(false);
     ui->spinCount->setDisabled(true);
     ui->typeCount->setDisabled(true);
-
+    if (mode) {
+        ui->buttonBox->button(QDialogButtonBox::Cancel)->deleteLater();
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Сгенерировать задания");
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setIcon(QIcon());
+        isCancelExist = false;
+    } else isCancelExist = true;
     count = 0;
 }
 
@@ -47,7 +52,7 @@ void DialogTranspositionGroup::on_buttonBox_accepted()
     if (ui->btnMod2->isChecked()) count += ui->spinMod2->value();
     if (ui->btnCount->isChecked()) count += ui->spinCount->value();
     if (ui->btnOrder->isChecked()) count += ui->spinOrder->value();
-    emit dialogTranspositionGroupMeta(count);
+
 
     if (ui->btnWrite->isChecked())
         emit dialogTranspositionGroup(ui->spinWrite->value(), ui->spinNmin->value(), ui->spinNmax->value() + 1, TranspositionGroupOptions::Write, taskWrite);
@@ -63,7 +68,8 @@ void DialogTranspositionGroup::on_buttonBox_accepted()
         emit dialogTranspositionGroup(ui->spinCount->value(), ui->spinNmin->value(), ui->spinNmax->value() + 1, TranspositionGroupOptions::Count, taskCount);
     if (ui->btnOrder->isChecked())
         emit dialogTranspositionGroup(ui->spinOrder->value(), ui->spinNmin->value(), ui->spinNmax->value() + 1, TranspositionGroupOptions::Order, taskOrder);
-    close();
+    emit dialogTranspositionGroupMeta(count);
+    if (isCancelExist) close();
 }
 
 void DialogTranspositionGroup::on_buttonBox_rejected()

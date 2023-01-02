@@ -1,5 +1,6 @@
 #ifndef DIALOGSYMBOLJACOBI_H
 #define DIALOGSYMBOLJACOBI_H
+#include <QPushButton>
 #include <QDialog>
 #include "symboljacobi.h"
 
@@ -16,7 +17,7 @@ enum class SymbolJacobiOptions {
 class DialogSymbolJacobi : public QDialog {
     Q_OBJECT
 public:
-    explicit DialogSymbolJacobi(QWidget *parent = nullptr);
+    explicit DialogSymbolJacobi(QWidget *parent = nullptr, bool mode = false);
     ~DialogSymbolJacobi();
 signals:
     void dialogSymbolJacobiMeta(int);
@@ -32,7 +33,7 @@ private slots:
     void on_btnNotEvenPrimes_clicked();
 
 private:
-    int count;
+    int count; bool isCancelExist;
     Ui::DialogSymbolJacobi *ui;
 };
 
