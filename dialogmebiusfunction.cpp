@@ -39,8 +39,7 @@ void DialogMebiusFunction::on_buttonBox_accepted()
     if (ui->btnPrimeDegree->isChecked()) count += ui->spinPrimeDegree->value();
     if (ui->btnEvenPrimes->isChecked()) count += ui->spinEvenPrimes->value();
     if (ui->btnNotEvenPrimes->isChecked()) count += ui->spinNotEvenPrimes->value();
-
-
+    emit dialogMebiusFunctionMeta(count);
     if (ui->btnDefault->isChecked())
         emit dialogMebiusFunction(ui->spinDefault->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, MebiusFunctionOptions::Default);
     if (ui->btnPrimes->isChecked())
@@ -51,7 +50,6 @@ void DialogMebiusFunction::on_buttonBox_accepted()
         emit dialogMebiusFunction(ui->spinNotEvenPrimes->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, MebiusFunctionOptions::NotEvenPrimes);
     if (ui->btnPrimeDegree->isChecked())
         emit dialogMebiusFunction(ui->spinPrimeDegree->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, MebiusFunctionOptions::PrimeDegree);
-    emit dialogMebiusFunctionMeta(count);
     if (isCancelExist) close();
 }
 

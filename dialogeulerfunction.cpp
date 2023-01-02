@@ -39,7 +39,7 @@ void DialogEulerFunction::on_buttonBox_accepted()
     if (ui->btnPrimeDegree->isChecked()) count += ui->spinPrimeDegree->value();
     if (ui->btnMultiplyPrimes->isChecked()) count += ui->spinMultiplyPrimes->value();
     if (ui->btnMultiplyPrimesDegree->isChecked()) count += ui->spinMultiplyPrimesDegree->value();
-
+    emit dialogEulerFunctionMeta(count);
     if (ui->btnDefault->isChecked())
         emit dialogEulerFunction(ui->spinDefault->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, EulerFunctionOptions::Default);
     if (ui->btnPrime->isChecked())
@@ -50,7 +50,6 @@ void DialogEulerFunction::on_buttonBox_accepted()
         emit dialogEulerFunction(ui->spinMultiplyPrimes->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, EulerFunctionOptions::MultiplyPrimes);
     if (ui->btnMultiplyPrimesDegree->isChecked())
         emit dialogEulerFunction(ui->spinMultiplyPrimesDegree->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, EulerFunctionOptions::MultiplyPrimesDegrees);
-    emit dialogEulerFunctionMeta(count);
     if (isCancelExist) close();
 }
 

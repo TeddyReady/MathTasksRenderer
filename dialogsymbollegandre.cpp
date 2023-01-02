@@ -44,8 +44,7 @@ void DialogSymbolLegandre::on_buttonBox_accepted()
     if (ui->btn1->isChecked()) count += ui->spin1->value();
     if (ui->btn2->isChecked()) count += ui->spin2->value();
     if (ui->btnNotEvenPrimes->isChecked()) count += ui->spinNotEvenPrimes->value();
-
-
+    emit dialogSymbolLegandreMeta(count);
     if (ui->btnDefault->isChecked())
         emit dialogSymbolLegandre(ui->spinDefault->value(), tmp[0], tmp[1], SymbolLegandreOptions::Default);
     if (ui->btnPrimes->isChecked())
@@ -56,7 +55,6 @@ void DialogSymbolLegandre::on_buttonBox_accepted()
         emit dialogSymbolLegandre(ui->spinNotEvenPrimes->value(), tmp[0], tmp[1], SymbolLegandreOptions::NotEvenPrimes);
     if (ui->btn2->isChecked())
         emit dialogSymbolLegandre(ui->spin2->value(), std::make_pair(2, 3), tmp[1], SymbolLegandreOptions::aEqual2);
-    emit dialogSymbolLegandreMeta(count);
     if (isCancelExist) close();
 }
 

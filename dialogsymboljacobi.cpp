@@ -44,8 +44,7 @@ void DialogSymbolJacobi::on_buttonBox_accepted()
     if (ui->btn1->isChecked()) count += ui->spin1->value();
     if (ui->btn2->isChecked()) count += ui->spin2->value();
     if (ui->btnNotEvenPrimes->isChecked()) count += ui->spinNotEvenPrimes->value();
-
-
+    emit dialogSymbolJacobiMeta(count);
     if (ui->btnDefault->isChecked())
         emit dialogSymbolJacobi(ui->spinDefault->value(), tmp[0], tmp[1], SymbolJacobiOptions::Default);
     if (ui->btnPrimes->isChecked())
@@ -55,8 +54,7 @@ void DialogSymbolJacobi::on_buttonBox_accepted()
     if (ui->btnNotEvenPrimes->isChecked())
         emit dialogSymbolJacobi(ui->spinNotEvenPrimes->value(), tmp[0], tmp[1], SymbolJacobiOptions::NotEvenPrimes);
     if (ui->btn2->isChecked())
-        emit dialogSymbolJacobi(ui->spin2->value(), std::make_pair(2, 3), tmp[1], SymbolJacobiOptions::aEqual2);
-    emit dialogSymbolJacobiMeta(count);
+        emit dialogSymbolJacobi(ui->spin2->value(), std::make_pair(2, 3), tmp[1], SymbolJacobiOptions::aEqual2);    
     if (isCancelExist) close();
 }
 

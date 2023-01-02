@@ -47,7 +47,7 @@
          <widget class="QListWidget" name="tasksList">
           <property name="maximumSize">
            <size>
-            <width>170</width>
+            <width>220</width>
             <height>16777215</height>
            </size>
           </property>
