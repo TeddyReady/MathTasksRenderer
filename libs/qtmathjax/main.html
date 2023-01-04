@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <!-- Thanks to MathJax examples for some of this code -->
+  <head>
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <script type="text/javascript"
+            src="MathJax/MathJax.js?config=TeX-AMS-MML_SVG"
+            ></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <script>
+      //MathJax.Hub.Config({
+        //jax: ["input/TeX", "output/HTML-CSS"],
+        //displayAlign: "left"
+      //});
+      MathJax.Hub.signal.Interest( function ( message ) {
+        if ( message[0] == 'End Update' )
+          qtapp.MathJaxDone();
+        else if ( /error/.test( message[0] ) )
+          qtapp.MathJaxError( message[1] );
+//        else
+//          qtapp.MathJaxError( message.join( ';' ) );
+      } );
+      window.UpdateMath = function ( TeX ) {
+        try {
+          if ( ( TeX.substr( 0, 2 ) == '$$' )
+            && ( TeX.substr( TeX.length-2 ) == '$$' ) )
+            TeX = "\\displaystyle{" + TeX.substr( 2, TeX.length-4 )
+                + "}";
+          else if ( ( TeX[0] == '$' )
+                 && ( TeX[TeX.length-1] == '$' ) )
+            TeX = "\\textstyle{" + TeX.substr( 1, TeX.length-2 )
+                + "}";
+          else
+            TeX = "\\displaystyle{" + TeX + "}";
+          MathJax.Hub.queue.Push(
+            [ "Text",
+              MathJax.Hub.getAllJax( "MathOutput" )[0],
+              TeX ] );
+        } catch ( e ) {
+          throw e + '\nmath = ' + math + '\nTeX = ' + TeX;
+        }
+        return 'started';
+      }
+    </script>
+
+    <div id="MathOutput" class="output">$${}$$</div>
+  </body>
+</html>

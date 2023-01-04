@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
     QFile styleFile(":/general/style.css");
     styleFile.open(QFile::ReadOnly);
     app.setStyleSheet(styleFile.readAll());
+    styleFile.close();
     QThread::msleep(1500);
     splash->showMessage("Загружаем приложение...", location, Qt::black);
     GeneratorWindow *mainWindow = new GeneratorWindow;

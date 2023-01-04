@@ -3,11 +3,11 @@
 #include <QDialog>
 #include <QDebug>
 
+using tasks_type = QVector<std::pair<QString, QString>>;
+
 namespace Ui {
 class DialogResults;
 }
-
-using tasks_type = QVector<std::pair<QString, QString>>;
 
 class DialogResults : public QDialog {
     Q_OBJECT

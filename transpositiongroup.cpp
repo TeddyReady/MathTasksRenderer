@@ -121,16 +121,16 @@ QString TranspositionGroup::writeToMode(ViewMode mode){
     QString result;
     switch (mode) {
     case ViewMode::Cycle:
+        //сортировка нужна!
         for (int i = 0; i < tp.size(); i++) {
             for (int j = 0; j < tp[i].size(); j++){
                 if (tp[i].size() > 1) {
-                    if (j == 0) result += "{" + QString::number(tp[i][j]) + ", ";
+                    if (j == 0) result += "(" + QString::number(tp[i][j]) + ", ";
                     else if (j == tp[i].size() - 1)
-                        result += QString::number(tp[i][j]) + "}";
+                        result += QString::number(tp[i][j]) + ")";
                     else
                         result += QString::number(tp[i][j]) + ", ";
                 }
-                else result += "(" + QString::number(tp[i][j]) + ")";
             }
         } break;
     case ViewMode::Standart:
@@ -151,11 +151,16 @@ QString TranspositionGroup::writeToMode(ViewMode mode){
                     tmp[tp[i][j] - 1] = tp[i][j];
                 }
             }
-        } result += "(";
+        } result += "\\left(\\begin{smallmatrix}";
+        for (int i = 0; i < tmp.size(); i++) {
+            result += QString::number(i + 1);
+            if (i + 1 != tmp.size()) result += "&";
+            else result += "\\\\";
+        }
         for (int i = 0; i < tmp.size(); i++) {
             if (i != tmp.size() - 1)
-                result += QString::number(tmp[i]) + ", ";
-            else result += QString::number(tmp[i]) + ")";
+                result += QString::number(tmp[i]) + " & ";
+            else result += QString::number(tmp[i]) + "\\end{smallmatrix}\\right)";
         }
     }
     return result;
@@ -226,8 +231,8 @@ QString TranspositionGroup::cycleType(){
     for (int i = 1; i <= result.size(); i++) {
         if (result[i] != 0) {
             if (i != result.size())
-                str += QString::number(i) + "<sup>" + QString::number(result[i]) + "</sup>, ";
-            else str += QString::number(i) + "<sup>" + QString::number(result[i]) + "</sup>";
+                str += QString::number(i) + "^" + QString::number(result[i]) + ",";
+            else str += QString::number(i) + "^" + QString::number(result[i]);
         }
     }
     str += "]";

@@ -13,6 +13,7 @@
 #include "dialogmebiusfunction.h"
 #include "dialogeulerfunction.h"
 #include "dialogsymboljacobi.h"
+#include "texengine.h"
 #include "testmode.h"
 
 QT_BEGIN_NAMESPACE
@@ -30,6 +31,7 @@ class GeneratorWindow : public QMainWindow {
 private:
     void saveSettings();
     void uploadSettings();
+    void isReadyRender();
 public:
     explicit GeneratorWindow(QWidget *parent = nullptr);
     ~GeneratorWindow();
@@ -51,21 +53,22 @@ public slots:
     void slotDialogTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode);
 private slots:
     void on_genButton_clicked();
-    void on_actionTXT_triggered();
     void on_actionQuit_triggered();
     void on_comboBox_currentTextChanged(const QString &task);
     void on_tabWidget_currentChanged(int index);
     void on_pushButton_clicked();
 
 private:
-    int count;
+    int totalTestTasks, totalTaskCount, curTaskCount;
     bool mode;
-    QVector<QString> generatedTasks, generatedData;
+    QVector<QString> generatedData;
     tasks_type *tasksForTest;
+    QString *tasksForWork;
     QFile file;
     QRandomGenerator *random;
     QAction *testMode, *workMode;
     QSettings *settings;
+    TeXEngine *engine;
     Ui::GeneratorWindow *ui;
 };
-#endif
+#endif //GENERATORWINDOW_H

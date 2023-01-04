@@ -2,8 +2,10 @@
 #include "ui_generatorwindow.h"
 
 GeneratorWindow::GeneratorWindow(QWidget *parent)
-    : QMainWindow(parent), count(1), mode(false),
+    : QMainWindow(parent), totalTestTasks(0),
+      totalTaskCount(0), curTaskCount(0), mode(false),
       tasksForTest(new tasks_type),
+      tasksForWork(new QString("\\color{sienna}{")),
       random(QRandomGenerator::global()),
       ui(new Ui::GeneratorWindow)
 {
@@ -12,9 +14,10 @@ GeneratorWindow::GeneratorWindow(QWidget *parent)
 
     ui->setupUi(this);
     ui->genButton->setEnabled(true);
-    ui->taskView->append("<!Doctype HTML>");
     ui->webView->load(QUrl("qrc:/web/index.html"));
     ui->mainLayout->addWidget(new DialogTranspositionGroup(this, true));
+
+    engine = new TeXEngine(ui->taskView);
 
     setAttribute(Qt::WA_DeleteOnClose);
 }
@@ -22,7 +25,10 @@ GeneratorWindow::~GeneratorWindow()
 {
     saveSettings();
     random = nullptr;
-    delete tasksForTest; delete ui;
+    delete engine;
+    delete tasksForTest;
+    delete tasksForWork;
+    delete ui;
 }
 
 void GeneratorWindow::saveSettings()
@@ -32,6 +38,16 @@ void GeneratorWindow::saveSettings()
 void GeneratorWindow::uploadSettings()
 {
     setGeometry(settings->value("windowSize").toRect());
+}
+
+void GeneratorWindow::isReadyRender(){
+    if (curTaskCount == totalTaskCount) {
+        *tasksForWork += "}";
+        engine->TeX2SVG(*tasksForWork);
+        tasksForWork->chop(1);
+        totalTaskCount = 0;
+        curTaskCount = 0;
+    }
 }
 
 void GeneratorWindow::on_tabWidget_currentChanged(int index)
@@ -62,14 +78,15 @@ void GeneratorWindow::on_pushButton_clicked()
         TestMode *testWindow = new TestMode(this, tasksForTest);
         testWindow->setWindowTitle("Тест");
         testWindow->show();
-        ui->lcdNumber->display(0);
+        totalTestTasks = 0;
+        ui->lcdNumber->display(totalTestTasks);
     }
 }
 
 void GeneratorWindow::on_genButton_clicked()
 {
     if (ui->tasksList->currentItem() == nullptr) {
-        ui->taskView->append("Перед генерацией выберите типаж задания!");
+        statusBar()->showMessage("Перед генерацией выберите типаж задания!");
         return;
     }
     if (ui->tasksList->currentItem()->text() == "Функция Эйлера") {
@@ -114,53 +131,7 @@ void GeneratorWindow::on_genButton_clicked()
                 this, SLOT(slotDialogTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode)));
     }
 }
-void GeneratorWindow::on_actionTXT_triggered()
-{
-    QString path = QFileDialog::getSaveFileName(0, QObject::tr("Сохранить задания"),
-        "/home/kataich75/qtprojects/TasksGenerator/tests/test_" +
-        QDateTime::currentDateTime().toString("dd.MM.yyyy") + "_" +
-        QDateTime::currentDateTime().toString("hh:mm:ss") + ".txt", QObject::tr("TXT files (*.txt)"));
-    file.setFileName(path);
-    if (file.open(QIODevice::WriteOnly)) {
-        QTextStream out(&file);
-        int taskIndex = 0;
-        for (int i = 0; i < generatedTasks.size(); i += 2) {
-            int task = generatedTasks[i].toInt();
-            int countOfTasks = generatedTasks[i + 1].toInt();
-            out << task << " " << countOfTasks << "\n";
-            switch (task) {
-            case TaskEulerFunction:
-                for (int j = 0; j < countOfTasks; j++) {
-                    out << generatedData[taskIndex] << " " << generatedData[taskIndex + 1] << "\n";
-                    taskIndex += 2;
-                } break;
-            case TaskMebiusFunction:
-                for (int j = 0; j < countOfTasks; j++) {
-                    out << generatedData[taskIndex] << " " << generatedData[taskIndex + 1] << "\n";
-                    taskIndex += 2;
-                } break;
-            case TaskSymbolLegandre:
-                for (int j = 0; j < countOfTasks; j++) {
-                    out << generatedData[taskIndex] << " " << generatedData[taskIndex + 1]
-                        << " " << generatedData[taskIndex + 2] << "\n";
-                    taskIndex += 3;
-                } break;
-            case TaskSymbolJacobi:
-                for (int j = 0; j < countOfTasks; j++) {
-                    out << generatedData[taskIndex] << " " << generatedData[taskIndex + 1]
-                        << " " << generatedData[taskIndex + 2] << "\n";
-                    taskIndex += 3;
-                } break;
-            case TaskTranspositionGroup:
-                for (int j = 0; j < countOfTasks; j++) {
-                    out << generatedData[taskIndex] << " " << generatedData[taskIndex + 1] << "\n";
-                    taskIndex += 2;
-                } break;
-            }
-        }
-    }
-    file.close();
-}
+
 void GeneratorWindow::on_actionQuit_triggered()
 {
     qApp->exit();
@@ -168,12 +139,16 @@ void GeneratorWindow::on_actionQuit_triggered()
 
 void GeneratorWindow::slotDialogEulerFunctionMeta(int countOfTasks)
 {
-    generatedTasks.push_back(QString::number(TaskEulerFunction));
-    generatedTasks.push_back(QString::number(countOfTasks));
     if (countOfTasks > 0) {
-        count = 1;
-        if (mode) statusBar()->showMessage("Задания на функцию Эйлера сгенерированы!", 1500);
-        else ui->taskView->append("<h3>Вычислите функцию Эйлера:</h3>");
+        curTaskCount = 1;
+        if (mode) {
+            totalTestTasks += countOfTasks;
+            statusBar()->showMessage("Задания на функцию Эйлера сгенерированы!", 1500);
+            ui->lcdNumber->display(totalTestTasks);
+        } else {
+            totalTaskCount = countOfTasks;
+            *tasksForWork += "Вычислите~функцию~Эйлера:\\\\";
+        }
     }
 }
 void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int maxNum, EulerFunctionOptions option)
@@ -184,28 +159,24 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
         for (int i = 0; i < countOfTasks; i++) {
             task.setTask(random->bounded(minNum, maxNum));
             if (!mode) {
-                ui->taskView->append(QString::number(count)  + ") φ(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()));
-                generatedData.push_back(QString::number(task.getTask()));
-                generatedData.push_back(QString::number(task.solve()));
+                *tasksForWork += QString::number(curTaskCount)  + ")~φ(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
+                isReadyRender();
             } else {
                 QString taskText = "Вычислите функцию Эйлера:\nφ(" + QString::number(task.getTask()) + ") = ?";
                 tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                ui->lcdNumber->display(tasksForTest->size());
-            } count++;
+            } curTaskCount++;
         } break;
     case EulerFunctionOptions::Primes:
         for (int i = 0; i < countOfTasks;) {
             task.setTask(random->bounded(minNum, maxNum));
             if (isPrime(task.getTask())) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") φ(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask()));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~φ(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
+                    isReadyRender();
                 } else {
                     QString taskText = "Вычислите функцию Эйлера:\nφ(" + QString::number(task.getTask()) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     case EulerFunctionOptions::PrimesDegrees:
@@ -214,14 +185,12 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
             auto data = decompositionToSimple(task.getTask());
             if (data.size() == 1 && data[0].second > 1) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") φ(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask()));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~φ(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
+                    isReadyRender();
                 } else {
                     QString taskText = "Вычислите функцию Эйлера:\nφ(" + QString::number(task.getTask()) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     case EulerFunctionOptions::MultiplyPrimes:
@@ -237,14 +206,12 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
                 }
             } if (accessFlag) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") φ(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask()));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~φ(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
+                    isReadyRender();
                 } else {
                     QString taskText = "Вычислите функцию Эйлера:\nφ(" + QString::number(task.getTask()) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     case EulerFunctionOptions::MultiplyPrimesDegrees:
@@ -260,26 +227,26 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
                 }
             } if (accessFlag) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") φ(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask()));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~φ(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
+                    isReadyRender();
                 } else {
                     QString taskText = "Вычислите функцию Эйлера:\nφ(" + QString::number(task.getTask()) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     }
 }
 
 void GeneratorWindow::slotDialogMebiusFunctionMeta(int countOfTasks){
-    generatedTasks.push_back(QString::number(TaskMebiusFunction));
-    generatedTasks.push_back(QString::number(countOfTasks));
-    if (countOfTasks > 0) {
-        count = 1;
-        if (mode) statusBar()->showMessage("Задания на функцию Мёбиуса сгенерированы!", 1500);
-        else ui->taskView->append("<h3>Вычислите функцию Мёбиуса:</h3>");
+    curTaskCount = 1;
+    if (mode) {
+        totalTestTasks += countOfTasks;
+        statusBar()->showMessage("Задания на функцию Мёбиуса сгенерированы!", 1500);
+        ui->lcdNumber->display(totalTestTasks);
+    } else {
+        totalTaskCount = countOfTasks;
+        *tasksForWork += "Вычислите~функцию~Мёбиуса:\\\\";
     }
 }
 void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int maxNum, MebiusFunctionOptions option){
@@ -289,28 +256,24 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
         for (int i = 0; i < countOfTasks; i++) {
             task.setTask(random->bounded(minNum, maxNum));
             if (!mode) {
-                ui->taskView->append(QString::number(count)  + ") μ(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()));
-                generatedData.push_back(QString::number(task.getTask()));
-                generatedData.push_back(QString::number(task.solve()));
+                *tasksForWork += QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
+                isReadyRender();
             } else {
                 QString taskText = "Вычислите функцию Мёбиуса:\nμ(" + QString::number(task.getTask()) + ") = ?";
                 tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                ui->lcdNumber->display(tasksForTest->size());
-            } count++;
+            } curTaskCount++;
         } break;
     case MebiusFunctionOptions::Primes:
         for (int i = 0; i < countOfTasks;) {
             task.setTask(random->bounded(minNum, maxNum));
             if (!isPrime(task.getTask())) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") μ(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask()));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
+                    isReadyRender();
                 } else {
                     QString taskText = "Вычислите функцию Мёбиуса:\nμ(" + QString::number(task.getTask()) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     case MebiusFunctionOptions::EvenPrimes:
@@ -328,14 +291,12 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
             }
             if (accessFlag) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") μ(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask()));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
+                    isReadyRender();
                 } else {
                     QString taskText = "Вычислите функцию Мёбиуса:\nμ(" + QString::number(task.getTask()) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     case MebiusFunctionOptions::NotEvenPrimes:
@@ -353,14 +314,12 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
             }
             if (accessFlag) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") μ(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask()));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
+                    isReadyRender();
                 } else {
                     QString taskText = "Вычислите функцию Мёбиуса:\nμ(" + QString::number(task.getTask()) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     case MebiusFunctionOptions::PrimeDegree:
@@ -376,26 +335,26 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
             }
             if (accessFlag) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") μ(" + QString::number(task.getTask()) + ") = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask()));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
+                    isReadyRender();
                 } else {
                     QString taskText = "Вычислите функцию Мёбиуса:\nμ(" + QString::number(task.getTask()) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     }
 }
 
 void GeneratorWindow::slotDialogSymbolLegandreMeta(int countOfTasks){
-    generatedTasks.push_back(QString::number(TaskSymbolLegandre));
-    generatedTasks.push_back(QString::number(countOfTasks));
-    if (countOfTasks > 0) {
-        count = 1;
-        if (mode) statusBar()->showMessage("Задания на символ Лежандра сгенерированы!", 1500);
-        else ui->taskView->append("<h3>Вычислите символ Лежандра:</h3>");
+    curTaskCount = 1;
+    if (mode) {
+        totalTestTasks += countOfTasks;
+        statusBar()->showMessage("Задания на символ Лежандра сгенерированы!", 1500);
+        ui->lcdNumber->display(totalTestTasks);
+    } else {
+        totalTaskCount = countOfTasks;
+        *tasksForWork += "Вычислите~символ~Лежандра:\\\\";
     }
 }
 void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, int> a, std::pair<int, int> p, SymbolLegandreOptions option){
@@ -406,17 +365,14 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (isPrime(task.getTask().second)) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") (<sup>" + QString::number(task.getTask().first) +
-                        "</sup>/<sub>" + QString::number(task.getTask().second) + "</sub>) = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask().first));
-                    generatedData.push_back(QString::number(task.getTask().second));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
+                       "}\\right)=" + QString::number(task.solve()) + "\\\\"; isReadyRender();
                 } else {
                     QString taskText = "Вычислите символ Лежандра:\nL(" + QString::number(task.getTask().first) +
                             " / " + QString::number(task.getTask().second) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     case SymbolLegandreOptions::Primes:
@@ -424,17 +380,14 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (isPrime(task.getTask().second) && !isPrime(task.getTask().first)) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") (<sup>" + QString::number(task.getTask().first) +
-                        "</sup>/<sub>" + QString::number(task.getTask().second) + "</sub>) = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask().first));
-                    generatedData.push_back(QString::number(task.getTask().second));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
+                       "}\\right)=" + QString::number(task.solve()) + "\\\\"; isReadyRender();
                 } else {
                     QString taskText = "Вычислите символ Лежандра:\nL(" + QString::number(task.getTask().first) +
                             " / " + QString::number(task.getTask().second) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     case SymbolLegandreOptions::aEqual_1:
@@ -442,17 +395,14 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (isPrime(task.getTask().second)) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") (<sup>" + QString::number(task.getTask().first) +
-                        "</sup>/<sub>" + QString::number(task.getTask().second) + "</sub>) = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask().first));
-                    generatedData.push_back(QString::number(task.getTask().second));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
+                       "}\\right)=" + QString::number(task.solve()) + "\\\\"; isReadyRender();
                 } else {
                     QString taskText = "Вычислите символ Лежандра:\nL(" + QString::number(task.getTask().first) +
                             " / " + QString::number(task.getTask().second) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     case SymbolLegandreOptions::aEqual2:
@@ -460,17 +410,14 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (isPrime(task.getTask().second)) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") (<sup>" + QString::number(task.getTask().first) +
-                        "</sup>/<sub>" + QString::number(task.getTask().second) + "</sub>) = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask().first));
-                    generatedData.push_back(QString::number(task.getTask().second));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
+                       "}\\right)=" + QString::number(task.solve()) + "\\\\"; isReadyRender();
                 } else {
                     QString taskText = "Вычислите символ Лежандра:\nL(" + QString::number(task.getTask().first) +
                             " / " + QString::number(task.getTask().second) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     case SymbolLegandreOptions::NotEvenPrimes:
@@ -478,29 +425,28 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (isPrime(task.getTask().second) && !isPrime(task.getTask().first) && task.getTask().first % 2 != 0) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") (<sup>" + QString::number(task.getTask().first) +
-                        "</sup>/<sub>" + QString::number(task.getTask().second) + "</sub>) = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask().first));
-                    generatedData.push_back(QString::number(task.getTask().second));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
+                       "}\\right)=" + QString::number(task.solve()) + "\\\\"; isReadyRender();
                 } else {
                     QString taskText = "Вычислите символ Лежандра:\nL(" + QString::number(task.getTask().first) +
                             " / " + QString::number(task.getTask().second) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     }
 }
 
 void GeneratorWindow::slotDialogSymbolJacobiMeta(int countOfTasks){
-    generatedTasks.push_back(QString::number(TaskSymbolJacobi));
-    generatedTasks.push_back(QString::number(countOfTasks));
-    if (countOfTasks > 0) {
-        count = 1;
-        if (mode) statusBar()->showMessage("Задания на символ Якоби сгенерированы!", 1500);
-        else ui->taskView->append("<h3>Вычислите символ Якоби:</h3>");
+    curTaskCount = 1;
+    if (mode) {
+        totalTestTasks += countOfTasks;
+        statusBar()->showMessage("Задания на символ Якоби сгенерированы!", 1500);
+        ui->lcdNumber->display(totalTestTasks);
+    } else {
+        totalTaskCount = countOfTasks;
+        *tasksForWork += "Вычислите~символ~Якоби:\\\\";
     }
 }
 void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, int> a, std::pair<int, int> p, SymbolJacobiOptions option){
@@ -511,17 +457,14 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (!isPrime(task.getTask().second) && task.getTask().second % 2 != 0) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") (<sup>" + QString::number(task.getTask().first) +
-                        "</sup>/<sub>" + QString::number(task.getTask().second) + "</sub>) = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask().first));
-                    generatedData.push_back(QString::number(task.getTask().second));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
+                       "}\\right)=" + QString::number(task.solve()) + "\\\\"; isReadyRender();
                 } else {
                     QString taskText = "Вычислите символ Якоби:\nJ(" + QString::number(task.getTask().first) +
                             " / " + QString::number(task.getTask().second) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     case SymbolJacobiOptions::Primes:
@@ -529,17 +472,14 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (!isPrime(task.getTask().second) && !isPrime(task.getTask().first) && task.getTask().second % 2 != 0) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") (<sup>" + QString::number(task.getTask().first) +
-                        "</sup>/<sub>" + QString::number(task.getTask().second) + "</sub>) = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask().first));
-                    generatedData.push_back(QString::number(task.getTask().second));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
+                       "}\\right)=" + QString::number(task.solve()) + "\\\\"; isReadyRender();
                 } else {
                     QString taskText = "Вычислите символ Якоби:\nJ(" + QString::number(task.getTask().first) +
                             " / " + QString::number(task.getTask().second) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     case SymbolJacobiOptions::aEqual_1:
@@ -547,17 +487,14 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (!isPrime(task.getTask().second) && task.getTask().second % 2 != 0) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") (<sup>" + QString::number(task.getTask().first) +
-                        "</sup>/<sub>" + QString::number(task.getTask().second) + "</sub>) = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask().first));
-                    generatedData.push_back(QString::number(task.getTask().second));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
+                       "}\\right)=" + QString::number(task.solve()) + "\\\\"; isReadyRender();
                 } else {
                     QString taskText = "Вычислите символ Якоби:\nJ(" + QString::number(task.getTask().first) +
                             " / " + QString::number(task.getTask().second) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     case SymbolJacobiOptions::aEqual2:
@@ -565,17 +502,14 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (!isPrime(task.getTask().second) && task.getTask().second % 2 != 0) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") (<sup>" + QString::number(task.getTask().first) +
-                        "</sup>/<sub>" + QString::number(task.getTask().second) + "</sub>) = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask().first));
-                    generatedData.push_back(QString::number(task.getTask().second));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
+                       "}\\right)=" + QString::number(task.solve()) + "\\\\"; isReadyRender();
                 } else {
                     QString taskText = "Вычислите символ Якоби:\nJ(" + QString::number(task.getTask().first) +
                             " / " + QString::number(task.getTask().second) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     case SymbolJacobiOptions::NotEvenPrimes:
@@ -583,157 +517,164 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (!isPrime(task.getTask().second) && !isPrime(task.getTask().first) && task.getTask().first % 2 != 0 && task.getTask().second % 2 != 0) {
                 if (!mode) {
-                    ui->taskView->append(QString::number(count)  + ") (<sup>" + QString::number(task.getTask().first) +
-                        "</sup>/<sub>" + QString::number(task.getTask().second) + "</sub>) = " + QString::number(task.solve()));
-                    generatedData.push_back(QString::number(task.getTask().first));
-                    generatedData.push_back(QString::number(task.getTask().second));
-                    generatedData.push_back(QString::number(task.solve()));
+                    *tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
+                       "}\\right)=" + QString::number(task.solve()) + "\\\\"; isReadyRender();
                 } else {
                     QString taskText = "Вычислите символ Якоби:\nJ(" + QString::number(task.getTask().first) +
                             " / " + QString::number(task.getTask().second) + ") = ?";
                     tasksForTest->push_back(std::make_pair(taskText, QString::number(task.solve())));
-                    ui->lcdNumber->display(tasksForTest->size());
-                } i++; count++;
+                } i++; curTaskCount++;
             }
         } break;
     }
 }
 
 void GeneratorWindow::slotDialogTranspositionGroupMeta(int countOfTasks){
-    generatedTasks.push_back(QString::number(TaskTranspositionGroup));
-    generatedTasks.push_back(QString::number(countOfTasks));
-    if (countOfTasks > 0 && !mode)
+    curTaskCount = 1;
+    totalTaskCount = countOfTasks;
+    if (mode) {
+        totalTestTasks += countOfTasks;
         statusBar()->showMessage("Задачи на группу подстановок сгенерированы!", 1500);
+        ui->lcdNumber->display(totalTestTasks);
+    }
 }
 void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, int maxN, TranspositionGroupOptions option, ViewMode mode){
     TranspositionGroup task, task2, result;
     switch (option) {
     case TranspositionGroupOptions::Write:
-        if (countOfTasks > 0) count = 1;
+        if (countOfTasks > 0) curTaskCount = 1;
+        else return;
+
         if (mode == ViewMode::Standart)
-              ui->taskView->append("<h3>Запишите подстановку в произведение независимых циклов:</h3>");
-        else ui->taskView->append("<h3>Запишите подстановку в каноническом виде:</h3>");
+              *tasksForWork += "Запишите~подстановку~в~виде~произведения~независимых~циклов:\\\\";
+        else *tasksForWork += "Запишите~подстановку~в~табличном~виде:\\\\";
         for (int i = 0; i < countOfTasks;) {
             task.setTask(random->bounded(minN, maxN), mode);
-            if (task.getViewMode() == ViewMode::Standart) {
-                ui->taskView->append(QString::number(count)  + ") S<sub>" + QString::number(task.getTask()) + "</sub>: " + task.writeToMode(ViewMode::Standart) + " = " + task.writeToMode(ViewMode::Cycle));
-                generatedData.push_back(task.writeToMode(ViewMode::Standart));
-                generatedData.push_back(task.writeToMode(ViewMode::Cycle));
-            } else {
-                ui->taskView->append(QString::number(count)  + ") S<sub>" + QString::number(task.getTask()) + "</sub>: " + task.writeToMode(ViewMode::Cycle) + " = " + task.writeToMode(ViewMode::Standart));
-                generatedData.push_back(task.writeToMode(ViewMode::Cycle));
-                generatedData.push_back(task.writeToMode(ViewMode::Standart));
-            } i++; count++;
+            if (!this->mode) {
+                if (task.getViewMode() == ViewMode::Standart)
+                    *tasksForWork += QString::number(curTaskCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=" + task.writeToMode(ViewMode::Cycle) + "\\\\";
+                else *tasksForWork += QString::number(curTaskCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=" + task.writeToMode(ViewMode::Standart) + "\\\\";
+                isReadyRender(); i++; curTaskCount++;
+            } else {}
         } break;
+
     case TranspositionGroupOptions::Multiply:
-        if (countOfTasks > 0) count = 1;
+        if (countOfTasks > 0) curTaskCount = 1;
+        else return;
+
         if (mode == ViewMode::Standart)
-              ui->taskView->append("<h3>Найдите произведение подстановок, записанных в каноническом виде:</h3>");
-        else ui->taskView->append("<h3>Найдите произведение подстановок, записанных в циклическом виде:</h3>");
+              *tasksForWork += "Найдите~произведение~подстановок,~записанных~в~табличном~виде:\\\\";
+        else *tasksForWork += "Найдите~произведение~подстановок,~записанных~в~циклическом~виде:\\\\";
         for (int i = 0; i < countOfTasks;) {
             int n = static_cast<int>(random->bounded(minN, maxN));
             task.setTask(n, mode);
             task2.setTask(n, mode);
             result = task * task2;
-            if (task.getViewMode() == ViewMode::Standart) {
-                ui->taskView->append(QString::number(count)  + ") S<sub>" + QString::number(task.getTask()) + "</sub>: " + task.writeToMode(ViewMode::Standart) + " · " +
-                     task2.writeToMode(ViewMode::Standart) + " = " + result.writeToMode(ViewMode::Standart));
-                generatedData.push_back(task.writeToMode(ViewMode::Standart) + " " + task2.writeToMode(ViewMode::Standart));
-                generatedData.push_back(result.writeToMode(ViewMode::Standart));
-            } else {
-                ui->taskView->append(QString::number(count)  + ") S<sub>" + QString::number(task.getTask()) + "</sub>: " + task.writeToMode(ViewMode::Cycle) + " · " +
-                     task2.writeToMode(ViewMode::Cycle) + " = " + result.writeToMode(ViewMode::Cycle));
-                generatedData.push_back(task.writeToMode(ViewMode::Cycle) + " " + task2.writeToMode(ViewMode::Cycle));
-                generatedData.push_back(result.writeToMode(ViewMode::Cycle));
-            } i++; count++;
+            if (!this->mode) {
+                if (task.getViewMode() == ViewMode::Standart)
+                    *tasksForWork += QString::number(curTaskCount) + ")~S_{" + QString::number(task.getTask()) + "}:" +
+                     task.writeToMode(ViewMode::Standart) + "·" + task2.writeToMode(ViewMode::Standart) + "=" + result.writeToMode(ViewMode::Standart) + "\\\\";
+                else *tasksForWork += QString::number(curTaskCount) + ")~S_{" + QString::number(task.getTask()) + "}:" +
+                     task.writeToMode(ViewMode::Cycle) + "·" + task2.writeToMode(ViewMode::Cycle) + "=" + result.writeToMode(ViewMode::Cycle) + "\\\\";
+                isReadyRender(); i++; curTaskCount++;
+            } else {}
         } break;
+
     case TranspositionGroupOptions::Inverse:
-        if (countOfTasks > 0) count = 1;
+        if (countOfTasks > 0) curTaskCount = 1;
+        else return;
+
         if (mode == ViewMode::Standart)
-              ui->taskView->append("<h3>Найдите подстановку, обратную данной, записанной в каноническом виде:</h3>");
-        else ui->taskView->append("<h3>Найдите подстановку, обратную данной, записанной в циклическом виде:</h3>");
+              *tasksForWork += "Найдите~подстановку,~обратную~данной,~записанной~в~табличном~виде:\\\\";
+        else *tasksForWork += "Найдите~подстановку,~обратную~данной,~записанной~в~циклическом~виде:\\\\";
         for (int i = 0; i < countOfTasks;) {
             task.setTask(random->bounded(minN, maxN), mode);
             result = ~task;
-            if (task.getViewMode() == ViewMode::Standart) {
-                ui->taskView->append(QString::number(count)  + ") S<sub>" + QString::number(task.getTask()) + "</sub>: " + task.writeToMode(ViewMode::Standart) + " = " +
-                     result.writeToMode(ViewMode::Standart));
-                generatedData.push_back(task.writeToMode(ViewMode::Standart));
-                generatedData.push_back(result.writeToMode(ViewMode::Standart));
-            } else {
-                ui->taskView->append(QString::number(count)  + ") S<sub>" + QString::number(task.getTask()) + "</sub>: " + task.writeToMode(ViewMode::Cycle) + " = " +
-                     result.writeToMode(ViewMode::Cycle));
-                generatedData.push_back(task.writeToMode(ViewMode::Cycle));
-                generatedData.push_back(result.writeToMode(ViewMode::Cycle));
-            } i++; count++;
+            if (!this->mode) {
+                if (task.getViewMode() == ViewMode::Standart)
+                    *tasksForWork += QString::number(curTaskCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=" +
+                         result.writeToMode(ViewMode::Standart) + "\\\\";
+                else *tasksForWork += QString::number(curTaskCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=" +
+                         result.writeToMode(ViewMode::Cycle) + "\\\\";
+                isReadyRender(); i++; curTaskCount++;
+            } else {}
         } break;
+
     case TranspositionGroupOptions::Cycle:
-        if (countOfTasks > 0) count = 1;
+        if (countOfTasks > 0) curTaskCount = 1;
+        else return;
+
         if (mode == ViewMode::Standart)
-              ui->taskView->append("<h3>Найдите цикловой тип подстановки, записанной в каноническом виде:</h3>");
-        else ui->taskView->append("<h3>Найдите цикловой тип подстановки, записанной в циклическом виде:</h3>");
+              *tasksForWork += "Выйдите~цикловой~тип~подстановки,~записанной~в~табличном~виде:\\\\";
+        else *tasksForWork += "Выйдите~цикловой~тип~подстановки,~записанной~в~циклическом~виде:\\\\";
         for (int i = 0; i < countOfTasks;) {
             task.setTask(random->bounded(minN, maxN), mode);
-            if (task.getViewMode() == ViewMode::Standart) {
-                ui->taskView->append(QString::number(count)  + ") S<sub>" + QString::number(task.getTask()) + "</sub>: " + task.writeToMode(ViewMode::Standart) + " = " +
-                     task.cycleType());
-                generatedData.push_back(task.writeToMode(ViewMode::Standart));
-            } else {
-                ui->taskView->append(QString::number(count)  + ") S<sub>" + QString::number(task.getTask()) + "</sub>: " + task.writeToMode(ViewMode::Cycle) + " = " +
-                     task.cycleType());
-                generatedData.push_back(task.writeToMode(ViewMode::Cycle));
-            } i++; count++; generatedData.push_back(task.cycleType());
+            if (!this->mode) {
+                if (task.getViewMode() == ViewMode::Standart)
+                    *tasksForWork += QString::number(curTaskCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=" +
+                         task.cycleType() + "\\\\";
+                else *tasksForWork += QString::number(curTaskCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=" +
+                         task.cycleType() + "\\\\";
+                isReadyRender(); i++; curTaskCount++;
+            } else {}
         } break;
+
     case TranspositionGroupOptions::Count:
-        if (countOfTasks > 0) count = 1;
+        if (countOfTasks > 0) curTaskCount = 1;
+        else return;
+
         if (mode == ViewMode::Standart)
-              ui->taskView->append("<h3>Вычислите количество беспорядков подстановки, записанной в каноническом виде:</h3>");
-        else ui->taskView->append("<h3>Вычислите количество беспорядков подстановки, записанной в циклическом виде:</h3>");
+              *tasksForWork += "Вычислите~количество~беспорядков~подстановки,~записанной~в~табличном~виде:\\\\";
+        else *tasksForWork += "Вычислите~количество~беспорядков~подстановки,~записанной~в~циклическом~виде:\\\\";
         for (int i = 0; i < countOfTasks;) {
             task.setTask(random->bounded(minN, maxN), mode);
-            if (task.getViewMode() == ViewMode::Standart) {
-                ui->taskView->append(QString::number(count)  + ") S<sub>" + QString::number(task.getTask()) + "</sub>: " + task.writeToMode(ViewMode::Standart) + " = " +
-                     QString::number(task.getHaos()));
-                generatedData.push_back(task.writeToMode(ViewMode::Standart));
-            } else {
-                ui->taskView->append(QString::number(count)  + ") S<sub>" + QString::number(task.getTask()) + "</sub>: " + task.writeToMode(ViewMode::Cycle) + " = " +
-                     QString::number(task.getHaos()));
-                generatedData.push_back(task.writeToMode(ViewMode::Cycle));
-            } i++; count++; generatedData.push_back(QString::number(task.getHaos()));
+            if (!this->mode) {
+                if (task.getViewMode() == ViewMode::Standart)
+                    *tasksForWork += QString::number(curTaskCount) + ")~S_{" + QString::number(task.getTask()) + "}:\\Delta" + task.writeToMode(ViewMode::Standart) + "=" +
+                         QString::number(task.getHaos()) + "\\\\";
+                else *tasksForWork += QString::number(curTaskCount) + ")~S_{" + QString::number(task.getTask()) + "}:\\Delta" + task.writeToMode(ViewMode::Cycle) + "=" +
+                         QString::number(task.getHaos()) + "\\\\";
+                isReadyRender(); i++; curTaskCount++;
+            } else {}
         } break;
+
     case TranspositionGroupOptions::Mod2:
-        if (countOfTasks > 0) count = 1;
+        if (countOfTasks > 0) curTaskCount = 1;
+        else return;
+
         if (mode == ViewMode::Standart)
-              ui->taskView->append("<h3>Определите четность подстановки, записанной в каноническом виде:</h3>");
-        else ui->taskView->append("<h3>Определите четность подстановки, записанной в циклическом виде:</h3>");
+              *tasksForWork += "Определите~четность~подстановки,~записанной~в~табличном~виде:\\\\";
+        else *tasksForWork += "Определите~четность~подстановки,~записанной~в~циклическом~виде:\\\\";
         for (int i = 0; i < countOfTasks;) {
             task.setTask(random->bounded(minN, maxN), mode);
-            if (task.getViewMode() == ViewMode::Standart) {
-                ui->taskView->append(QString::number(count)  + ") S<sub>" + QString::number(task.getTask()) + "</sub>: " + task.writeToMode(ViewMode::Standart) + " - " +
-                     task.getEven());
-                generatedData.push_back(task.writeToMode(ViewMode::Standart));
-            } else {
-                ui->taskView->append(QString::number(count)  + ") S<sub>" + QString::number(task.getTask()) + "</sub>: " + task.writeToMode(ViewMode::Cycle) + " - " +
-                     task.getEven());
-                generatedData.push_back(task.writeToMode(ViewMode::Cycle));
-            } i++; count++; generatedData.push_back(task.getEven());
+            if (!this->mode) {
+                if (task.getViewMode() == ViewMode::Standart)
+                    *tasksForWork += QString::number(curTaskCount) + ")~S_{" + QString::number(task.getTask()) + "}:\\delta" + task.writeToMode(ViewMode::Standart) + "\\Rightarrow" +
+                         task.getEven() + "\\\\";
+                else *tasksForWork += QString::number(curTaskCount) + ")~S_{" + QString::number(task.getTask()) + "}:\\delta" + task.writeToMode(ViewMode::Cycle) + "\\Rightarrow" +
+                        task.getEven() + "\\\\";
+                isReadyRender(); i++; curTaskCount++;
+            } else {}
         } break;
+
     case TranspositionGroupOptions::Order:
-        if (countOfTasks > 0) count = 1;
+        if (countOfTasks > 0) curTaskCount = 1;
+        else return;
+
         if (mode == ViewMode::Standart)
-              ui->taskView->append("<h3>Определите порядок подстановки, записанной в каноническом виде:</h3>");
-        else ui->taskView->append("<h3>Определите порядок подстановки, записанной в циклическом виде:</h3>");
+              *tasksForWork += "Определите~порядок~подстановки,~записанной~в~табличном~виде:\\\\";
+        else *tasksForWork += "Определите~порядок~подстановки,~записанной~в~циклическом~виде:\\\\";
         for (int i = 0; i < countOfTasks;) {
             task.setTask(random->bounded(minN, maxN), mode);
-            if (task.getViewMode() == ViewMode::Standart) {
-                ui->taskView->append(QString::number(count)  + ") S<sub>" + QString::number(task.getTask()) + "</sub>: " + task.writeToMode(ViewMode::Standart) + " = " +
-                     QString::number(task.getOrder()));
-                generatedData.push_back(task.writeToMode(ViewMode::Standart));
-            } else {
-                ui->taskView->append(QString::number(count)  + ") S<sub>" + QString::number(task.getTask()) + "</sub>: " + task.writeToMode(ViewMode::Cycle) + " = " +
-                     QString::number(task.getOrder()));
-                generatedData.push_back(task.writeToMode(ViewMode::Cycle));
-            } i++; count++; generatedData.push_back(QString::number(task.getOrder()));
+            if (!this->mode) {
+            if (task.getViewMode() == ViewMode::Standart)
+                *tasksForWork += QString::number(curTaskCount) + ")~S_{" + QString::number(task.getTask()) + "}:~ord" + task.writeToMode(ViewMode::Standart) + "=" +
+                     QString::number(task.getOrder()) + "\\\\";
+            else *tasksForWork += QString::number(curTaskCount) + ")~S_{" + QString::number(task.getTask()) + "}:~ord" + task.writeToMode(ViewMode::Cycle) + "=" +
+                    QString::number(task.getOrder()) + "\\\\";
+            isReadyRender(); i++; curTaskCount++;
+            } else {}
         } break;
     }
 }
