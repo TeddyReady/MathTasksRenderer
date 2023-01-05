@@ -118,21 +118,33 @@ TranspositionGroup TranspositionGroup::operator ~(){
 }
 
 QString TranspositionGroup::writeToMode(ViewMode mode){
-    QString result;
+    QString result; bool isTrivial = true;
     switch (mode) {
     case ViewMode::Cycle:
-        //сортировка нужна!
         for (int i = 0; i < tp.size(); i++) {
-            for (int j = 0; j < tp[i].size(); j++){
-                if (tp[i].size() > 1) {
-                    if (j == 0) result += "(" + QString::number(tp[i][j]) + ", ";
-                    else if (j == tp[i].size() - 1)
-                        result += QString::number(tp[i][j]) + ")";
-                    else
-                        result += QString::number(tp[i][j]) + ", ";
+            if (tp[i].size() > 1) {
+                isTrivial = false;
+                break;
+            }
+        }
+        if (!isTrivial) {
+            for (int i = 0; i < tp.size(); i++) {
+                for (int j = 0; j < tp[i].size(); j++){
+                    if (tp[i].size() > 1) {
+                        if (j == 0) result += "(" + QString::number(tp[i][j]) + ", ";
+                        else if (j == tp[i].size() - 1)
+                            result += QString::number(tp[i][j]) + ")";
+                        else
+                            result += QString::number(tp[i][j]) + ", ";
+                    }
                 }
             }
-        } break;
+        } else {
+            for (int i = 0; i < tp.size(); i++) {
+                result += "(" + QString::number(tp[i][0]) + ")";
+            }
+        }
+        break;
     case ViewMode::Standart:
         int cnt = 0;
         for (int i = 0; i < tp.size(); i++) {

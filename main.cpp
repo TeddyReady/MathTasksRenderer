@@ -6,6 +6,7 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    QApplication::setOverrideCursor(Qt::WaitCursor);
 
     QSplashScreen *splash = new QSplashScreen;
     splash->setPixmap(QPixmap(":/img/splash.png"));
@@ -25,7 +26,8 @@ int main(int argc, char *argv[])
     QThread::msleep(500);
     mainWindow->show();
     splash->finish(mainWindow);
-
     delete splash;
+
+    QApplication::restoreOverrideCursor();
     return app.exec();
 }

@@ -47,7 +47,7 @@
          <widget class="QListWidget" name="tasksList">
           <property name="maximumSize">
            <size>
-            <width>250</width>
+            <width>16777215</width>
             <height>16777215</height>
            </size>
           </property>
@@ -78,15 +78,15 @@
           </item>
          </widget>
         </item>
+        <item row="0" column="1">
+         <widget class="QWebView" name="taskView"/>
+        </item>
         <item row="1" column="0" colspan="2">
          <widget class="QPushButton" name="genButton">
           <property name="text">
            <string>Сгенерировать Задания</string>
           </property>
          </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QWebView" name="taskView"/>
         </item>
        </layout>
       </widget>
@@ -198,6 +198,17 @@
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
   <action name="actionQuit">
    <property name="text">
     <string>Выйти из приложения</string>

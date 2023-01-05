@@ -1,11 +1,12 @@
 #ifndef GENERATORWINDOW_H
 #define GENERATORWINDOW_H
-#include <QtWebKitWidgets/QWebView>
 #include <QMouseEvent>
 #include <QTextStream>
 #include <QFileDialog>
 #include <QSettings>
 #include <QDateTime>
+#include <QCursor>
+#include <QPixmap>
 #include <QUrl>
 
 #include "dialogtranspositiongroup.h"
@@ -13,7 +14,6 @@
 #include "dialogmebiusfunction.h"
 #include "dialogeulerfunction.h"
 #include "dialogsymboljacobi.h"
-#include "texengine.h"
 #include "testmode.h"
 
 QT_BEGIN_NAMESPACE
@@ -29,9 +29,11 @@ enum AllTasks {
 class GeneratorWindow : public QMainWindow {
     Q_OBJECT
 private:
+    void uploadUI();
     void saveSettings();
     void uploadSettings();
     void isReadyRender();
+    void welcome();
 public:
     explicit GeneratorWindow(QWidget *parent = nullptr);
     ~GeneratorWindow();
@@ -52,18 +54,19 @@ public slots:
     void slotDialogTranspositionGroupMeta(int);
     void slotDialogTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode);
 private slots:
+    void checkAnswers();
+    void clearTasks();
     void on_genButton_clicked();
     void on_actionQuit_triggered();
     void on_comboBox_currentTextChanged(const QString &task);
     void on_tabWidget_currentChanged(int index);
     void on_pushButton_clicked();
-
 private:
     int totalTestTasks, totalTaskCount, curTaskCount;
     bool mode;
     QVector<QString> generatedData;
     tasks_type *tasksForTest;
-    QString *tasksForWork;
+    QString *tasksForWork, *solvedWorkTasks;
     QFile file;
     QRandomGenerator *random;
     QAction *testMode, *workMode;

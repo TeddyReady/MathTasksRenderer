@@ -3,7 +3,11 @@
 #include <QDialog>
 #include <QDebug>
 
-using tasks_type = QVector<std::pair<QString, QString>>;
+enum class SupCommands {
+    None, Transposition
+};
+
+using tasks_type = QVector<std::pair<std::pair<QString, QString>, SupCommands>>;
 
 namespace Ui {
 class DialogResults;

@@ -10,7 +10,10 @@
 #include <QGroupBox>
 #include <QLineEdit>
 #include <QToolBar>
+#include <QWebView>
+
 #include "dialogresults.h"
+#include "texengine.h"
 
 namespace Ui {
 class TestMode;
@@ -18,6 +21,8 @@ class TestMode;
 
 class TestMode : public QMainWindow {
     Q_OBJECT
+private:
+    void finishTest();
     void closeEvent(QCloseEvent *event);
 public:
     explicit TestMode(QWidget *parent = nullptr, tasks_type *tasksForTest = nullptr);
@@ -33,9 +38,8 @@ private:
     QVector<QString> *results;
     int curTask;
     bool isPressed;
+    TeXEngine *engine;
     Ui::TestMode *ui;
-
-    void finishTest();
 };
 
 #endif

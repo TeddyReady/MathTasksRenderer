@@ -9,9 +9,12 @@ DialogResults::DialogResults(QWidget *parent, tasks_type *tasks, QVector<QString
     userCount = 0;
     maxCount = tasks->size();
     for (int i = 0; i < maxCount; i++) {
-        //qDebug() << (*tasks)[i].second << " " << (*results)[i];
-        if ((*tasks)[i].second == (*results)[i]) {
-            userCount++;
+        if ((*tasks)[i].second == SupCommands::Transposition) {
+
+        } else {
+            if ((*tasks)[i].first.second == (*results)[i]) {
+                userCount++;
+            }
         }
     }
     ui->userResult->setText(QString::number(userCount));

@@ -10,5 +10,8 @@
         <file>general/style.css</file>
         <file>general/settings.ini</file>
         <file>web/scripts/main.js</file>
+        <file>img/checkAnswers.png</file>
+        <file>img/clearTasks.png</file>
+        <file>img/quit.jpg</file>
     </qresource>
 </RCC>

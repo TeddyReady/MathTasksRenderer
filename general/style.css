@@ -85,19 +85,22 @@ QListWidget {
 border: 2px solid Tan;
 border-radius: 8px;
 padding: 3px;
-background-color: Beige;
+background-color: CornSilk;
 color: SaddleBrown;
 font-size: 22px;
-font-weight: 450;
+font-weight: 400;
 font-family: "Times New Roman", sans-serif;
-width: 200px;
+min-width: 220px;
+max-width: 220px;
 }
 QListWidget::item:hover {
 background-color: Tan;
+border-radius: 4px;
 color: Beige;
 }
 QListWidget::item:selected {
 background-color: SaddleBrown;
+border-radius: 4px;
 color: Beige;
 }
 QTextBrowser {
