@@ -202,7 +202,7 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
                 isReadyRender();
             } else {
                 QString taskText = "\\color{sienna}{Вычислите~функцию~Эйлера:\\\\φ(" + QString::number(task.getTask()) + ")=~?}";
-                tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
             } curTaskCount++;
         } break;
     case EulerFunctionOptions::Primes:
@@ -215,7 +215,7 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
                     isReadyRender();
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~функцию~Эйлера:\\\\φ(" + QString::number(task.getTask()) + ")=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -230,7 +230,7 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
                     isReadyRender();
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~функцию~Эйлера:\\\\φ(" + QString::number(task.getTask()) + ")=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -252,7 +252,7 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
                     isReadyRender();
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~функцию~Эйлера:\\\\φ(" + QString::number(task.getTask()) + ")=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -274,7 +274,7 @@ void GeneratorWindow::slotDialogEulerFunction(int countOfTasks, int minNum, int 
                     isReadyRender();
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~функцию~Эйлера:\\\\φ(" + QString::number(task.getTask()) + ")=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -307,7 +307,7 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
                 isReadyRender();
             } else {
                 QString taskText = "\\color{sienna}{Вычислите~функцию~Мёбиуса:\\\\\\mu(" + QString::number(task.getTask()) + ")=~?}";
-                tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
             } curTaskCount++;
         } break;
     case MebiusFunctionOptions::Primes:
@@ -320,7 +320,7 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
                     isReadyRender();
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~функцию~Мёбиуса:\\\\\\mu(" + QString::number(task.getTask()) + ")=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -344,7 +344,7 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
                     isReadyRender();
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~функцию~Мёбиуса:\\\\\\mu(" + QString::number(task.getTask()) + ")=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -368,7 +368,7 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
                     isReadyRender();
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~функцию~Мёбиуса:\\\\\\mu(" + QString::number(task.getTask()) + ")=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -390,7 +390,7 @@ void GeneratorWindow::slotDialogMebiusFunction(int countOfTasks, int minNum, int
                     isReadyRender();
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~функцию~Мёбиуса:\\\\\\mu(" + QString::number(task.getTask()) + ")=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -428,7 +428,7 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~символ~Лежандра:\\\\\\left(\\frac{" +
                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -446,7 +446,7 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~символ~Лежандра:\\\\\\left(\\frac{" +
                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -464,7 +464,7 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~символ~Лежандра:\\\\\\left(\\frac{" +
                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -482,7 +482,7 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~символ~Лежандра:\\\\\\left(\\frac{" +
                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -500,7 +500,7 @@ void GeneratorWindow::slotDialogSymbolLegandre(int countOfTasks, std::pair<int, 
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~символ~Лежандра:\\\\\\left(\\frac{" +
                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -538,7 +538,7 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~символ~Якоби:\\\\\\left(\\frac{" +
                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -556,7 +556,7 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~символ~Якоби:\\\\\\left(\\frac{" +
                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -574,7 +574,7 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~символ~Якоби:\\\\\\left(\\frac{" +
                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -592,7 +592,7 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~символ~Якоби:\\\\\\left(\\frac{" +
                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -610,7 +610,7 @@ void GeneratorWindow::slotDialogSymbolJacobi(int countOfTasks, std::pair<int, in
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~символ~Якоби:\\\\\\left(\\frac{" +
                       QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.solve())), std::make_pair(SupCommands::Number, 0)));
                 } i++; curTaskCount++;
             }
         } break;
@@ -657,11 +657,11 @@ void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, i
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\color{sienna}{Запишите~подстановку~в~виде~произведения~независимых~циклов.\\\\S_{" +
                       QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.writeToMode(ViewMode::Cycle)), SupCommands::Transposition));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.writeToMode(ViewMode::Cycle)), std::make_pair(SupCommands::Transposition, task.getTask())));
                 } else {
                     QString taskText = "\\color{sienna}{Запишите~подстановку~в~табличном~виде.\\\\В~ответе~укажите~нижнюю~строку~получившейся~подстановки.\\\\S_{" +
                       QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.writeToMode(ViewMode::Standart)), SupCommands::Transposition));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.writeToMode(ViewMode::Standart)), std::make_pair(SupCommands::Transposition, task.getTask())));
                 }
             } i++; curTaskCount++;
         } break;
@@ -697,11 +697,11 @@ void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, i
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\color{sienna}{Найдите~произведение~подстановок,~записанных~в~табличном~виде.\\\\В~ответе~укажите~нижнюю~строку~получившейся~подстановки.\\\\S_{" +
                       QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "·" + task2.writeToMode(ViewMode::Standart) + "=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, result.writeToMode(ViewMode::Standart)), SupCommands::Transposition));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, result.writeToMode(ViewMode::Standart)), std::make_pair(SupCommands::Transposition, result.getTask())));
                 } else {
                     QString taskText = "\\color{sienna}{Найдите~произведение~подстановок,~записанных~в~циклическом~виде.\\\\S_{" +
                       QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "·" + task2.writeToMode(ViewMode::Cycle) + "=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, result.writeToMode(ViewMode::Cycle)), SupCommands::Transposition));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, result.writeToMode(ViewMode::Cycle)), std::make_pair(SupCommands::Transposition, result.getTask())));
                 }
             } i++; curTaskCount++;
         } break;
@@ -733,11 +733,11 @@ void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, i
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\color{sienna}{Найдите~подстановку,~обратную~данной,~записанной~в~табличном~виде.\\\\В~ответе~укажите~нижнюю~строку~получившейся~подстановки.\\\\S_{" +
                       QString::number(task.getTask()) + "}:\\overline{" + task.writeToMode(ViewMode::Standart) + "}=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, result.writeToMode(ViewMode::Standart)), SupCommands::Transposition));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, result.writeToMode(ViewMode::Standart)), std::make_pair(SupCommands::Transposition, result.getTask())));
                 } else {
                     QString taskText = "\\color{sienna}{Найдите~подстановку,~обратную~данной,~записанной~в~циклическом~виде.\\\\S_{" +
                       QString::number(task.getTask()) + "}:\\overline{" + task.writeToMode(ViewMode::Cycle) + "}=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, result.writeToMode(ViewMode::Cycle)), SupCommands::Transposition));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, result.writeToMode(ViewMode::Cycle)), std::make_pair(SupCommands::Transposition, result.getTask())));
                 }
             } i++; curTaskCount++;
         } break;
@@ -768,11 +768,11 @@ void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, i
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\color{sienna}{Найдите~цикловой~тип~подстановки,~записанной~в~табличном~виде.\\\\Ответ~дайте~в~формате~[1^i,2^j,...,n^k],~где~i,j,k\\neq0.\\\\S_{" +
                       QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.cycleType()), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.cycleType()), std::make_pair(SupCommands::CycleType, 0)));
                 } else {
                     QString taskText = "\\color{sienna}{Найдите~цикловой~тип~подстановки,~записанной~в~циклическом~виде.\\\\Ответ~дайте~в~формате~[1^i,2^j,...,n^k],~где~i,j,k\\neq0.\\\\S_{" +
                       QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.cycleType()), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.cycleType()), std::make_pair(SupCommands::CycleType, 0)));
                 }
             } i++; curTaskCount++;
         } break;
@@ -803,11 +803,11 @@ void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, i
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\color{sienna}{Вычислите~количество~беспорядков~подстановки,~записанной~в~табличном~виде.\\\\S_{" +
                       QString::number(task.getTask()) + "}:\\Delta" + task.writeToMode(ViewMode::Standart) + "=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.getHaos())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.getHaos())), std::make_pair(SupCommands::Number, 0)));
                 } else {
                     QString taskText = "\\color{sienna}{Вычислите~количество~беспорядков~подстановки,~записанной~в~циклическом~виде.\\\\S_{" +
                       QString::number(task.getTask()) + "}:\\Delta" + task.writeToMode(ViewMode::Cycle) + "=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.getHaos())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.getHaos())), std::make_pair(SupCommands::Number, 0)));
                 }
             } i++; curTaskCount++;
         } break;
@@ -838,11 +838,11 @@ void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, i
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\color{sienna}{Определите~четность~подстановки,~записанной~в~табличном~виде.\\\\В~ответе~укажите~Ч,~если~подстановка~четная,~и~Н,~в~противном~случае.\\\\S_{" +
                       QString::number(task.getTask()) + "}:\\delta" + task.writeToMode(ViewMode::Standart) + "=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.getEven()), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.getEven(true)), std::make_pair(SupCommands::Even, 0)));
                 } else {
                     QString taskText = "\\color{sienna}{Определите~четность~подстановки,~записанной~в~циклическом~виде.\\\\В~ответе~укажите~Ч,~если~подстановка~четная,~и~Н,~в~противном~случае.\\\\S_{" +
                       QString::number(task.getTask()) + "}:\\delta" + task.writeToMode(ViewMode::Cycle) + "=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.getEven()), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.getEven(true)), std::make_pair(SupCommands::Even, 0)));
                 }
             } i++; curTaskCount++;
         } break;
@@ -873,11 +873,11 @@ void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, i
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\color{sienna}{Определите~порядок~подстановки,~записанной~в~табличном~виде.\\\\S_{" +
                       QString::number(task.getTask()) + "}:~ord" + task.writeToMode(ViewMode::Standart) + "=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.getOrder())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.getOrder())), std::make_pair(SupCommands::Number, 0)));
                 } else {
                     QString taskText = "\\color{sienna}{Определите~порядок~подстановки,~записанной~в~циклическом~виде.\\\\S_{" +
                       QString::number(task.getTask()) + "}:~ord" + task.writeToMode(ViewMode::Cycle) + "=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.getOrder())), SupCommands::None));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, QString::number(task.getOrder())), std::make_pair(SupCommands::Number, 0)));
                 }
             } i++; curTaskCount++;
         } break;

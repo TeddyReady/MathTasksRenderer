@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QMap>
 #include "basemath.h"
+#include <string>
 
 enum class ViewMode {
     Standart, Cycle
@@ -17,7 +18,7 @@ class TranspositionGroup {
 public:
     explicit TranspositionGroup();
     explicit TranspositionGroup(QVector<std::pair<int, int>>);
-    explicit TranspositionGroup(const QString &str);
+    explicit TranspositionGroup(const QString &str, int order);
     TranspositionGroup operator *(TranspositionGroup &trans);
     TranspositionGroup operator ~();
     bool operator ==(const TranspositionGroup& trans);
@@ -29,7 +30,7 @@ public:
     QString writeToMode(ViewMode);
     QString cycleType();
     int getHaos();
-    QString getEven();
+    QString getEven(bool forTest = false);
     int getOrder();
 };
 

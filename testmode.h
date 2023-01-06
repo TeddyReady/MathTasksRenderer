@@ -11,6 +11,7 @@
 #include <QLineEdit>
 #include <QToolBar>
 #include <QWebView>
+#include <QRegExp>
 
 #include "dialogresults.h"
 #include "texengine.h"

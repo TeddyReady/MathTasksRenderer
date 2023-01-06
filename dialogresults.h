@@ -1,14 +1,16 @@
 #ifndef DIALOGRESULTS_H
 #define DIALOGRESULTS_H
+#include <QStandardItemModel>
 #include <QDialog>
 #include <QDebug>
+
 #include "transpositiongroup.h"
 
 enum class SupCommands {
-    None, Transposition
+    Number, Transposition, CycleType, Even
 };
-
-using tasks_type = QVector<std::pair<std::pair<QString, QString>, SupCommands>>;
+QRegExp getInstructions(SupCommands command);
+using tasks_type = QVector<std::pair<std::pair<QString, QString>, std::pair<SupCommands, int>>>;
 
 namespace Ui {
 class DialogResults;

@@ -39,26 +39,48 @@ TranspositionGroup::TranspositionGroup(QVector<std::pair<int, int>> data)
     }
 }
 
-TranspositionGroup::TranspositionGroup(const QString &str){
-    std::string tmp = str.toStdString();
-    tmp.erase(remove(tmp.begin(), tmp.end(), ' '), tmp.end());
-    QString base = QString::fromStdString(tmp);
+TranspositionGroup::TranspositionGroup(const QString &str, int order)
+{
+    QString base = str;
+    //Need Validation Syntax
+    //General add elements
     for (int i = 0; i < base.size(); i++) {
-        if (base[i] == '(') {
-            if (base[i + 2] == ')'){
-                QVector<int> tmp;
-                tmp.push_back(QString(base[i + 1]).toInt());
-                tp.push_back(tmp);
-                i += 2;
-            } else if (base[i + 2] == ',') {
-                QVector<int> tmp;
-                while (base[i + 2] != ')') {
-                    tmp.push_back(QString(base[i + 1]).toInt());
+        if (base[i] == '(') { 
+            QVector<int> tmp; QString num; i++;
+            while(base[i] != ')') {
+                num += base[i];
+                if (base[i + 1] == ',') {
+                    tmp.push_back(QString(num).toInt());
                     i += 2;
-                } tmp.push_back(QString(base[i + 1]).toInt());
-                i += 2; tp.push_back(tmp);
-            }
+                } else i++;
+            } tp.push_back(tmp);
         }
+    }
+    //Add alone elements
+    bool isFind = false;
+    QVector<QVector<int>> local;
+    for (int i = 1; i <= order; i++) {
+
+        for (int J = 0; J < tp.size(); J++) {
+            for (int j = 0; j < tp[J].size(); j++) {
+
+                if (i == tp[J][j]) {
+                    isFind = true;
+                    break;
+                }
+
+            } if (isFind) break;
+        }
+        if (isFind) isFind = false;
+        else {
+            QVector<int> tmp;
+            tmp.push_back(i);
+            local.push_back(tmp);
+        }
+
+    }
+    for (int i = 0; i < local.size(); i++) {
+        tp.push_back(local[i]);
     }
 }
 
@@ -143,24 +165,29 @@ TranspositionGroup TranspositionGroup::operator ~(){
 
 bool TranspositionGroup::operator ==(const TranspositionGroup& trans){
     for (int I = 0; I < trans.tp.size(); I++) {
-        if (trans.tp[I].size() > 1) {
+
             for (int i = 0; i < trans.tp[I].size(); i++) {
 
                 for (int J = 0; J < tp.size(); J++) {
-                    if (tp[J].size() > 1) {
-                        for (int j = 0; j < trans.tp[J].size(); j++) {
 
-                            if (trans.tp[I][i] == tp[J][j] && trans.tp[I].size() == tp[J].size()) {
+                        for (int j = 0; j < tp[J].size(); j++) {
 
+                            if (trans.tp[I][i] == tp[J][j]) {
+                                if (trans.tp[I].size() == tp[J].size()) {
+                                    if (trans.tp[I][(i + 1) % trans.tp[I].size()] == tp[J][(j + 1) % tp[J].size()])
+                                        break;
+                                    else return false;
+                                } else return false;
                             }
 
                         }
-                    }
+                        break;
+
                 }
 
             }
-        }
-    }
+
+    } return true;
 }
 
 QString TranspositionGroup::writeToMode(ViewMode mode){
@@ -177,11 +204,11 @@ QString TranspositionGroup::writeToMode(ViewMode mode){
             for (int i = 0; i < tp.size(); i++) {
                 for (int j = 0; j < tp[i].size(); j++){
                     if (tp[i].size() > 1) {
-                        if (j == 0) result += "(" + QString::number(tp[i][j]) + ", ";
+                        if (j == 0) result += "(" + QString::number(tp[i][j]) + ",";
                         else if (j == tp[i].size() - 1)
                             result += QString::number(tp[i][j]) + ")";
                         else
-                            result += QString::number(tp[i][j]) + ", ";
+                            result += QString::number(tp[i][j]) + ",";
                     }
                 }
             }
@@ -229,13 +256,13 @@ void TranspositionGroup::setTask(int n, ViewMode mode)
     QRandomGenerator *gen = QRandomGenerator::global();
     int cnt = 0, curValue;
     QVector<int> sizes, id, tmp;
-    //Рандомная инициализация весов
+    //Random weight initializing
     while (cnt != n) {
         curValue = static_cast<int>(gen->bounded(1, (n + 1) - cnt));
         sizes.push_back(curValue);
         cnt += curValue;
     }
-    //Тождественную перестановку
+    //Identity transposition
     for (int i = 1; i < n + 1; i++) {
         id.push_back(i);
     }
@@ -319,8 +346,10 @@ int TranspositionGroup::getHaos(){
     return count;
 }
 
-QString TranspositionGroup::getEven(){
-    return (getHaos() % 2) ? "Нечетная" : "Четная";
+QString TranspositionGroup::getEven(bool forTest){
+    if (forTest)
+        return (getHaos() % 2) ? "Н" : "Ч";
+    else return (getHaos() % 2) ? "Нечетная" : "Четная";
 }
 
 int TranspositionGroup::getOrder(){

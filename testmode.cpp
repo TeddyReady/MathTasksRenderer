@@ -16,7 +16,8 @@ TestMode::TestMode(QWidget *parent, tasks_type* tasksForTest) :
         ui->toolBar->hide();
         results->push_back("");
         ui->groupBox->setTitle("Задание 1");
-        engine->TeX2SVG((*tasks)[0].first.first);
+        engine->TeX2SVG((*tasks)[0].first.first, true);
+        ui->lineEdit->setValidator(new QRegExpValidator(getInstructions((*tasks)[0].second.first), this));
         curTask = 1;
     } else {
         for (int i = 0; i < tasks->size(); i++) {
@@ -46,7 +47,8 @@ void TestMode::changeTask()
     }
     curTask = static_cast<QString>(tmp->text().split("№").last()).toInt();
     ui->groupBox->setTitle("Задание " + QString::number(curTask));
-    engine->TeX2SVG((*tasks)[curTask - 1].first.first);
+    engine->TeX2SVG((*tasks)[curTask - 1].first.first, true);
+    ui->lineEdit->setValidator(new QRegExpValidator(getInstructions((*tasks)[curTask - 1].second.first), this));
     if ((*results)[curTask - 1] != "") {
         ui->lineEdit->setText((*results)[curTask - 1]);
     }
@@ -76,7 +78,8 @@ void TestMode::on_prevTask_clicked()
     }
     curTask = static_cast<QString>(ui->groupBox->title().split(" ").last()).toInt() - 1;
     ui->groupBox->setTitle("Задание " + QString::number(curTask));
-    engine->TeX2SVG((*tasks)[curTask - 1].first.first);
+    engine->TeX2SVG((*tasks)[curTask - 1].first.first, true);
+    ui->lineEdit->setValidator(new QRegExpValidator(getInstructions((*tasks)[curTask - 1].second.first), this));
     if ((*results)[curTask - 1] != "") {
         ui->lineEdit->setText((*results)[curTask - 1]);
     }
@@ -106,7 +109,8 @@ void TestMode::on_nextTask_clicked()
                 ui->nextTask->setText("Завершить");
             }
             ui->groupBox->setTitle("Задание " + QString::number(curTask));
-            engine->TeX2SVG((*tasks)[curTask - 1].first.first);
+            engine->TeX2SVG((*tasks)[curTask - 1].first.first, true);
+            ui->lineEdit->setValidator(new QRegExpValidator(getInstructions((*tasks)[curTask - 1].second.first), this));
             if ((*results)[curTask - 1] != "") {
                 ui->lineEdit->setText((*results)[curTask - 1]);
             }
