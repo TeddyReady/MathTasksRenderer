@@ -90,8 +90,8 @@ color: SaddleBrown;
 font-size: 22px;
 font-weight: 400;
 font-family: "Times New Roman", sans-serif;
-min-width: 220px;
-max-width: 220px;
+min-width: 280px;
+max-width: 280px;
 }
 QListWidget::item:hover {
 background-color: Tan;
@@ -159,7 +159,8 @@ border: 2px solid Tan;
 border-bottom-color: SaddleBrown;
 border-top-left-radius: 4px;
 border-top-right-radius: 4px;
-width: 150px;
+min-width: 180px;
+max-width: 180px;
 padding: 3px;
 }
 QTabBar::tab:hover {
@@ -173,4 +174,8 @@ color: White;
 }
 QTabBar::tab:!selected {
 margin-top: 2px;
+}
+
+QWebView {
+background-color: #f7f9eb;
 }

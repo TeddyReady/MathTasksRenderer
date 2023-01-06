@@ -15,7 +15,7 @@ GeneratorWindow::GeneratorWindow(QWidget *parent)
 
     connect(ui->toolBar->actions().at(0), SIGNAL(triggered()), this, SLOT(checkAnswers()));
     connect(ui->toolBar->actions().at(1), SIGNAL(triggered()), this, SLOT(clearTasks()));
-    connect(ui->toolBar->actions().at(2), &QAction::triggered, [](){qApp->exit();});
+    connect(ui->toolBar->actions().at(3), &QAction::triggered, [](){qApp->exit();});
 }
 GeneratorWindow::~GeneratorWindow()
 {
