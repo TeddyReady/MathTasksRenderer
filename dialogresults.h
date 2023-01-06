@@ -2,6 +2,7 @@
 #define DIALOGRESULTS_H
 #include <QDialog>
 #include <QDebug>
+#include "transpositiongroup.h"
 
 enum class SupCommands {
     None, Transposition

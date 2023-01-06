@@ -1,6 +1,7 @@
 #ifndef TRANSPOSITIONGROUP_H
 #define TRANSPOSITIONGROUP_H
 #include <QRandomGenerator>
+#include <QString>
 #include <QVector>
 #include <QDebug>
 #include <QMap>
@@ -16,8 +17,10 @@ class TranspositionGroup {
 public:
     explicit TranspositionGroup();
     explicit TranspositionGroup(QVector<std::pair<int, int>>);
+    explicit TranspositionGroup(const QString &str);
     TranspositionGroup operator *(TranspositionGroup &trans);
     TranspositionGroup operator ~();
+    bool operator ==(const TranspositionGroup& trans);
 
     void setTask(int, ViewMode mode);
     int getTask();

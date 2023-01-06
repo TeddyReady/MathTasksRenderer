@@ -2,7 +2,8 @@
 
 TranspositionGroup::TranspositionGroup() {}
 
-TranspositionGroup::TranspositionGroup(QVector<std::pair<int, int>> data){
+TranspositionGroup::TranspositionGroup(QVector<std::pair<int, int>> data)
+{
     std::sort(data.begin(), data.end());
     QVector<int> multi, single;
     for (int i = 0; i < data.size(); i++) {
@@ -34,6 +35,29 @@ TranspositionGroup::TranspositionGroup(QVector<std::pair<int, int>> data){
             single.push_back(data[i].second);
             tp.push_back(single);
             single.clear();
+        }
+    }
+}
+
+TranspositionGroup::TranspositionGroup(const QString &str){
+    std::string tmp = str.toStdString();
+    tmp.erase(remove(tmp.begin(), tmp.end(), ' '), tmp.end());
+    QString base = QString::fromStdString(tmp);
+    for (int i = 0; i < base.size(); i++) {
+        if (base[i] == '(') {
+            if (base[i + 2] == ')'){
+                QVector<int> tmp;
+                tmp.push_back(QString(base[i + 1]).toInt());
+                tp.push_back(tmp);
+                i += 2;
+            } else if (base[i + 2] == ',') {
+                QVector<int> tmp;
+                while (base[i + 2] != ')') {
+                    tmp.push_back(QString(base[i + 1]).toInt());
+                    i += 2;
+                } tmp.push_back(QString(base[i + 1]).toInt());
+                i += 2; tp.push_back(tmp);
+            }
         }
     }
 }
@@ -115,6 +139,28 @@ TranspositionGroup TranspositionGroup::operator ~(){
     }
     TranspositionGroup tmp(result);
     return tmp;
+}
+
+bool TranspositionGroup::operator ==(const TranspositionGroup& trans){
+    for (int I = 0; I < trans.tp.size(); I++) {
+        if (trans.tp[I].size() > 1) {
+            for (int i = 0; i < trans.tp[I].size(); i++) {
+
+                for (int J = 0; J < tp.size(); J++) {
+                    if (tp[J].size() > 1) {
+                        for (int j = 0; j < trans.tp[J].size(); j++) {
+
+                            if (trans.tp[I][i] == tp[J][j] && trans.tp[I].size() == tp[J].size()) {
+
+                            }
+
+                        }
+                    }
+                }
+
+            }
+        }
+    }
 }
 
 QString TranspositionGroup::writeToMode(ViewMode mode){

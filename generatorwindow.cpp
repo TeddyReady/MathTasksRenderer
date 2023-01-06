@@ -13,12 +13,9 @@ GeneratorWindow::GeneratorWindow(QWidget *parent)
     uploadSettings();
     uploadUI();
 
-    welcome();
-
     connect(ui->toolBar->actions().at(0), SIGNAL(triggered()), this, SLOT(checkAnswers()));
     connect(ui->toolBar->actions().at(1), SIGNAL(triggered()), this, SLOT(clearTasks()));
     connect(ui->toolBar->actions().at(2), &QAction::triggered, [](){qApp->exit();});
-
 }
 GeneratorWindow::~GeneratorWindow()
 {
@@ -47,6 +44,7 @@ void GeneratorWindow::uploadUI()
     ui->toolBar->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->toolBar->addAction(new QAction(QPixmap("://img/checkAnswers.png"), "Показать ответы", this));
     ui->toolBar->addAction(new QAction(QPixmap("://img/clearTasks.png"), "Очистить задачи", this));
+    ui->toolBar->addSeparator();
     ui->toolBar->addAction(new QAction(QPixmap("://img/quit.jpg"), "Выход...", this));
     ui->toolBar->actions().at(0)->setDisabled(true);
     ui->toolBar->actions().at(1)->setDisabled(true);
@@ -68,7 +66,7 @@ void GeneratorWindow::uploadSettings()
 void GeneratorWindow::isReadyRender(){
     if (curTaskCount == totalTaskCount) {
         QApplication::setOverrideCursor(Qt::WaitCursor);
-        engine->TeX2SVG(*tasksForWork + "}");
+        engine->TeX2SVG(*tasksForWork + "}", true);
         totalTaskCount = 0;
         curTaskCount = 0;
         QApplication::restoreOverrideCursor();
@@ -76,7 +74,7 @@ void GeneratorWindow::isReadyRender(){
 }
 void GeneratorWindow::checkAnswers(){
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    engine->TeX2SVG(*solvedWorkTasks + "}");
+    engine->TeX2SVG(*solvedWorkTasks + "}", true);
     *tasksForWork = *solvedWorkTasks;
     ui->toolBar->actions().at(0)->setDisabled(true);
     QApplication::restoreOverrideCursor();
@@ -85,13 +83,9 @@ void GeneratorWindow::clearTasks()
 {
     *tasksForWork = "\\color{sienna}{";
     *solvedWorkTasks = *tasksForWork;
-    engine->TeX2SVG("\\color{sienna}{В~ожидании~генерации~задач...}");
+    engine->TeX2SVG("\\color{sienna}{В~ожидании~генерации~задач...}", true);
     ui->toolBar->actions().at(0)->setDisabled(true);
     ui->toolBar->actions().at(1)->setDisabled(true);
-}
-void GeneratorWindow::welcome()
-{
-    engine->TeX2SVG("\\color{sienna}{Algebra~Madness~приветствует~Вас!}");
 }
 
 void GeneratorWindow::on_tabWidget_currentChanged(int index)
@@ -176,11 +170,6 @@ void GeneratorWindow::on_genButton_clicked()
         connect(window, SIGNAL(dialogTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode)),
                 this, SLOT(slotDialogTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode)));
     }
-}
-
-void GeneratorWindow::on_actionQuit_triggered()
-{
-    qApp->exit();
 }
 
 void GeneratorWindow::slotDialogEulerFunctionMeta(int countOfTasks)

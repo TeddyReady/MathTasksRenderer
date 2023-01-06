@@ -33,7 +33,6 @@ private:
     void saveSettings();
     void uploadSettings();
     void isReadyRender();
-    void welcome();
 public:
     explicit GeneratorWindow(QWidget *parent = nullptr);
     ~GeneratorWindow();
@@ -57,7 +56,6 @@ private slots:
     void checkAnswers();
     void clearTasks();
     void on_genButton_clicked();
-    void on_actionQuit_triggered();
     void on_comboBox_currentTextChanged(const QString &task);
     void on_tabWidget_currentChanged(int index);
     void on_pushButton_clicked();

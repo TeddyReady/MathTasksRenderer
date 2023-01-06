@@ -30,9 +30,9 @@ bool TeXEngine::hasComputed ( QString TeXcode )
     return cache.contains( TeXcode );
 }
 
-QString TeXEngine::TeX2SVG ( QString TeXcode )
+QString TeXEngine::TeX2SVG ( QString TeXcode, bool forceReload)
 {
-    if ( hasComputed( TeXcode ) ) {
+    if ( hasComputed( TeXcode ) && !forceReload) {
         QString *ptr = cache[TeXcode];
         return ptr ? QString( ptr->constData() ) : QString();
     }

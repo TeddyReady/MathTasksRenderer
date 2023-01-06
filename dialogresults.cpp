@@ -10,7 +10,9 @@ DialogResults::DialogResults(QWidget *parent, tasks_type *tasks, QVector<QString
     maxCount = tasks->size();
     for (int i = 0; i < maxCount; i++) {
         if ((*tasks)[i].second == SupCommands::Transposition) {
-
+            if (TranspositionGroup((*tasks)[i].first.second) == TranspositionGroup((*results)[i])){
+                userCount++;
+            }
         } else {
             if ((*tasks)[i].first.second == (*results)[i]) {
                 userCount++;
