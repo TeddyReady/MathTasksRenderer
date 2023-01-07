@@ -27,7 +27,7 @@ public:
     int getTask();
     QVector<QVector<int>>& getTransposition();
     ViewMode getViewMode();
-    QString writeToMode(ViewMode);
+    QString writeToMode(ViewMode, bool forTest = false);
     QString cycleType();
     int getHaos();
     QString getEven(bool forTest = false);

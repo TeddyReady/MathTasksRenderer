@@ -1,6 +1,7 @@
 #ifndef DIALOGRESULTS_H
 #define DIALOGRESULTS_H
 #include <QStandardItemModel>
+#include <QHeaderView>
 #include <QDialog>
 #include <QDebug>
 

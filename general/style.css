@@ -179,3 +179,20 @@ margin-top: 2px;
 QWebView {
 background-color: #f7f9eb;
 }
+QTableView {
+
+}
+QProgressBar {
+border: 2px solid SaddleBrown;
+border-radius: 5px;
+text-align: center;
+font-size: 22px;
+font-weight: bold;
+color: SaddleBrown;
+}
+QProgressBar::chunk {
+    background-color: Tan;
+    width: 20px;
+    border-radius: 2px;
+    margin: 0.5px;
+}

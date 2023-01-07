@@ -36,7 +36,6 @@ void GeneratorWindow::uploadUI()
     ui->pushButton->setCursor(Qt::PointingHandCursor);
     ui->webView->load(QUrl("qrc:/web/index.html"));
     ui->webView->setContextMenuPolicy(Qt::CustomContextMenu);
-    ui->mainLayout->addWidget(new DialogTranspositionGroup(this, true));
     ui->tabWidget->tabBar()->setCursor(Qt::PointingHandCursor);
     ui->taskView->setCursor(Qt::BlankCursor);
     ui->taskView->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -655,13 +654,13 @@ void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, i
                 } isReadyRender(); localCount++;
             } else {
                 if (task.getViewMode() == ViewMode::Standart) {
-                    QString taskText = "\\color{sienna}{Запишите~подстановку~в~виде~произведения~независимых~циклов.\\\\S_{" +
+                    QString taskText = "\\color{sienna}{Запишите~подстановку~в~виде~произведения~независимых~циклов.\\\\Неподвижные~элементы~указывать~не~требуется.\\\\S_{" +
                       QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?}";
                     tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.writeToMode(ViewMode::Cycle)), std::make_pair(SupCommands::Transposition, task.getTask())));
                 } else {
                     QString taskText = "\\color{sienna}{Запишите~подстановку~в~табличном~виде.\\\\В~ответе~укажите~нижнюю~строку~получившейся~подстановки.\\\\S_{" +
                       QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.writeToMode(ViewMode::Standart)), std::make_pair(SupCommands::Transposition, task.getTask())));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.writeToMode(ViewMode::Standart, true)), std::make_pair(SupCommands::Transposition, task.getTask())));
                 }
             } i++; curTaskCount++;
         } break;
@@ -697,9 +696,9 @@ void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, i
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\color{sienna}{Найдите~произведение~подстановок,~записанных~в~табличном~виде.\\\\В~ответе~укажите~нижнюю~строку~получившейся~подстановки.\\\\S_{" +
                       QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "·" + task2.writeToMode(ViewMode::Standart) + "=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, result.writeToMode(ViewMode::Standart)), std::make_pair(SupCommands::Transposition, result.getTask())));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, result.writeToMode(ViewMode::Standart, true)), std::make_pair(SupCommands::Transposition, result.getTask())));
                 } else {
-                    QString taskText = "\\color{sienna}{Найдите~произведение~подстановок,~записанных~в~циклическом~виде.\\\\S_{" +
+                    QString taskText = "\\color{sienna}{Найдите~произведение~подстановок,~записанных~в~циклическом~виде.\\\\Неподвижные~элементы~указывать~не~требуется.\\\\S_{" +
                       QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "·" + task2.writeToMode(ViewMode::Cycle) + "=~?}";
                     tasksForTest->push_back(std::make_pair(std::make_pair(taskText, result.writeToMode(ViewMode::Cycle)), std::make_pair(SupCommands::Transposition, result.getTask())));
                 }
@@ -733,9 +732,9 @@ void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, i
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\color{sienna}{Найдите~подстановку,~обратную~данной,~записанной~в~табличном~виде.\\\\В~ответе~укажите~нижнюю~строку~получившейся~подстановки.\\\\S_{" +
                       QString::number(task.getTask()) + "}:\\overline{" + task.writeToMode(ViewMode::Standart) + "}=~?}";
-                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, result.writeToMode(ViewMode::Standart)), std::make_pair(SupCommands::Transposition, result.getTask())));
+                    tasksForTest->push_back(std::make_pair(std::make_pair(taskText, result.writeToMode(ViewMode::Standart, true)), std::make_pair(SupCommands::Transposition, result.getTask())));
                 } else {
-                    QString taskText = "\\color{sienna}{Найдите~подстановку,~обратную~данной,~записанной~в~циклическом~виде.\\\\S_{" +
+                    QString taskText = "\\color{sienna}{Найдите~подстановку,~обратную~данной,~записанной~в~циклическом~виде.\\\\Неподвижные~элементы~указывать~не~требуется.\\\\S_{" +
                       QString::number(task.getTask()) + "}:\\overline{" + task.writeToMode(ViewMode::Cycle) + "}=~?}";
                     tasksForTest->push_back(std::make_pair(std::make_pair(taskText, result.writeToMode(ViewMode::Cycle)), std::make_pair(SupCommands::Transposition, result.getTask())));
                 }
@@ -837,11 +836,11 @@ void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, i
             } else {
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\color{sienna}{Определите~четность~подстановки,~записанной~в~табличном~виде.\\\\В~ответе~укажите~Ч,~если~подстановка~четная,~и~Н,~в~противном~случае.\\\\S_{" +
-                      QString::number(task.getTask()) + "}:\\delta" + task.writeToMode(ViewMode::Standart) + "=~?}";
+                      QString::number(task.getTask()) + "}:\\delta" + task.writeToMode(ViewMode::Standart) + "\\Rightarrow~?}";
                     tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.getEven(true)), std::make_pair(SupCommands::Even, 0)));
                 } else {
                     QString taskText = "\\color{sienna}{Определите~четность~подстановки,~записанной~в~циклическом~виде.\\\\В~ответе~укажите~Ч,~если~подстановка~четная,~и~Н,~в~противном~случае.\\\\S_{" +
-                      QString::number(task.getTask()) + "}:\\delta" + task.writeToMode(ViewMode::Cycle) + "=~?}";
+                      QString::number(task.getTask()) + "}:\\delta" + task.writeToMode(ViewMode::Cycle) + "\\Rightarrow~?}";
                     tasksForTest->push_back(std::make_pair(std::make_pair(taskText, task.getEven(true)), std::make_pair(SupCommands::Even, 0)));
                 }
             } i++; curTaskCount++;
@@ -886,7 +885,8 @@ void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, i
 
 void GeneratorWindow::on_comboBox_currentTextChanged(const QString &task)
 {
-    delete ui->mainLayout->takeAt(0)->widget();
+    if (!ui->mainLayout->isEmpty())
+        delete ui->mainLayout->takeAt(0)->widget();
     if (task == "Группа Перестановок") {
         DialogTranspositionGroup *window = new DialogTranspositionGroup(this, mode);
         connect(window, SIGNAL(dialogTranspositionGroupMeta(int)),
@@ -922,5 +922,5 @@ void GeneratorWindow::on_comboBox_currentTextChanged(const QString &task)
         connect(window, SIGNAL(dialogSymbolJacobi(int, std::pair<int, int>, std::pair<int, int>, SymbolJacobiOptions)),
                 this, SLOT(slotDialogSymbolJacobi(int, std::pair<int, int>, std::pair<int, int>, SymbolJacobiOptions)));
         ui->mainLayout->addWidget(window);
-    }
+    } else {}
 }

@@ -13,6 +13,8 @@ DialogResults::DialogResults(QWidget *parent, tasks_type *tasks, QVector<QString
     model->setHeaderData(1, Qt::Horizontal, "Правильный ответ");
     ui->tableView->setModel(model);
     ui->tableView->setSelectionMode(QAbstractItemView::NoSelection);
+    ui->tableView->setColumnWidth(0, (this->width() / 2));
+    ui->tableView->setColumnWidth(1, (this->width() / 2));
     for (int i = 0; i < maxCount; i++) {
         model->setData(model->index(i, 0), (*results)[i]);
         model->setData(model->index(i, 1), (*tasks)[i].first.second);
