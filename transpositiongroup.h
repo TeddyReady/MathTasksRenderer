@@ -1,12 +1,13 @@
 #ifndef TRANSPOSITIONGROUP_H
 #define TRANSPOSITIONGROUP_H
+
 #include <QRandomGenerator>
 #include <QString>
 #include <QVector>
 #include <QDebug>
 #include <QMap>
+
 #include "basemath.h"
-#include <string>
 
 enum class ViewMode {
     Standart, Cycle

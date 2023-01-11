@@ -17,7 +17,7 @@ TestMode::TestMode(QWidget *parent, tasks_type* tasksForTest, QTime time) :
         results->push_back("");
         ui->groupBox->setTitle("Задание 1");
         engine->TeX2SVG(std::get<0>((*tasks)[0]), true);
-        ui->lineEdit->setValidator(new QRegExpValidator(getInstructions(std::get<2>((*tasks)[curTask - 1])), this));
+        ui->lineEdit->setValidator(new QRegExpValidator(getInstructions(std::get<2>((*tasks)[0])), this));
         curTask = 1;
     } else {
         for (int i = 0; i < tasks->size(); i++) {

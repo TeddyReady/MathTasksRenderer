@@ -41,13 +41,30 @@ TranspositionGroup::TranspositionGroup(QVector<std::pair<int, int>> data)
 
 TranspositionGroup::TranspositionGroup(const QString &str, int order)
 {
+    //Syntax check
     QString base = str;
-
-    //Need Validation Syntax
-
+    int count_1 = 0, count_2 = 0;
+    for (int i = 0; i < base.size(); i++) {
+        if (base[i] == '(') count_1++;
+        else if (base[i] == ')') count_2++;
+    } bool error = false;
+    if (count_1 == count_2) {
+        for (int i = 0; i < base.size(); i++) {
+            if (base[i] == ',' && base[i + 1] == ')') {
+                error = true;
+                break;
+            }
+        }
+    } else error = true;
+    if (error) {
+        for (int i = 1; i <= order; i++) {
+            QVector<int> tmp; tmp.push_back(i);
+            tp.push_back(tmp);
+        } return;
+    }
     //General add elements
     for (int i = 0; i < base.size(); i++) {
-        if (base[i] == '(') { 
+        if (base[i] == '(') {
             QVector<int> tmp; QString num; i++;
             while(base[i] != ')') {
                 num += base[i];
@@ -83,8 +100,7 @@ TranspositionGroup::TranspositionGroup(const QString &str, int order)
             local.push_back(tmp);
         }
 
-    }
-    for (int i = 0; i < local.size(); i++) {
+    } for (int i = 0; i < local.size(); i++) {
         tp.push_back(local[i]);
     }
 }
@@ -267,8 +283,7 @@ QString TranspositionGroup::writeToMode(ViewMode mode, bool forTest){
                 else result += QString::number(tmp[i]) + ")";
             }
         }
-    }
-    return result;
+    } return result;
 }
 
 void TranspositionGroup::setTask(int n, ViewMode mode)

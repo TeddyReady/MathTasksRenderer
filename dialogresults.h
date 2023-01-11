@@ -1,12 +1,12 @@
 #ifndef DIALOGRESULTS_H
 #define DIALOGRESULTS_H
+
 #include <QStandardItemModel>
 #include <QHeaderView>
 #include <QDialog>
 #include <QDebug>
 
 #include "transpositiongroup.h"
-#include <tuple>
 
 enum class SupCommands {
     Number, Transposition, CycleType, Even
