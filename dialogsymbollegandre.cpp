@@ -44,7 +44,7 @@ void DialogSymbolLegandre::on_buttonBox_accepted()
     if (ui->btn1->isChecked()) count += ui->spin1->value();
     if (ui->btn2->isChecked()) count += ui->spin2->value();
     if (ui->btnNotEvenPrimes->isChecked()) count += ui->spinNotEvenPrimes->value();
-    emit dialogSymbolLegandreMeta(count);
+    emit dialogSymbolLegandreMeta(count); count = 0;
     if (ui->btnDefault->isChecked())
         emit dialogSymbolLegandre(ui->spinDefault->value(), tmp[0], tmp[1], SymbolLegandreOptions::Default);
     if (ui->btnPrimes->isChecked())

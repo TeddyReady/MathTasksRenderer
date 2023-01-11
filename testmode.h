@@ -41,7 +41,7 @@ private:
     tasks_type* tasks;
     QVector<QString> *results;
     int curTask;
-    bool isPressed;
+    bool isPressed, timerExist;
     TeXEngine *engine;
     QTime allTime;
     QTimer *timer;

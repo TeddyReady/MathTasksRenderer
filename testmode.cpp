@@ -35,12 +35,13 @@ TestMode::TestMode(QWidget *parent, tasks_type* tasksForTest, QTime time) :
         } ui->prevTask->setDisabled(true);
     }
     if (allTime != QTime(0, 0, 0, 0)) {
+        timerExist = true;
         timer = new QTimer(this);
         timer->setInterval(1000);
         connect(timer, SIGNAL(timeout()), this, SLOT(updateTime()));
         statusBar()->showMessage(allTime.toString("hh:mm:ss"), 1000);
         timer->start();
-    }
+    } else timerExist = false;
 }
 
 TestMode::~TestMode()
@@ -140,8 +141,7 @@ void TestMode::finishTest()
     if (ui->lineEdit->text() != "") {
         (*results)[curTask - 1] = ui->lineEdit->text();
         ui->lineEdit->clear();
-    }
-    delete timer;
+    } if (timerExist) delete timer;
     DialogResults *window = new DialogResults(this, tasks, results);
     window->setWindowTitle("Результаты теста");
     window->setModal(true);

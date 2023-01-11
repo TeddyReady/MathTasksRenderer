@@ -196,3 +196,10 @@ QProgressBar::chunk {
     border-radius: 2px;
     margin: 0.5px;
 }
+QLCDNumber {
+  background-color: Beige;
+  border: 2px solid Tan;
+  border-width: 2px;
+  border-radius: 8px;
+  color: SaddleBrown;
+}

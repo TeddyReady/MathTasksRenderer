@@ -39,7 +39,7 @@ void DialogEulerFunction::on_buttonBox_accepted()
     if (ui->btnPrimeDegree->isChecked()) count += ui->spinPrimeDegree->value();
     if (ui->btnMultiplyPrimes->isChecked()) count += ui->spinMultiplyPrimes->value();
     if (ui->btnMultiplyPrimesDegree->isChecked()) count += ui->spinMultiplyPrimesDegree->value();
-    emit dialogEulerFunctionMeta(count);
+    emit dialogEulerFunctionMeta(count); count = 0;
     if (ui->btnDefault->isChecked())
         emit dialogEulerFunction(ui->spinDefault->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, EulerFunctionOptions::Default);
     if (ui->btnPrime->isChecked())

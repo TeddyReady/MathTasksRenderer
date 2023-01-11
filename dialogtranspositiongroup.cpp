@@ -52,7 +52,7 @@ void DialogTranspositionGroup::on_buttonBox_accepted()
     if (ui->btnMod2->isChecked()) count += ui->spinMod2->value();
     if (ui->btnCount->isChecked()) count += ui->spinCount->value();
     if (ui->btnOrder->isChecked()) count += ui->spinOrder->value();
-    emit dialogTranspositionGroupMeta(count);
+    emit dialogTranspositionGroupMeta(count); count = 0;
     if (ui->btnWrite->isChecked())
         emit dialogTranspositionGroup(ui->spinWrite->value(), ui->spinNmin->value(), ui->spinNmax->value() + 1, TranspositionGroupOptions::Write, taskWrite);
     if (ui->btnCycle->isChecked())
