@@ -17,10 +17,10 @@ DialogResults::DialogResults(QWidget *parent, tasks_type *tasks, QVector<QString
     ui->tableView->setColumnWidth(1, (this->width() / 2));
     for (int i = 0; i < maxCount; i++) {
         model->setData(model->index(i, 0), (*results)[i]);
-        model->setData(model->index(i, 1), (*tasks)[i].first.second);
-        if ((*tasks)[i].second.first == SupCommands::Transposition) {
-            if (TranspositionGroup((*tasks)[i].first.second, (*tasks)[i].second.second) ==
-                TranspositionGroup((*results)[i], (*tasks)[i].second.second)){
+        model->setData(model->index(i, 1), std::get<1>((*tasks)[i]));
+        if (std::get<2>((*tasks)[i]) == SupCommands::Transposition) {
+            if (TranspositionGroup(std::get<1>((*tasks)[i]), std::get<3>((*tasks)[i])) ==
+                TranspositionGroup((*results)[i], std::get<3>((*tasks)[i]))){
                 userCount++;
                 model->setData(model->index(i, 0), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
                 model->setData(model->index(i, 1), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
@@ -29,7 +29,7 @@ DialogResults::DialogResults(QWidget *parent, tasks_type *tasks, QVector<QString
                 model->setData(model->index(i, 1), QColor(Qt::darkRed), Qt::BackgroundColorRole);
             }
         } else {
-            if ((*tasks)[i].first.second == (*results)[i]) {
+            if (std::get<1>((*tasks)[i]) == (*results)[i]) {
                 userCount++;
                 model->setData(model->index(i, 0), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
                 model->setData(model->index(i, 1), QColor(Qt::darkGreen), Qt::BackgroundColorRole);

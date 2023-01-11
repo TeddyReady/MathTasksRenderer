@@ -1,4 +1,3 @@
-include(libs/qtmathjax/qtmathjax.pri)
 QT       += core gui webkitwidgets
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Algebra_Madness
@@ -56,3 +55,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 RESOURCES += \
     resourses.qrc
+include(libs/qtmathjax/qtmathjax.pri)
+INCLUDEPATH += $$PWD/libs/qtmathjax
+LIBS += -L$$PWD/libs/

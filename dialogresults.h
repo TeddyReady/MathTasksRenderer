@@ -6,12 +6,13 @@
 #include <QDebug>
 
 #include "transpositiongroup.h"
+#include <tuple>
 
 enum class SupCommands {
     Number, Transposition, CycleType, Even
 };
 QRegExp getInstructions(SupCommands command);
-using tasks_type = QVector<std::pair<std::pair<QString, QString>, std::pair<SupCommands, int>>>;
+using tasks_type = QVector<std::tuple<QString, QString, SupCommands, int>>;
 
 namespace Ui {
 class DialogResults;
