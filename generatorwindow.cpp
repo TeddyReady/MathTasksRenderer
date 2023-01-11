@@ -888,6 +888,35 @@ void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, i
                 }
             } i++; curTaskCount++;
         } break;
+
+    case TranspositionGroupOptions::Decomposition:
+        if (!this->mode) {
+            *tasksForWork += "Запишите~подстановку~в~виде~произведения~транспозиций:\\\\";
+            *solvedWorkTasks += "Запишите~подстановку~в~виде~произведения~транспозиций:\\\\";
+        }
+        for (int i = 0; i < countOfTasks;) {
+            task.setTask(random->bounded(minN, maxN), mode, true);
+            if (!this->mode) {
+                if (task.getViewMode() == ViewMode::Standart) {
+                    *tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?\\\\";
+                    *solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=" + task.writeToMode(ViewMode::Decomposition) + "\\\\";
+                } else {
+                    *tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?\\\\";
+                    *solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=" + task.writeToMode(ViewMode::Decomposition) + "\\\\";
+                } isReadyRender(); localCount++;
+            } else {
+                if (task.getViewMode() == ViewMode::Standart) {
+                    QString taskText = "\\color{sienna}{Запишите~подстановку~в~виде~произведения~транспозиций.\\\\S_{" +
+                      QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?}";
+                    tasksForTest->push_back(std::make_tuple(taskText, task.writeToMode(ViewMode::Decomposition), SupCommands::MultiTransposition, task.getTask()));
+                } else {
+                    QString taskText = "\\color{sienna}{Запишите~подстановку~в~виде~произведения~транспозиций\\\\S_{" +
+                      QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?}";
+                    tasksForTest->push_back(std::make_tuple(taskText, task.writeToMode(ViewMode::Decomposition), SupCommands::MultiTransposition, task.getTask()));
+                }
+            } i++; curTaskCount++;
+        } break;
+
     }
 }
 

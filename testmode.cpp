@@ -6,6 +6,7 @@ TestMode::TestMode(QWidget *parent, tasks_type* tasksForTest, QTime time) :
     ui(new Ui::TestMode)
 {
     ui->setupUi(this);
+    ui->taskView->setContextMenuPolicy(Qt::CustomContextMenu);
     engine = new TeXEngine(ui->taskView);
     isPressed = false;
     tasks = tasksForTest;

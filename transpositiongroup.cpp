@@ -105,6 +105,11 @@ TranspositionGroup::TranspositionGroup(const QString &str, int order)
     }
 }
 
+TranspositionGroup::TranspositionGroup(QVector<int> data)
+{
+    tp.push_back(data);
+}
+
 TranspositionGroup TranspositionGroup::operator *(TranspositionGroup &trans)
 {
     QVector<std::pair<int, int>> result;
@@ -226,8 +231,7 @@ QString TranspositionGroup::writeToMode(ViewMode mode, bool forTest){
                 isTrivial = false;
                 break;
             }
-        }
-        if (!isTrivial) {
+        } if (!isTrivial) {
             for (int i = 0; i < tp.size(); i++) {
                 for (int j = 0; j < tp[i].size(); j++){
                     if (tp[i].size() > 1) {
@@ -243,7 +247,17 @@ QString TranspositionGroup::writeToMode(ViewMode mode, bool forTest){
             for (int i = 0; i < tp.size(); i++) {
                 result += "(" + QString::number(tp[i][0]) + ")";
             }
-        }
+        } break;
+    case ViewMode::Decomposition:
+        for(int I = 0; I < tp.size(); I++) {
+            if (tp[I].size() > 1) {
+                for (int i = 0; i < tp[I].size() - 1; i++) {
+                    result += "(" + QString::number(tp[I][0]) + "," + QString::number(tp[I][i + 1]) + ")";
+                }
+            }
+        } break;
+    case ViewMode::Neighbors:
+
         break;
     case ViewMode::Standart:
         int cnt = 0;
@@ -282,21 +296,24 @@ QString TranspositionGroup::writeToMode(ViewMode mode, bool forTest){
                     result += QString::number(tmp[i]) + ",";
                 else result += QString::number(tmp[i]) + ")";
             }
-        }
+        } break;
     } return result;
 }
 
-void TranspositionGroup::setTask(int n, ViewMode mode)
+void TranspositionGroup::setTask(int n, ViewMode mode, bool identityForbidden)
 {
     QRandomGenerator *gen = QRandomGenerator::global();
-    int cnt = 0, curValue;
+    int curValue;
     QVector<int> sizes, id, tmp;
     //Random weight initializing
-    while (cnt != n) {
-        curValue = static_cast<int>(gen->bounded(1, (n + 1) - cnt));
-        sizes.push_back(curValue);
-        cnt += curValue;
-    }
+    do {
+        int cnt = 0; sizes.clear();
+        while (cnt != n) {
+            curValue = static_cast<int>(gen->bounded(1, (n + 1) - cnt));
+            sizes.push_back(curValue);
+            cnt += curValue;
+        }
+    } while (identityForbidden && *std::max_element(sizes.begin(), sizes.end()) == 1);
     //Identity transposition
     for (int i = 1; i < n + 1; i++) {
         id.push_back(i);
@@ -393,4 +410,14 @@ int TranspositionGroup::getOrder(){
         order = LCM(order, tp[i + 1].size());
     }
     return order;
+}
+
+TranspositionGroup TranspositionGroup::simplify(){
+    if (tp.size() > 1) {
+        TranspositionGroup base(tp[0]);
+        for (int I = 1; I < tp.size(); I++) {
+            TranspositionGroup tmp(tp[I]);
+            base = base * tmp;
+        } tp = base.tp;
+    } return *this;
 }

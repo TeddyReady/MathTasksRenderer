@@ -13,7 +13,9 @@ class DialogTranspositionGroup;
 enum class TranspositionGroupOptions {
        Write, Multiply,
     Inverse,  Order, Mod2,
-        Cycle, Count
+        Cycle, Count,
+        Decomposition,
+          Neighbor
 };
 
 class DialogTranspositionGroup : public QDialog {
@@ -35,9 +37,13 @@ private slots:
     void on_btnMod2_clicked();
     void on_btnCount_clicked();
     void on_btnOrder_clicked();
+    void on_btnDec_clicked();
+
+    void on_btnNeighbor_clicked();
+
 private:
     int count; bool isCancelExist;
-    ViewMode taskWrite, taskMultiply, taskInverse, taskOrder, taskMod2, taskCycle, taskCount;
+    ViewMode taskWrite, taskMultiply, taskInverse, taskOrder, taskMod2, taskCycle, taskCount, taskDec, taskNeighbor;
     Ui::DialogTranspositionGroup *ui;
 };
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>708</width>
-    <height>350</height>
+    <width>763</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,17 +26,47 @@
    </item>
    <item row="1" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="5" column="0">
-      <widget class="QCheckBox" name="btnMod2">
+     <item row="5" column="2">
+      <widget class="QSpinBox" name="spinMod2"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QCheckBox" name="btnInverse">
        <property name="text">
-        <string>Вычислить четность</string>
+        <string>Найти обратную</string>
        </property>
       </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QPushButton" name="typeCount">
+       <property name="text">
+        <string>Выбрать вид...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="labelCnt">
+       <property name="text">
+        <string>Количество заданий</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QSpinBox" name="spinInverse"/>
      </item>
      <item row="1" column="1">
       <widget class="QPushButton" name="typeWrite">
        <property name="text">
         <string>Выбрать вид...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QSpinBox" name="spinMultiply">
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="value">
+        <number>0</number>
        </property>
       </widget>
      </item>
@@ -47,27 +77,58 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QCheckBox" name="btnMultiply">
-       <property name="text">
-        <string>Произведение подстановок</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="2">
-      <widget class="QSpinBox" name="spinWrite"/>
-     </item>
-     <item row="4" column="0">
-      <widget class="QCheckBox" name="btnCycle">
-       <property name="text">
-        <string>Вычислить цикловой тип</string>
+      <widget class="QSpinBox" name="spinWrite">
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="value">
+        <number>0</number>
        </property>
       </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QCheckBox" name="btnMod2">
+       <property name="text">
+        <string>Вычислить четность</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QPushButton" name="typeCycle">
+       <property name="text">
+        <string>Выбрать вид...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QCheckBox" name="btnOrder">
+       <property name="text">
+        <string>Вычислить порядок подстановки</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QPushButton" name="typeMod2">
+       <property name="text">
+        <string>Выбрать вид...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2">
+      <widget class="QSpinBox" name="spinOrder"/>
      </item>
      <item row="2" column="1">
       <widget class="QPushButton" name="typeMultiply">
        <property name="text">
         <string>Выбрать вид...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QCheckBox" name="btnWrite">
+       <property name="text">
+        <string>Записать подстановку указанным способом</string>
        </property>
       </widget>
      </item>
@@ -78,23 +139,27 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
-      <widget class="QSpinBox" name="spinMultiply"/>
-     </item>
-     <item row="1" column="0">
-      <widget class="QCheckBox" name="btnWrite">
+     <item row="4" column="0">
+      <widget class="QCheckBox" name="btnCycle">
        <property name="text">
-        <string>Записать подстановку указанным способом</string>
+        <string>Вычислить цикловой тип</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="2">
-      <widget class="QSpinBox" name="spinInverse"/>
+     <item row="4" column="2">
+      <widget class="QSpinBox" name="spinCycle"/>
      </item>
-     <item row="3" column="0">
-      <widget class="QCheckBox" name="btnInverse">
+     <item row="2" column="0">
+      <widget class="QCheckBox" name="btnMultiply">
        <property name="text">
-        <string>Найти обратную</string>
+        <string>Произведение подстановок</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QPushButton" name="typeDec">
+       <property name="text">
+        <string>Выбрать вид...</string>
        </property>
       </widget>
      </item>
@@ -110,33 +175,15 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="0">
-      <widget class="QCheckBox" name="btnOrder">
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Вычислить порядок подстановки</string>
+        <string>Вид исходной подстановки</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
-      <widget class="QPushButton" name="typeCycle">
-       <property name="text">
-        <string>Выбрать вид...</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QPushButton" name="typeMod2">
-       <property name="text">
-        <string>Выбрать вид...</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QPushButton" name="typeCount">
-       <property name="text">
-        <string>Выбрать вид...</string>
-       </property>
-      </widget>
+     <item row="6" column="2">
+      <widget class="QSpinBox" name="spinCount"/>
      </item>
      <item row="7" column="1">
       <widget class="QPushButton" name="typeOrder">
@@ -145,31 +192,32 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="2">
-      <widget class="QSpinBox" name="spinOrder"/>
-     </item>
-     <item row="6" column="2">
-      <widget class="QSpinBox" name="spinCount"/>
-     </item>
-     <item row="5" column="2">
-      <widget class="QSpinBox" name="spinMod2"/>
-     </item>
-     <item row="4" column="2">
-      <widget class="QSpinBox" name="spinCycle"/>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="label_2">
+     <item row="8" column="0">
+      <widget class="QCheckBox" name="btnDec">
        <property name="text">
-        <string>Вид исходной подстановки</string>
+        <string>Разложить перестановку в произведение транспозиций</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="labelCnt">
+     <item row="9" column="0">
+      <widget class="QCheckBox" name="btnNeighbor">
        <property name="text">
-        <string>Количество заданий</string>
+        <string>Разложить в произведение транспозиций соседних элементов</string>
        </property>
       </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QPushButton" name="typeNeighbor">
+       <property name="text">
+        <string>Выбрать вид...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="2">
+      <widget class="QSpinBox" name="spinDec"/>
+     </item>
+     <item row="9" column="2">
+      <widget class="QSpinBox" name="spinNeighbor"/>
      </item>
     </layout>
    </item>
@@ -190,7 +238,11 @@
      <item row="1" column="0">
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="1">
-        <widget class="QSpinBox" name="spinNmin"/>
+        <widget class="QSpinBox" name="spinNmin">
+         <property name="minimum">
+          <number>2</number>
+         </property>
+        </widget>
        </item>
        <item row="0" column="3">
         <widget class="QLabel" name="label_5">

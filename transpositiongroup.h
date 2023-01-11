@@ -10,7 +10,9 @@
 #include "basemath.h"
 
 enum class ViewMode {
-    Standart, Cycle
+    Standart, Cycle,
+     Decomposition,
+       Neighbors
 };
 
 class TranspositionGroup {
@@ -20,11 +22,12 @@ public:
     explicit TranspositionGroup();
     explicit TranspositionGroup(QVector<std::pair<int, int>>);
     explicit TranspositionGroup(const QString &str, int order);
+    explicit TranspositionGroup(QVector<int>);
     TranspositionGroup operator *(TranspositionGroup &trans);
     TranspositionGroup operator ~();
     bool operator ==(const TranspositionGroup& trans);
 
-    void setTask(int, ViewMode mode);
+    void setTask(int, ViewMode mode, bool identityForbidden = false);
     int getTask();
     QVector<QVector<int>>& getTransposition();
     ViewMode getViewMode();
@@ -33,6 +36,7 @@ public:
     int getHaos();
     QString getEven(bool forTest = false);
     int getOrder();
+    TranspositionGroup simplify();
 };
 
 #endif // TRANSPOSITIONGROUP_H

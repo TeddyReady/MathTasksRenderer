@@ -28,6 +28,16 @@ DialogResults::DialogResults(QWidget *parent, tasks_type *tasks, QVector<QString
                 model->setData(model->index(i, 0), QColor(Qt::darkRed), Qt::BackgroundColorRole);
                 model->setData(model->index(i, 1), QColor(Qt::darkRed), Qt::BackgroundColorRole);
             }
+        } if (std::get<2>((*tasks)[i]) == SupCommands::MultiTransposition) {
+            if (TranspositionGroup(std::get<1>((*tasks)[i]), std::get<3>((*tasks)[i])).simplify() ==
+                TranspositionGroup((*results)[i], std::get<3>((*tasks)[i])).simplify()){
+                userCount++;
+                model->setData(model->index(i, 0), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
+                model->setData(model->index(i, 1), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
+            } else {
+                model->setData(model->index(i, 0), QColor(Qt::darkRed), Qt::BackgroundColorRole);
+                model->setData(model->index(i, 1), QColor(Qt::darkRed), Qt::BackgroundColorRole);
+            }
         } else {
             if (std::get<1>((*tasks)[i]) == (*results)[i]) {
                 userCount++;
@@ -82,6 +92,8 @@ QRegExp getInstructions(SupCommands command)
     case SupCommands::Transposition:
         regex = QRegExp("(\\(([0-9]+(,|))+\\))+");
         break;
-
+    case SupCommands::MultiTransposition:
+        regex = QRegExp("(\\(([0-9]+(,|))+\\))+");
+        break;
     } return regex;
 }

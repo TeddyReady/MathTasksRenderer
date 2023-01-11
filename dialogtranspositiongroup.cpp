@@ -29,6 +29,12 @@ DialogTranspositionGroup::DialogTranspositionGroup(QWidget *parent, bool mode) :
     ui->btnCount->setChecked(false);
     ui->spinCount->setDisabled(true);
     ui->typeCount->setDisabled(true);
+    ui->btnDec->setChecked(false);
+    ui->spinDec->setDisabled(true);
+    ui->typeDec->setDisabled(true);
+    ui->btnNeighbor->setChecked(false);
+    ui->spinNeighbor->setDisabled(true);
+    ui->typeNeighbor->setDisabled(true);
     if (mode) {
         ui->buttonBox->button(QDialogButtonBox::Cancel)->deleteLater();
         ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Сгенерировать задания");
@@ -52,6 +58,8 @@ void DialogTranspositionGroup::on_buttonBox_accepted()
     if (ui->btnMod2->isChecked()) count += ui->spinMod2->value();
     if (ui->btnCount->isChecked()) count += ui->spinCount->value();
     if (ui->btnOrder->isChecked()) count += ui->spinOrder->value();
+    if (ui->btnDec->isChecked()) count += ui->spinDec->value();
+    if (ui->btnNeighbor->isChecked()) count += ui->spinNeighbor->value();
     emit dialogTranspositionGroupMeta(count); count = 0;
     if (ui->btnWrite->isChecked())
         emit dialogTranspositionGroup(ui->spinWrite->value(), ui->spinNmin->value(), ui->spinNmax->value() + 1, TranspositionGroupOptions::Write, taskWrite);
@@ -66,7 +74,11 @@ void DialogTranspositionGroup::on_buttonBox_accepted()
     if (ui->btnCount->isChecked())
         emit dialogTranspositionGroup(ui->spinCount->value(), ui->spinNmin->value(), ui->spinNmax->value() + 1, TranspositionGroupOptions::Count, taskCount);
     if (ui->btnOrder->isChecked())
-        emit dialogTranspositionGroup(ui->spinOrder->value(), ui->spinNmin->value(), ui->spinNmax->value() + 1, TranspositionGroupOptions::Order, taskOrder);   
+        emit dialogTranspositionGroup(ui->spinOrder->value(), ui->spinNmin->value(), ui->spinNmax->value() + 1, TranspositionGroupOptions::Order, taskOrder);
+    if (ui->btnDec->isChecked())
+        emit dialogTranspositionGroup(ui->spinDec->value(), ui->spinNmin->value(), ui->spinNmax->value() + 1, TranspositionGroupOptions::Decomposition, taskDec);
+    if (ui->btnNeighbor->isChecked())
+        emit dialogTranspositionGroup(ui->spinNeighbor->value(), ui->spinNmin->value(), ui->spinNmax->value() + 1, TranspositionGroupOptions::Neighbor, taskNeighbor);
     if (isCancelExist) close();
 }
 
@@ -353,5 +365,85 @@ void DialogTranspositionGroup::on_btnOrder_clicked()
         ui->typeOrder->setDisabled(true);
         ui->typeOrder->menu()->deleteLater();
         ui->typeOrder->setText("Выбрать вид...");
+    }
+}
+
+void DialogTranspositionGroup::on_btnDec_clicked()
+{
+    if (ui->btnDec->isChecked()) {
+        ui->typeDec->setEnabled(true);
+
+        QMenu *subMenu = new QMenu(ui->typeDec);
+        QAction *viewDefault = new QAction("Канонический вид");
+        QAction *viewCycle = new QAction("Циклический вид");
+        viewDefault->setCheckable(true);
+        viewCycle->setCheckable(true);
+        subMenu->addAction(viewDefault);
+        subMenu->addAction(viewCycle);
+        ui->typeDec->setMenu(subMenu);
+        connect(viewDefault, &QAction::triggered, [=](){
+            ui->spinDec->setEnabled(true);
+            if (viewDefault->isChecked()) {
+                viewCycle->setChecked(false);
+            }
+            viewDefault->setChecked(true);
+            ui->typeDec->setText("Канонический вид");
+            taskDec = ViewMode::Standart;
+        });
+        connect(viewCycle, &QAction::triggered, [=](){
+            ui->spinDec->setEnabled(true);
+            if (viewCycle->isChecked()) {
+                viewDefault->setChecked(false);
+            }
+            viewCycle->setChecked(true);
+            ui->typeDec->setText("Циклический вид");
+            taskDec = ViewMode::Cycle;
+        });
+
+    } else {
+        ui->spinDec->setDisabled(true);
+        ui->typeDec->setDisabled(true);
+        ui->typeDec->menu()->deleteLater();
+        ui->typeDec->setText("Выбрать вид...");
+    }
+}
+
+void DialogTranspositionGroup::on_btnNeighbor_clicked()
+{
+    if (ui->btnNeighbor->isChecked()) {
+        ui->typeNeighbor->setEnabled(true);
+
+        QMenu *subMenu = new QMenu(ui->typeNeighbor);
+        QAction *viewDefault = new QAction("Канонический вид");
+        QAction *viewCycle = new QAction("Циклический вид");
+        viewDefault->setCheckable(true);
+        viewCycle->setCheckable(true);
+        subMenu->addAction(viewDefault);
+        subMenu->addAction(viewCycle);
+        ui->typeNeighbor->setMenu(subMenu);
+        connect(viewDefault, &QAction::triggered, [=](){
+            ui->spinNeighbor->setEnabled(true);
+            if (viewDefault->isChecked()) {
+                viewCycle->setChecked(false);
+            }
+            viewDefault->setChecked(true);
+            ui->typeNeighbor->setText("Канонический вид");
+            taskNeighbor = ViewMode::Standart;
+        });
+        connect(viewCycle, &QAction::triggered, [=](){
+            ui->spinNeighbor->setEnabled(true);
+            if (viewCycle->isChecked()) {
+                viewDefault->setChecked(false);
+            }
+            viewCycle->setChecked(true);
+            ui->typeNeighbor->setText("Циклический вид");
+            taskNeighbor = ViewMode::Cycle;
+        });
+
+    } else {
+        ui->spinNeighbor->setDisabled(true);
+        ui->typeNeighbor->setDisabled(true);
+        ui->typeNeighbor->menu()->deleteLater();
+        ui->typeNeighbor->setText("Выбрать вид...");
     }
 }
