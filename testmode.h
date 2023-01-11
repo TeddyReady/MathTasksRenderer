@@ -12,9 +12,11 @@
 #include <QToolBar>
 #include <QWebView>
 #include <QRegExp>
+#include <QTimer>
 
+#include "qtmathjax/texengine.h"
+#include "dialogtesttimer.h"
 #include "dialogresults.h"
-#include "texengine.h"
 
 namespace Ui {
 class TestMode;
@@ -26,7 +28,7 @@ private:
     void finishTest();
     void closeEvent(QCloseEvent *event);
 public:
-    explicit TestMode(QWidget *parent = nullptr, tasks_type *tasksForTest = nullptr);
+    explicit TestMode(QWidget *parent = nullptr, tasks_type *tasksForTest = nullptr, QTime time = QTime(0, 0, 0, 0));
     ~TestMode();
 signals:
     void closeWindow();
@@ -34,12 +36,15 @@ private slots:
     void changeTask();
     void on_prevTask_clicked();
     void on_nextTask_clicked();
+    void updateTime();
 private:
     tasks_type* tasks;
     QVector<QString> *results;
     int curTask;
     bool isPressed;
     TeXEngine *engine;
+    QTime allTime;
+    QTimer *timer;
     Ui::TestMode *ui;
 };
 

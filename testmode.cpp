@@ -1,8 +1,8 @@
 #include "testmode.h"
 #include "ui_testmode.h"
 
-TestMode::TestMode(QWidget *parent, tasks_type* tasksForTest) :
-    QMainWindow(parent),
+TestMode::TestMode(QWidget *parent, tasks_type* tasksForTest, QTime time) :
+    QMainWindow(parent), allTime(time),
     ui(new Ui::TestMode)
 {
     ui->setupUi(this);
@@ -16,7 +16,7 @@ TestMode::TestMode(QWidget *parent, tasks_type* tasksForTest) :
         ui->toolBar->hide();
         results->push_back("");
         ui->groupBox->setTitle("Задание 1");
-        engine->TeX2SVG((*tasks)[0].first.first, true);
+        engine->TeX2SVG((*tasks)[0].first.first);
         ui->lineEdit->setValidator(new QRegExpValidator(getInstructions((*tasks)[0].second.first), this));
         curTask = 1;
     } else {
@@ -30,6 +30,13 @@ TestMode::TestMode(QWidget *parent, tasks_type* tasksForTest) :
             }
         } ui->prevTask->setDisabled(true);
     }
+    if (allTime != QTime(0, 0, 0, 0)) {
+        timer = new QTimer(this);
+        timer->setInterval(1000);
+        connect(timer, SIGNAL(timeout()), this, SLOT(updateTime()));
+        ui->timeLabel->setText(allTime.toString("hh:mm:ss"));
+        timer->start();
+    } else ui->timeLabel->hide();
 }
 
 TestMode::~TestMode()
@@ -47,7 +54,7 @@ void TestMode::changeTask()
     }
     curTask = static_cast<QString>(tmp->text().split("№").last()).toInt();
     ui->groupBox->setTitle("Задание " + QString::number(curTask));
-    engine->TeX2SVG((*tasks)[curTask - 1].first.first, true);
+    engine->TeX2SVG((*tasks)[curTask - 1].first.first);
     ui->lineEdit->setValidator(new QRegExpValidator(getInstructions((*tasks)[curTask - 1].second.first), this));
     if ((*results)[curTask - 1] != "") {
         ui->lineEdit->setText((*results)[curTask - 1]);
@@ -78,7 +85,7 @@ void TestMode::on_prevTask_clicked()
     }
     curTask = static_cast<QString>(ui->groupBox->title().split(" ").last()).toInt() - 1;
     ui->groupBox->setTitle("Задание " + QString::number(curTask));
-    engine->TeX2SVG((*tasks)[curTask - 1].first.first, true);
+    engine->TeX2SVG((*tasks)[curTask - 1].first.first);
     ui->lineEdit->setValidator(new QRegExpValidator(getInstructions((*tasks)[curTask - 1].second.first), this));
     if ((*results)[curTask - 1] != "") {
         ui->lineEdit->setText((*results)[curTask - 1]);
@@ -109,7 +116,7 @@ void TestMode::on_nextTask_clicked()
                 ui->nextTask->setText("Завершить");
             }
             ui->groupBox->setTitle("Задание " + QString::number(curTask));
-            engine->TeX2SVG((*tasks)[curTask - 1].first.first, true);
+            engine->TeX2SVG((*tasks)[curTask - 1].first.first);
             ui->lineEdit->setValidator(new QRegExpValidator(getInstructions((*tasks)[curTask - 1].second.first), this));
             if ((*results)[curTask - 1] != "") {
                 ui->lineEdit->setText((*results)[curTask - 1]);
@@ -130,6 +137,7 @@ void TestMode::finishTest()
         (*results)[curTask - 1] = ui->lineEdit->text();
         ui->lineEdit->clear();
     }
+    if (allTime != QTime(0, 0, 0, 0)) delete timer;
     DialogResults *window = new DialogResults(this, tasks, results);
     window->setWindowTitle("Результаты теста");
     window->setModal(true);
@@ -142,4 +150,12 @@ void TestMode::closeEvent(QCloseEvent *event){
     tasks->clear();
     tasks = nullptr;
     event->accept();
+}
+
+void TestMode::updateTime(){
+    if (allTime != QTime(0, 0, 0, 0)) {
+        allTime = allTime.addSecs(-1);
+        ui->timeLabel->setText(allTime.toString("hh:mm:ss"));
+    }
+    else finishTest();
 }
