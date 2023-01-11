@@ -13,5 +13,6 @@
         <file>img/checkAnswers.png</file>
         <file>img/clearTasks.png</file>
         <file>img/quit.jpg</file>
+        <file>img/reload.png</file>
     </qresource>
 </RCC>

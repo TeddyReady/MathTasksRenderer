@@ -10,10 +10,14 @@ TestMode::TestMode(QWidget *parent, tasks_type* tasksForTest, QTime time) :
     isPressed = false;
     tasks = tasksForTest;
     results = new QVector<QString>;
+    QAction *reloadAction = new QAction(QPixmap("://img/reload.png"), "Reload task", ui->toolBar);
+    connect(reloadAction, &QAction::triggered, [&](){
+        engine->TeX2SVG(std::get<0>((*tasks)[curTask - 1]), true);
+    }); ui->toolBar->addAction(reloadAction);
+
     if (tasks->size() == 1) {
         ui->prevTask->setHidden(true);
         ui->nextTask->setText("Завершить");
-        ui->toolBar->hide();
         results->push_back("");
         ui->groupBox->setTitle("Задание 1");
         engine->TeX2SVG(std::get<0>((*tasks)[0]), true);
@@ -23,8 +27,8 @@ TestMode::TestMode(QWidget *parent, tasks_type* tasksForTest, QTime time) :
         for (int i = 0; i < tasks->size(); i++) {
             results->push_back("");
             QAction *taskAction = new QAction("№" + QString::number(i + 1), ui->toolBar);
-            ui->toolBar->addAction(taskAction);
             connect(taskAction, SIGNAL(triggered()), this, SLOT(changeTask()));
+            ui->toolBar->addAction(taskAction);
             if (i == 0) {
                 emit taskAction->triggered();
             }

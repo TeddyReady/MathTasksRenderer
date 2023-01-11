@@ -12,10 +12,10 @@
   </head>
   <body>
     <script>
-      //MathJax.Hub.Config({
-        //jax: ["input/TeX", "output/HTML-CSS"],
-        //displayAlign: "left"
-      //});
+      MathJax.Hub.Config({
+        jax: ["input/TeX", "output/HTML-CSS"],
+        displayAlign: "center"
+      });
       MathJax.Hub.signal.Interest( function ( message ) {
         if ( message[0] == 'End Update' )
           qtapp.MathJaxDone();

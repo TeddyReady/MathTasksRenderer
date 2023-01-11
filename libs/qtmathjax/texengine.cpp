@@ -1,7 +1,4 @@
 #include "texengine.h"
-#include <QCoreApplication>
-#include <QWebElement>
-#include <QDir>
 
 TeXEngine::TeXEngine (QWebView *webView)
     : view(webView) , running( false ), isReady( false )

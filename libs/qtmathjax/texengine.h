@@ -1,9 +1,11 @@
 #ifndef TEXENGINE_H
 #define TEXENGINE_H
-
-#include <QWebView>
+#include <QCoreApplication>
+#include <QWebElement>
 #include <QWebFrame>
+#include <QWebView>
 #include <QCache>
+#include <QDir>
 
 class TeXEngine: QObject {
     Q_OBJECT
