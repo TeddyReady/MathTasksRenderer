@@ -232,9 +232,10 @@ bool TranspositionGroup::operator ==(const TranspositionGroup& trans){
 }
 
 QString TranspositionGroup::writeToMode(ViewMode mode, bool forTest){
-    QString result; bool isTrivial = true;
+    QString result;
     switch (mode) {
-    case ViewMode::Cycle:
+    case ViewMode::Cycle: {
+        bool isTrivial = true;
         for (int i = 0; i < tp.size(); i++) {
             if (tp[i].size() > 1) {
                 isTrivial = false;
@@ -257,6 +258,7 @@ QString TranspositionGroup::writeToMode(ViewMode mode, bool forTest){
                 result += "(" + QString::number(tp[i][0]) + ")";
             }
         } break;
+    }
     case ViewMode::Decomposition:
         for(int I = 0; I < tp.size(); I++) {
             if (tp[I].size() > 1) {
@@ -265,10 +267,30 @@ QString TranspositionGroup::writeToMode(ViewMode mode, bool forTest){
                 }
             }
         } break;
-    case ViewMode::Neighbors:
-
+    case ViewMode::Neighbors: {
+        TranspositionGroup *tmp = new TranspositionGroup(this->writeToMode(ViewMode::Decomposition), this->getTask());
+        for (int i = 0; i < tmp->tp.size(); i++) {
+            if (tmp->tp[i].size() > 1) {
+                std::sort(tmp->tp[i].begin(), tmp->tp[i].end());
+                if (tmp->tp[i][1] - tmp->tp[i][0] != 1) {
+                    int target = tmp->tp[i][1];
+                    tmp->tp[i][1] = tmp->tp[i][0] + 1;
+                    QVector<QString> *options = new QVector<QString>;
+                    options->push_back("(" + QString::number(tmp->tp[i][0]) + "," + QString::number(tmp->tp[i][1]) + ")");
+                    while (tmp->tp[i][1] != target) {
+                        options->push_back("(" + QString::number(tmp->tp[i][1]) + "," + QString::number(tmp->tp[i][1] + 1) + ")");
+                        options->push_front("(" + QString::number(tmp->tp[i][1]) + "," + QString::number(tmp->tp[i][1] + 1) + ")");
+                        tmp->tp[i][1]++;
+                    } for (int j = 0; j < options->size(); j++) {
+                        result += (*options)[j];
+                    } delete options;
+                } else result += "(" + QString::number(tmp->tp[i][0]) + "," + QString::number(tmp->tp[i][1]) + ")";
+            }
+        }
+        delete tmp;
         break;
-    case ViewMode::Standart:
+    }
+    case ViewMode::Standart: {
         int cnt = 0;
         for (int i = 0; i < tp.size(); i++) {
             cnt += tp[i].size();
@@ -306,7 +328,7 @@ QString TranspositionGroup::writeToMode(ViewMode mode, bool forTest){
                 else result += QString::number(tmp[i]) + ")";
             }
         } break;
-    } return result;
+    }} return result;
 }
 
 void TranspositionGroup::setTask(int n, ViewMode mode, bool identityForbidden)

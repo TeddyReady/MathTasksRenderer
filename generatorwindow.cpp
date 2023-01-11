@@ -910,13 +910,40 @@ void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, i
                       QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?}";
                     tasksForTest->push_back(std::make_tuple(taskText, task.writeToMode(ViewMode::Decomposition), SupCommands::MultiTransposition, task.getTask()));
                 } else {
-                    QString taskText = "\\color{sienna}{Запишите~подстановку~в~виде~произведения~транспозиций\\\\S_{" +
+                    QString taskText = "\\color{sienna}{Запишите~подстановку~в~виде~произведения~транспозиций.\\\\S_{" +
                       QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?}";
                     tasksForTest->push_back(std::make_tuple(taskText, task.writeToMode(ViewMode::Decomposition), SupCommands::MultiTransposition, task.getTask()));
                 }
             } i++; curTaskCount++;
         } break;
 
+    case TranspositionGroupOptions::Neighbor:
+        if (!this->mode) {
+            *tasksForWork += "Запишите~подстановку~в~виде~произведения~транспозиций~соседних~элементов:\\\\";
+            *solvedWorkTasks += "Запишите~подстановку~в~виде~произведения~транспозиций~соседних~элементов:\\\\";
+        }
+        for (int i = 0; i < countOfTasks;) {
+            task.setTask(random->bounded(minN, maxN), mode, true);
+            if (!this->mode) {
+                if (task.getViewMode() == ViewMode::Standart) {
+                    *tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?\\\\";
+                    *solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=" + task.writeToMode(ViewMode::Neighbors) + "\\\\";
+                } else {
+                    *tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?\\\\";
+                    *solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=" + task.writeToMode(ViewMode::Neighbors) + "\\\\";
+                } isReadyRender(); localCount++;
+            } else {
+                if (task.getViewMode() == ViewMode::Standart) {
+                    QString taskText = "\\color{sienna}{Запишите~подстановку~в~виде~произведения~транспозиций~соседних~элементов.\\\\S_{" +
+                      QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?}";
+                    tasksForTest->push_back(std::make_tuple(taskText, task.writeToMode(ViewMode::Neighbors), SupCommands::MultiTransposition, task.getTask()));
+                } else {
+                    QString taskText = "\\color{sienna}{Запишите~подстановку~в~виде~произведения~транспозиций~соседних~элементов.\\\\S_{" +
+                      QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?}";
+                    tasksForTest->push_back(std::make_tuple(taskText, task.writeToMode(ViewMode::Neighbors), SupCommands::MultiTransposition, task.getTask()));
+                }
+            } i++; curTaskCount++;
+        } break;
     }
 }
 
