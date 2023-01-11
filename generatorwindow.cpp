@@ -34,7 +34,7 @@ void GeneratorWindow::uploadUI()
     ui->genButton->setEnabled(true);
     ui->genButton->setCursor(Qt::PointingHandCursor);
     ui->pushButton->setCursor(Qt::PointingHandCursor);
-    ui->webView->load(QUrl("qrc:/web/index.html"));
+    ui->webView->load(QUrl("qrc:/web/theory.html"));
     ui->webView->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->tabWidget->tabBar()->setCursor(Qt::PointingHandCursor);
     ui->taskView->setCursor(Qt::BlankCursor);
