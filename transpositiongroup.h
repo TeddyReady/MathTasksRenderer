@@ -22,7 +22,7 @@ public:
     explicit TranspositionGroup();
     explicit TranspositionGroup(QVector<std::pair<int, int>>);
     explicit TranspositionGroup(const QString &str, int order);
-    explicit TranspositionGroup(QVector<int>);
+    explicit TranspositionGroup(QVector<int>, int);
     TranspositionGroup operator *(TranspositionGroup &trans);
     TranspositionGroup operator ~();
     bool operator ==(const TranspositionGroup& trans);
@@ -36,7 +36,7 @@ public:
     int getHaos();
     QString getEven(bool forTest = false);
     int getOrder();
-    TranspositionGroup simplify();
+    TranspositionGroup simplify(int);
 };
 
 #endif // TRANSPOSITIONGROUP_H

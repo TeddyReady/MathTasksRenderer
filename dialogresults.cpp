@@ -29,8 +29,8 @@ DialogResults::DialogResults(QWidget *parent, tasks_type *tasks, QVector<QString
                 model->setData(model->index(i, 1), QColor(Qt::darkRed), Qt::BackgroundColorRole);
             }
         } if (std::get<2>((*tasks)[i]) == SupCommands::MultiTransposition) {
-            if (TranspositionGroup(std::get<1>((*tasks)[i]), std::get<3>((*tasks)[i])).simplify() ==
-                TranspositionGroup((*results)[i], std::get<3>((*tasks)[i])).simplify()){
+            if (TranspositionGroup(std::get<1>((*tasks)[i]), std::get<3>((*tasks)[i])).simplify(std::get<3>((*tasks)[i])) ==
+                TranspositionGroup((*results)[i], std::get<3>((*tasks)[i])).simplify(std::get<3>((*tasks)[i]))){
                 userCount++;
                 model->setData(model->index(i, 0), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
                 model->setData(model->index(i, 1), QColor(Qt::darkGreen), Qt::BackgroundColorRole);

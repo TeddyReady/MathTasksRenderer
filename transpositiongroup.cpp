@@ -105,9 +105,18 @@ TranspositionGroup::TranspositionGroup(const QString &str, int order)
     }
 }
 
-TranspositionGroup::TranspositionGroup(QVector<int> data)
+TranspositionGroup::TranspositionGroup(QVector<int> data, int order)
 {
-    tp.push_back(data);
+    bool isFind = false;
+    for (int i = 1; i <= order; i++) {
+        for (int j = 0; j < data.size(); j++) {
+            if (i == data[j]) isFind = true;
+        } if (!isFind) {
+            QVector<int> tmp;
+            tmp.push_back(i);
+            tp.push_back(tmp);
+        } else isFind = false;
+    } tp.push_back(data);
 }
 
 TranspositionGroup TranspositionGroup::operator *(TranspositionGroup &trans)
@@ -412,11 +421,11 @@ int TranspositionGroup::getOrder(){
     return order;
 }
 
-TranspositionGroup TranspositionGroup::simplify(){
+TranspositionGroup TranspositionGroup::simplify(int order){
     if (tp.size() > 1) {
-        TranspositionGroup base(tp[0]);
+        TranspositionGroup base(tp[0], order);
         for (int I = 1; I < tp.size(); I++) {
-            TranspositionGroup tmp(tp[I]);
+            TranspositionGroup tmp(tp[I], order);
             base = base * tmp;
         } tp = base.tp;
     } return *this;
