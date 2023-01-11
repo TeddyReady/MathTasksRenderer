@@ -107,19 +107,27 @@ void GeneratorWindow::on_pushButton_clicked()
     if (tasksForTest->isEmpty())
     statusBar()->showMessage("Перед запуском теста, необходимо сгенерировать задания!", 1500);
     else {
-        //Рандомная сортировка
-        for (int i = 0; i < tasksForTest->size(); i++) {
-            int j = random->bounded(0, tasksForTest->size());
-            auto tmp = (*tasksForTest)[i];
-            (*tasksForTest)[i] = (*tasksForTest)[j];
-            (*tasksForTest)[j] = tmp;
-        }
-        TestMode *testWindow = new TestMode(this, tasksForTest);
-        testWindow->setWindowTitle("Тест");
-        testWindow->show();
-        totalTestTasks = 0;
-        ui->lcdNumber->display(totalTestTasks);
+        DialogTestTimer *window = new DialogTestTimer(this);
+        connect(window, SIGNAL(timeRemaining(QTime)), this, SLOT(startTest(QTime)));
+        window->setWindowTitle("Конфигурация Теста");
+        window->exec();
     }
+}
+
+void GeneratorWindow::startTest(QTime time)
+{
+    //Рандомная сортировка
+    for (int i = 0; i < tasksForTest->size(); i++) {
+        int j = random->bounded(0, tasksForTest->size());
+        auto tmp = (*tasksForTest)[i];
+        (*tasksForTest)[i] = (*tasksForTest)[j];
+        (*tasksForTest)[j] = tmp;
+    }
+    TestMode *testWindow = new TestMode(this, tasksForTest, time);
+    testWindow->setWindowTitle("Тест");
+    testWindow->show();
+    totalTestTasks = 0;
+    ui->lcdNumber->display(totalTestTasks);
 }
 
 void GeneratorWindow::on_genButton_clicked()

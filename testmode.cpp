@@ -34,9 +34,9 @@ TestMode::TestMode(QWidget *parent, tasks_type* tasksForTest, QTime time) :
         timer = new QTimer(this);
         timer->setInterval(1000);
         connect(timer, SIGNAL(timeout()), this, SLOT(updateTime()));
-        ui->timeLabel->setText(allTime.toString("hh:mm:ss"));
+        statusBar()->showMessage(allTime.toString("hh:mm:ss"), 1000);
         timer->start();
-    } else ui->timeLabel->hide();
+    }
 }
 
 TestMode::~TestMode()
@@ -137,7 +137,7 @@ void TestMode::finishTest()
         (*results)[curTask - 1] = ui->lineEdit->text();
         ui->lineEdit->clear();
     }
-    if (allTime != QTime(0, 0, 0, 0)) delete timer;
+    delete timer;
     DialogResults *window = new DialogResults(this, tasks, results);
     window->setWindowTitle("Результаты теста");
     window->setModal(true);
@@ -155,7 +155,7 @@ void TestMode::closeEvent(QCloseEvent *event){
 void TestMode::updateTime(){
     if (allTime != QTime(0, 0, 0, 0)) {
         allTime = allTime.addSecs(-1);
-        ui->timeLabel->setText(allTime.toString("hh:mm:ss"));
+        statusBar()->showMessage(allTime.toString("hh:mm:ss"), 1000);
     }
     else finishTest();
 }

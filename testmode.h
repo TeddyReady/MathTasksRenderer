@@ -14,9 +14,9 @@
 #include <QRegExp>
 #include <QTimer>
 
-#include "qtmathjax/texengine.h"
 #include "dialogtesttimer.h"
 #include "dialogresults.h"
+#include "texengine.h"
 
 namespace Ui {
 class TestMode;

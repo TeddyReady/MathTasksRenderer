@@ -6,6 +6,7 @@ DialogTestTimer::DialogTestTimer(QWidget *parent) :
     ui(new Ui::DialogTestTimer)
 {
     ui->setupUi(this);
+    ui->timeEdit->setTime(QTime(0, 0, 0, 0));
 }
 
 DialogTestTimer::~DialogTestTimer()

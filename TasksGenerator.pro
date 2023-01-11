@@ -1,12 +1,15 @@
 include(libs/qtmathjax/qtmathjax.pri)
 QT       += core gui webkitwidgets
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+TARGET = Algebra_Madness
+TEMPLATE = app
 CONFIG += c++11
 DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     basemath.cpp \
     dialogeulerfunction.cpp \
     dialogmebiusfunction.cpp \
+    dialogtesttimer.cpp \
     dialogresults.cpp \
     dialogsymboljacobi.cpp \
     dialogsymbollegandre.cpp \
@@ -24,6 +27,7 @@ HEADERS += \
     basemath.h \
     dialogeulerfunction.h \
     dialogmebiusfunction.h \
+    dialogtesttimer.h\
     dialogresults.h \
     dialogsymboljacobi.h \
     dialogsymbollegandre.h \
@@ -39,6 +43,7 @@ HEADERS += \
 FORMS += \
     dialogeulerfunction.ui \
     dialogmebiusfunction.ui \
+    dialogtesttimer.ui \
     dialogresults.ui \
     dialogsymboljacobi.ui \
     dialogsymbollegandre.ui \
