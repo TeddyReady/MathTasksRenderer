@@ -4,6 +4,11 @@ color: SaddleBrown;
 border: 2px solid Tan;
 border-radius: 3px;
 }
+QStatusBar {
+color: SaddleBrown;
+text-align: center;
+font-size: 14px;
+}
 QDialog > QLabel {
 background-color: Wheat;
 color: SaddleBrown;
