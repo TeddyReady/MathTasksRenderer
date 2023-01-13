@@ -10,7 +10,7 @@
 
 enum class SupCommands {
     Number, Transposition, CycleType, Even,
-            MultiTransposition
+       MultiTransposition, Name
 };
 QRegExp getInstructions(SupCommands command);
 using tasks_type = QVector<std::tuple<QString, QString, SupCommands, int>>;

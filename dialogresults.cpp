@@ -74,26 +74,23 @@ DialogResults::~DialogResults()
 
 QRegExp getInstructions(SupCommands command)
 {
-    QRegExp regex;
     switch (command) {
-
     case SupCommands::Number:
-        regex = QRegExp("-?[0-9]+");
-        break;
+        return QRegExp("-?[0-9]+");
 
     case SupCommands::Even:
-        regex = QRegExp("(Ч|Н)");
-        break;
+        return QRegExp("(Ч|Н)");
 
     case SupCommands::CycleType:
-        regex = QRegExp("\\[([0-9]+\\^[0-9]+(,|))+\\]");
-        break;
+        return QRegExp("\\[([0-9]+\\^[0-9]+(,|))+\\]");
 
     case SupCommands::Transposition:
-        regex = QRegExp("(\\(([0-9]+(,|))+\\))+");
-        break;
+        return QRegExp("(\\(([0-9]+(,|))+\\))+");
+
     case SupCommands::MultiTransposition:
-        regex = QRegExp("(\\(([0-9]+(,|))+\\))+");
-        break;
-    } return regex;
+        return QRegExp("(\\(([0-9]+(,|))+\\))+");
+
+    case SupCommands::Name:
+        return QRegExp("[А-Яа-я]+");
+    } return QRegExp("");
 }

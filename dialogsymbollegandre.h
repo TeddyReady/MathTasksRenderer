@@ -1,7 +1,9 @@
 #ifndef DIALOGSYMBOLLEGANDRE_H
 #define DIALOGSYMBOLLEGANDRE_H
+
 #include <QPushButton>
 #include <QDialog>
+
 #include "symbollegandre.h"
 
 namespace Ui {

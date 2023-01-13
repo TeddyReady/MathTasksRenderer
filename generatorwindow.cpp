@@ -176,6 +176,14 @@ void GeneratorWindow::on_genButton_clicked()
                 this, SLOT(slotDialogTranspositionGroupMeta(int)));
         connect(window, SIGNAL(dialogTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode)),
                 this, SLOT(slotDialogTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode)));
+    } else if (ui->tasksList->currentItem()->text() == "Алгебраические Структуры") {
+        DialogSet *window = new DialogSet(this);
+        window->setWindowTitle("Выберите настройки генерации");
+        window->show();
+        connect(window, SIGNAL(dialogSetMeta(int)),
+                this, SLOT(slotDialogSetMeta(int)));
+        connect(window, SIGNAL(dialogSet(int, set_type *)),
+                this, SLOT(slotDialogSet(int, set_type *)));
     }
 }
 
@@ -947,6 +955,37 @@ void GeneratorWindow::slotDialogTranspositionGroup(int countOfTasks, int minN, i
     }
 }
 
+void GeneratorWindow::slotDialogSetMeta(int countOfTasks)
+{
+    if (countOfTasks > 0) {
+        curTaskCount = 1;
+        if (mode) {
+            totalTestTasks += countOfTasks;
+            statusBar()->showMessage("Задания на Множества сгенерированы!", 1500);
+            ui->lcdNumber->display(totalTestTasks);
+        } else {
+            totalTaskCount = countOfTasks;
+            *tasksForWork += "Чем~является~данная~Алгебраическая~Структура:\\\\";
+            *solvedWorkTasks += "Чем~является~данная~Алгебраическая~Структура:\\\\";
+            ui->toolBar->actions().at(0)->setEnabled(true);
+            ui->toolBar->actions().at(1)->setEnabled(true);
+        }
+    }
+}
+void GeneratorWindow::slotDialogSet(int countOfTasks, set_type *data)
+{
+    for (int i = 0; i < countOfTasks; i++) {
+        if (!mode) {
+            *tasksForWork += QString::number(curTaskCount)  + ")~\\left(" + std::get<0>((*data)[i]) + "," + std::get<1>((*data)[i]) + "\\right)\\Rightarrow~?\\\\";
+            *solvedWorkTasks += QString::number(curTaskCount)  + ")~\\left(" + std::get<0>((*data)[i]) + "," + std::get<1>((*data)[i]) + "\\right)\\Rightarrow" + std::get<2>((*data)[i]) + "\\\\";
+            isReadyRender();
+        } else {
+            QString taskText = "\\color{sienna}{Чем~является~данная~Алгебраическая~Структура:\\\\\\left(" + std::get<0>((*data)[i]) + "," + std::get<1>((*data)[i]) + "\\right)\\Rightarrow~?}";
+            tasksForTest->push_back(std::make_tuple(taskText, std::get<2>((*data)[i]), SupCommands::Name, 0));
+        } curTaskCount++;
+    } delete data;
+}
+
 void GeneratorWindow::on_comboBox_currentTextChanged(const QString &task)
 {
     if (!ui->mainLayout->isEmpty())
@@ -985,6 +1024,13 @@ void GeneratorWindow::on_comboBox_currentTextChanged(const QString &task)
                 this, SLOT(slotDialogSymbolJacobiMeta(int)));
         connect(window, SIGNAL(dialogSymbolJacobi(int, std::pair<int, int>, std::pair<int, int>, SymbolJacobiOptions)),
                 this, SLOT(slotDialogSymbolJacobi(int, std::pair<int, int>, std::pair<int, int>, SymbolJacobiOptions)));
+        ui->mainLayout->addWidget(window);
+    } else if (task == "Алгебраические Структуры") {
+        DialogSet *window = new DialogSet(this, mode);
+        connect(window, SIGNAL(dialogSetMeta(int)),
+                this, SLOT(slotDialogSetMeta(int)));
+        connect(window, SIGNAL(dialogSet(int, set_type *)),
+                this, SLOT(slotDialogSet(int, set_type *)));
         ui->mainLayout->addWidget(window);
     } else {}
 }

@@ -14,6 +14,7 @@
 #include "dialogmebiusfunction.h"
 #include "dialogeulerfunction.h"
 #include "dialogsymboljacobi.h"
+#include "dialogset.h"
 #include "testmode.h"
 
 QT_BEGIN_NAMESPACE
@@ -23,7 +24,7 @@ QT_END_NAMESPACE
 enum AllTasks {
     TaskEulerFunction, TaskMebiusFunction,
     TaskSymbolLegandre, TaskSymbolJacobi,
-    TaskTranspositionGroup
+    TaskTranspositionGroup, TaskSet
 };
 
 class GeneratorWindow : public QMainWindow {
@@ -52,6 +53,9 @@ public slots:
     //Группа перестановок
     void slotDialogTranspositionGroupMeta(int);
     void slotDialogTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode);
+    //Алгебраические структуры
+    void slotDialogSetMeta(int);
+    void slotDialogSet(int, set_type *);
 private slots:
     void checkAnswers();
     void clearTasks();

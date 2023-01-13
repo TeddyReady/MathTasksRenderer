@@ -15,5 +15,6 @@
         <file>img/quit.jpg</file>
         <file>img/reload.png</file>
         <file>web/theory.html</file>
+        <file>data/set.csv</file>
     </qresource>
 </RCC>

@@ -8,6 +8,7 @@ SOURCES += \
     basemath.cpp \
     dialogeulerfunction.cpp \
     dialogmebiusfunction.cpp \
+    dialogset.cpp \
     dialogtesttimer.cpp \
     dialogresults.cpp \
     dialogsymboljacobi.cpp \
@@ -26,6 +27,7 @@ HEADERS += \
     basemath.h \
     dialogeulerfunction.h \
     dialogmebiusfunction.h \
+    dialogset.h \
     dialogtesttimer.h\
     dialogresults.h \
     dialogsymboljacobi.h \
@@ -42,6 +44,7 @@ HEADERS += \
 FORMS += \
     dialogeulerfunction.ui \
     dialogmebiusfunction.ui \
+    dialogset.ui \
     dialogtesttimer.ui \
     dialogresults.ui \
     dialogsymboljacobi.ui \
