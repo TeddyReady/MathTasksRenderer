@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     mainWindow->setWindowTitle("Algebra Madness");
     mainWindow->setWindowIcon(QIcon(":/img/appIcon.png"));
     QThread::msleep(500);
-    mainWindow->show();
+    mainWindow->showMaximized();
     splash->finish(mainWindow);
     delete splash;
 
