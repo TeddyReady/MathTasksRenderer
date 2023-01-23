@@ -56,27 +56,31 @@ TranspositionGroup::TranspositionGroup(const QString &str, int order)
             }
         }
     } else error = true;
-    if (error) {
+    if (!error) {
+        //General add elements
+        for (int i = 0; i < base.size(); i++) {
+            if (base[i] == '(') {
+                QVector<int> tmp; QString num; i++;
+                while(base[i] != ')') {
+                    num += base[i];
+                    if (base[i + 1] == ',') {
+                        tmp.push_back(QString(num).toInt());
+                        num = "";
+                        i += 2;
+                    } else i++;
+                }
+                if (QString(num).toInt() <= order)
+                    tmp.push_back(QString(num).toInt());
+                else {error = true; break;}
+                tp.push_back(tmp);
+            }
+        }
+    } if (error) {
+        tp.clear();
         for (int i = 1; i <= order; i++) {
             QVector<int> tmp; tmp.push_back(i);
             tp.push_back(tmp);
         } return;
-    }
-    //General add elements
-    for (int i = 0; i < base.size(); i++) {
-        if (base[i] == '(') {
-            QVector<int> tmp; QString num; i++;
-            while(base[i] != ')') {
-                num += base[i];
-                if (base[i + 1] == ',') {
-                    tmp.push_back(QString(num).toInt());
-                    num = "";
-                    i += 2;
-                } else i++;
-            }
-            tmp.push_back(QString(num).toInt());
-            tp.push_back(tmp);
-        }
     }
     //Add alone elements
     bool isFind = false;

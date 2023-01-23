@@ -7,10 +7,10 @@ public:
     explicit SymbolLegandre();
     explicit SymbolLegandre(int a, int p);
 
-    int solve();
-    void setTask(int a, int p);
-    std::pair<int, int> getTask();
-private:
+    void setTask(int a, int p) { this->a = a; this->p = p; }
+    std::pair<int, int> getTask() const { return std::make_pair(a, p); }
+    virtual int solve() const;
+protected:
     int a, p;
 };
 

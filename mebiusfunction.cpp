@@ -1,23 +1,16 @@
 #include "mebiusfunction.h"
 
-MebiusFunction::MebiusFunction() {}
+MebiusFunction::MebiusFunction() : number(1) {}
 MebiusFunction::MebiusFunction(int number) : number(number) {}
 
-int MebiusFunction::solve(){
+int MebiusFunction::solve() const {
     if (number == 1) return 1;
     else {
         auto data = decompositionToSimple(number);
-        for (int i = 0; i < data.size(); i++) {
+        for (size_t i = 0; i < data.size(); ++i) {
             if (data[i].second > 1)
                 return 0;
         }
         return pow(-1, data.size());
     }
-}
-
-void MebiusFunction::setTask(int num){
-    number = num;
-}
-int MebiusFunction::getTask(){
-    return number;
 }

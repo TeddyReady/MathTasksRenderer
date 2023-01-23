@@ -2,6 +2,7 @@
 #define DIALOGMEBIUSFUNCTION_H
 #include <QPushButton>
 #include <QDialog>
+
 #include "mebiusfunction.h"
 
 namespace Ui {

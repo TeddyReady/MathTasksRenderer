@@ -2,7 +2,7 @@ QT       += core gui webkitwidgets
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Algebra_Madness
 TEMPLATE = app
-CONFIG += c++11
+CONFIG += c++20
 DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     basemath.cpp \
@@ -59,5 +59,3 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     resourses.qrc
 include(libs/qtmathjax/qtmathjax.pri)
-INCLUDEPATH += $$PWD/libs/qtmathjax
-LIBS += -L$$PWD/libs/

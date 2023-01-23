@@ -9,4 +9,3 @@ VPATH += $$PWD
 SOURCES += $$PWD/texengine.cpp
 HEADERS += $$PWD/texengine.h
 RESOURCES += $$PWD/qtmathjax.qrc
-

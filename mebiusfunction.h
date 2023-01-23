@@ -7,9 +7,9 @@ public:
     explicit MebiusFunction();
     explicit MebiusFunction(int number);
 
-    int solve();
-    void setTask(int num);
-    int getTask();
+    int solve() const;
+    void setTask(int num) { number = num; }
+    int getTask() const { return number; }
 private:
     int number;
 };

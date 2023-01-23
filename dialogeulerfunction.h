@@ -3,6 +3,7 @@
 #include <QPushButton>
 #include <QDialog>
 #include <QIcon>
+
 #include "eulerfunction.h"
 
 namespace Ui {
@@ -31,7 +32,6 @@ private slots:
     void on_btnPrimeDegree_clicked();
     void on_btnMultiplyPrimes_clicked();
     void on_btnMultiplyPrimesDegree_clicked();
-
 private:
     int count; bool isCancelExist;
     Ui::DialogEulerFunction *ui;

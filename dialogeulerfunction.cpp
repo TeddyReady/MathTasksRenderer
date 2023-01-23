@@ -2,8 +2,7 @@
 #include "ui_dialogeulerfunction.h"
 
 DialogEulerFunction::DialogEulerFunction(QWidget *parent, bool mode) :
-    QDialog(parent),
-    ui(new Ui::DialogEulerFunction)
+    QDialog(parent), ui(new Ui::DialogEulerFunction)
 {
     ui->setupUi(this);
     ui->lineMin->setText(QString::number(1));
@@ -18,12 +17,14 @@ DialogEulerFunction::DialogEulerFunction(QWidget *parent, bool mode) :
     ui->spinMultiplyPrimes->setDisabled(true);
     ui->btnMultiplyPrimesDegree->setChecked(false);
     ui->spinMultiplyPrimesDegree->setDisabled(true);
+
     if (mode) {
         ui->buttonBox->button(QDialogButtonBox::Cancel)->deleteLater();
         ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Сгенерировать задания");
         ui->buttonBox->button(QDialogButtonBox::Ok)->setIcon(QIcon());
         isCancelExist = false;
     } else isCancelExist = true;
+
     count = 0;
 }
 
@@ -40,6 +41,7 @@ void DialogEulerFunction::on_buttonBox_accepted()
     if (ui->btnMultiplyPrimes->isChecked()) count += ui->spinMultiplyPrimes->value();
     if (ui->btnMultiplyPrimesDegree->isChecked()) count += ui->spinMultiplyPrimesDegree->value();
     emit dialogEulerFunctionMeta(count); count = 0;
+
     if (ui->btnDefault->isChecked())
         emit dialogEulerFunction(ui->spinDefault->value(), ui->lineMin->text().toInt(), ui->lineMax->text().toInt() + 1, EulerFunctionOptions::Default);
     if (ui->btnPrime->isChecked())

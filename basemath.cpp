@@ -1,28 +1,28 @@
 #include "basemath.h"
 
-QVector<std::pair<int, int>> decompositionToSimple(int num){
-    QVector<std::pair<int, int>> deviders;
-    if (isPrime(num)){
-         deviders.push_back(std::make_pair(num, 1));
-    } else {
+std::vector<std::pair<int, int>> decompositionToSimple(int num)
+{
+    std::vector<std::pair<int, int>> deviders;
+    if (isPrime(num))
+         deviders.emplace_back(std::make_pair(num, 1));
+    else {
         int count = 0;
         int localNum = num;
-        for (int i = 2; i <= num / 2 + 1;){
+        for (size_t i = 2; i <= static_cast<size_t>(num / 2 + 1);) {
             if (localNum % i == 0){
                 localNum /= i;
                 count++;
             } else if (count != 0){
-                deviders.push_back(std::make_pair(i, count));
+                deviders.emplace_back(std::make_pair(i, count));
                 count = 0;
-            } else {
-                i++;
-            }
+            } else i++;
         }
     }
     return deviders;
 }
 
-bool isPrime(int num) {
+bool isPrime(int num)
+{
     if (num % 2 == 0 || num == 1) {
         return false;
     }
@@ -34,10 +34,12 @@ bool isPrime(int num) {
     return true;
 }
 
-int GCD(int a, int b){
+int GCD(int a, int b)
+{
     return b ? GCD(b, a % b) : a;
 }
 
-int LCM(int a, int b){
+int LCM(int a, int b)
+{
     return a / GCD(a, b) * b;
 }

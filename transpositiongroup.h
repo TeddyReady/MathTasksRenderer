@@ -4,7 +4,6 @@
 #include <QRandomGenerator>
 #include <QString>
 #include <QVector>
-#include <QDebug>
 #include <QMap>
 
 #include "basemath.h"
@@ -16,13 +15,12 @@ enum class ViewMode {
 };
 
 class TranspositionGroup {
-    QVector<QVector<int>> tp;
-    ViewMode mode;
 public:
     explicit TranspositionGroup();
     explicit TranspositionGroup(QVector<std::pair<int, int>>);
     explicit TranspositionGroup(const QString &str, int order);
     explicit TranspositionGroup(QVector<int>, int);
+
     TranspositionGroup operator *(TranspositionGroup &trans);
     TranspositionGroup operator ~();
     bool operator ==(const TranspositionGroup& trans);
@@ -37,6 +35,9 @@ public:
     QString getEven(bool forTest = false);
     int getOrder();
     TranspositionGroup simplify(int);
+private:
+    QVector<QVector<int>> tp;
+    ViewMode mode;
 };
 
 #endif // TRANSPOSITIONGROUP_H
