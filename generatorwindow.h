@@ -39,23 +39,23 @@ public:
     ~GeneratorWindow();
 public slots:
     //Эйлер
-    void slotDialogEulerFunctionMeta(int);
-    void slotDialogEulerFunction(int, int, int, EulerFunctionOptions);
+    void slotDialogEulerFunctionMeta(const int&);
+    void slotDialogEulerFunction(const int&, const int&, const int&, const EulerFunctionOptions&);
     //Мёбиус
-    void slotDialogMebiusFunctionMeta(int);
-    void slotDialogMebiusFunction(int, int, int, MebiusFunctionOptions);
+    void slotDialogMebiusFunctionMeta(const int&);
+    void slotDialogMebiusFunction(const int&, const int&, const int&, const MebiusFunctionOptions&);
     //Лежандр
-    void slotDialogSymbolLegandreMeta(int);
-    void slotDialogSymbolLegandre(int, std::pair<int, int>, std::pair<int, int>, SymbolLegandreOptions);
+    void slotDialogSymbolLegandreMeta(const int&);
+    void slotDialogSymbolLegandre(const int&, const std::pair<int, int>&, const std::pair<int, int>&, const SymbolLegandreOptions&);
     //Якоби
-    void slotDialogSymbolJacobiMeta(int);
-    void slotDialogSymbolJacobi(int, std::pair<int, int>, std::pair<int, int>, SymbolJacobiOptions);
+    void slotDialogSymbolJacobiMeta(const int&);
+    void slotDialogSymbolJacobi(const int&, const std::pair<int, int>&, const std::pair<int, int>&, const SymbolJacobiOptions&);
     //Группа перестановок
-    void slotDialogTranspositionGroupMeta(int);
-    void slotDialogTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode);
+    void slotDialogTranspositionGroupMeta(const int&);
+    void slotDialogTranspositionGroup(const int&, const int&, const int&, const TranspositionGroupOptions&, const ViewMode&);
     //Алгебраические структуры
-    void slotDialogSetMeta(int);
-    void slotDialogSet(int, set_type *);
+    void slotDialogSetMeta(const int&);
+    void slotDialogSet(const int&, const set_type&, const SetOptions&);
 private slots:
     void checkAnswers();
     void clearTasks();
@@ -68,8 +68,8 @@ private:
     int totalTestTasks, totalTaskCount, curTaskCount;
     bool mode;
     QVector<QString> generatedData;
-    tasks_type *tasksForTest;
-    QString *tasksForWork, *solvedWorkTasks;
+    tasks_type tasksForTest;
+    QString tasksForWork, solvedWorkTasks;
     QFile file;
     QRandomGenerator *random;
     QAction *testMode, *workMode;

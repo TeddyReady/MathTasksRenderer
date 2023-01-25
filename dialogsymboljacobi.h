@@ -20,8 +20,8 @@ public:
     explicit DialogSymbolJacobi(QWidget *parent = nullptr, bool mode = false);
     ~DialogSymbolJacobi();
 signals:
-    void dialogSymbolJacobiMeta(int);
-    void dialogSymbolJacobi(int, std::pair<int, int>, std::pair<int, int>, SymbolJacobiOptions);
+    void dialogSymbolJacobiMeta(const int&);
+    void dialogSymbolJacobi(const int&, const std::pair<int, int>&, const std::pair<int, int>&, const SymbolJacobiOptions&);
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();

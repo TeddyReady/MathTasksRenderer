@@ -24,8 +24,8 @@ public:
     explicit DialogTranspositionGroup(QWidget *parent = nullptr, bool mode = false);
     ~DialogTranspositionGroup();
 signals:
-    void dialogTranspositionGroupMeta(int);
-    void dialogTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode);
+    void dialogTranspositionGroupMeta(const int&);
+    void dialogTranspositionGroup(const int&, const int&, const int&, const TranspositionGroupOptions&, const ViewMode&);
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();

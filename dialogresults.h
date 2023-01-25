@@ -22,7 +22,7 @@ class DialogResults;
 class DialogResults : public QDialog {
     Q_OBJECT
 public:
-    explicit DialogResults(QWidget *parent = nullptr, tasks_type *tasks = nullptr, QVector<QString> *results = nullptr);
+    explicit DialogResults(const tasks_type &tasks, const QVector<QString> &results, QWidget *parent = nullptr);
     ~DialogResults();
 
 private:

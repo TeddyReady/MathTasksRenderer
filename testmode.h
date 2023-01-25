@@ -28,7 +28,7 @@ private:
     void finishTest();
     void closeEvent(QCloseEvent *event);
 public:
-    explicit TestMode(QWidget *parent = nullptr, tasks_type *tasksForTest = nullptr, QTime time = QTime(0, 0, 0, 0));
+    explicit TestMode(tasks_type &tasksForTest, QTime time, QWidget *parent = nullptr);
     ~TestMode();
 signals:
     void closeWindow();
@@ -38,8 +38,8 @@ private slots:
     void on_nextTask_clicked();
     void updateTime();
 private:
-    tasks_type* tasks;
-    QVector<QString> *results;
+    tasks_type tasks;
+    QVector<QString> results;
     int curTask;
     bool isPressed, timerExist;
     TeXEngine *engine;

@@ -1,13 +1,12 @@
 #include "dialogresults.h"
 #include "ui_dialogresults.h"
 
-DialogResults::DialogResults(QWidget *parent, tasks_type *tasks, QVector<QString> *results) :
-    QDialog(parent),
-    ui(new Ui::DialogResults)
+DialogResults::DialogResults(const tasks_type &tasks, const QVector<QString> &results, QWidget *parent) :
+    QDialog(parent), ui(new Ui::DialogResults)
 {
     ui->setupUi(this);
     userCount = 0;
-    maxCount = tasks->size();
+    maxCount = tasks.size();
     QStandardItemModel *model = new QStandardItemModel(maxCount, 2, this);
     model->setHeaderData(0, Qt::Horizontal, "Ваш ответ");
     model->setHeaderData(1, Qt::Horizontal, "Правильный ответ");
@@ -17,11 +16,11 @@ DialogResults::DialogResults(QWidget *parent, tasks_type *tasks, QVector<QString
     ui->tableView->setColumnWidth(1, (this->width() / 2));
 
     for (int i = 0; i < maxCount; i++) {
-        model->setData(model->index(i, 0), (*results)[i]);
-        model->setData(model->index(i, 1), std::get<1>((*tasks)[i]));
-        if (std::get<2>((*tasks)[i]) == SupCommands::Transposition) {
-            if (TranspositionGroup(std::get<1>((*tasks)[i]), std::get<3>((*tasks)[i])) ==
-                TranspositionGroup((*results)[i], std::get<3>((*tasks)[i]))){
+        model->setData(model->index(i, 0), results[i]);
+        model->setData(model->index(i, 1), std::get<1>(tasks[i]));
+        if (std::get<2>(tasks[i]) == SupCommands::Transposition) {
+            if (TranspositionGroup(std::get<1>(tasks[i]), std::get<3>(tasks[i])) ==
+                TranspositionGroup(results[i], std::get<3>(tasks[i]))){
                 userCount++;
                 model->setData(model->index(i, 0), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
                 model->setData(model->index(i, 1), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
@@ -29,9 +28,9 @@ DialogResults::DialogResults(QWidget *parent, tasks_type *tasks, QVector<QString
                 model->setData(model->index(i, 0), QColor(Qt::darkRed), Qt::BackgroundColorRole);
                 model->setData(model->index(i, 1), QColor(Qt::darkRed), Qt::BackgroundColorRole);
             }
-        } else if (std::get<2>((*tasks)[i]) == SupCommands::MultiTransposition) {
-            if (TranspositionGroup(std::get<1>((*tasks)[i]), std::get<3>((*tasks)[i])).simplify(std::get<3>((*tasks)[i])) ==
-                TranspositionGroup((*results)[i], std::get<3>((*tasks)[i])).simplify(std::get<3>((*tasks)[i]))){
+        } else if (std::get<2>(tasks[i]) == SupCommands::MultiTransposition) {
+            if (TranspositionGroup(std::get<1>(tasks[i]), std::get<3>(tasks[i])).simplify(std::get<3>(tasks[i])) ==
+                TranspositionGroup(results[i], std::get<3>(tasks[i])).simplify(std::get<3>(tasks[i]))){
                 userCount++;
                 model->setData(model->index(i, 0), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
                 model->setData(model->index(i, 1), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
@@ -40,7 +39,7 @@ DialogResults::DialogResults(QWidget *parent, tasks_type *tasks, QVector<QString
                 model->setData(model->index(i, 1), QColor(Qt::darkRed), Qt::BackgroundColorRole);
             }
         } else {
-            if (std::get<1>((*tasks)[i]) == (*results)[i]) {
+            if (std::get<1>(tasks[i]) == results[i]) {
                 userCount++;
                 model->setData(model->index(i, 0), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
                 model->setData(model->index(i, 1), QColor(Qt::darkGreen), Qt::BackgroundColorRole);

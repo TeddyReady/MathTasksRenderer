@@ -21,8 +21,8 @@ public:
     explicit DialogMebiusFunction(QWidget *parent = nullptr, bool mode = false);
     ~DialogMebiusFunction();
 signals:
-    void dialogMebiusFunctionMeta(int);
-    void dialogMebiusFunction(int, int, int, MebiusFunctionOptions);
+    void dialogMebiusFunctionMeta(const int&);
+    void dialogMebiusFunction(const int&, const int&, const int&, const MebiusFunctionOptions&);
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();

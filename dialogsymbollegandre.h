@@ -22,8 +22,8 @@ public:
     explicit DialogSymbolLegandre(QWidget *parent = nullptr, bool mode = false);
     ~DialogSymbolLegandre();
 signals:
-    void dialogSymbolLegandreMeta(int);
-    void dialogSymbolLegandre(int, std::pair<int, int>, std::pair<int, int>, SymbolLegandreOptions);
+    void dialogSymbolLegandreMeta(const int&);
+    void dialogSymbolLegandre(const int&, const std::pair<int, int>&, const std::pair<int, int>&, const SymbolLegandreOptions&);
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();

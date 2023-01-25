@@ -22,8 +22,8 @@ public:
     explicit DialogEulerFunction(QWidget *parent = nullptr, bool mode = false);
     ~DialogEulerFunction();
 signals:
-    void dialogEulerFunctionMeta(int);
-    void dialogEulerFunction(int, int, int, EulerFunctionOptions);
+    void dialogEulerFunctionMeta(const int&);
+    void dialogEulerFunction(const int&, const int&, const int&, const EulerFunctionOptions&);
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>242</width>
-    <height>85</height>
+    <width>400</width>
+    <height>228</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,15 +16,69 @@
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
+     <item row="3" column="1">
+      <widget class="QSpinBox" name="spinAbel"/>
+     </item>
+     <item row="5" column="0">
+      <widget class="QCheckBox" name="btnNeutral">
        <property name="text">
-        <string>Количество заданий:</string>
+        <string>Существование нейтрального</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QSpinBox" name="spinBox"/>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Количество</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QSpinBox" name="spinAssociate"/>
+     </item>
+     <item row="4" column="0">
+      <widget class="QCheckBox" name="btnAssociate">
+       <property name="text">
+        <string>Ассоциативность операции</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QCheckBox" name="btnOper">
+       <property name="text">
+        <string>Проверка операции на множестве</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QCheckBox" name="btnAbel">
+       <property name="text">
+        <string>Коммутативность операции</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="spinCheck"/>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Типы заданий</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QSpinBox" name="spinNeutral"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QCheckBox" name="btnCheck">
+       <property name="text">
+        <string>Описание алгебраической структуры</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QSpinBox" name="spinOper"/>
      </item>
     </layout>
    </item>
