@@ -44,14 +44,15 @@ class DialogSet : public QDialog {
 private:
     void uploadUI();
     void uploadData();
-    QString getCode(Set) const;
-    QString getCode(SetType) const;
+    void generateTasks(const int&, const SetOptions&);
+    QString getCode(const Set&) const;
+    QString getCode(const SetType&) const;
 public:
     explicit DialogSet(QWidget *parent = nullptr, bool mode = false);
     ~DialogSet();
 signals:
-    void dialogSetMeta(int);
-    void dialogSet(int, const set_type&);
+    void dialogSetMeta(const int&);
+    void dialogSet(const int&, const set_type&, const SetOptions&);
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
@@ -63,8 +64,9 @@ private slots:
     void on_btnNeutral_clicked();
 private:
     static const int numOfSets, numOfOperators;
-    bool isCancelExist;
-    set_type data, baseData;
+    int count; bool isCancelExist;
+    set_type baseData;
+    QRandomGenerator *gen;
     Ui::DialogSet *ui;
 };
 

@@ -2,8 +2,7 @@
 #include "ui_dialogtranspositiongroup.h"
 
 DialogTranspositionGroup::DialogTranspositionGroup(QWidget *parent, bool mode) :
-    QDialog(parent),
-    ui(new Ui::DialogTranspositionGroup)
+    QDialog(parent), count(0), ui(new Ui::DialogTranspositionGroup)
 {
     ui->setupUi(this);
     ui->spinNmin->setValue(2);
@@ -35,13 +34,13 @@ DialogTranspositionGroup::DialogTranspositionGroup(QWidget *parent, bool mode) :
     ui->btnNeighbor->setChecked(false);
     ui->spinNeighbor->setDisabled(true);
     ui->typeNeighbor->setDisabled(true);
+
     if (mode) {
         ui->buttonBox->button(QDialogButtonBox::Cancel)->deleteLater();
         ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Сгенерировать задания");
         ui->buttonBox->button(QDialogButtonBox::Ok)->setIcon(QIcon());
         isCancelExist = false;
     } else isCancelExist = true;
-    count = 0;
 }
 
 DialogTranspositionGroup::~DialogTranspositionGroup()

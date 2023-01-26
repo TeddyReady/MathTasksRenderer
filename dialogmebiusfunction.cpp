@@ -2,8 +2,7 @@
 #include "ui_dialogmebiusfunction.h"
 
 DialogMebiusFunction::DialogMebiusFunction(QWidget *parent, bool mode) :
-    QDialog(parent),
-    ui(new Ui::DialogMebiusFunction)
+    QDialog(parent), count(0), ui(new Ui::DialogMebiusFunction)
 {
     ui->setupUi(this);
     ui->lineMin->setText(QString::number(1));
@@ -25,8 +24,6 @@ DialogMebiusFunction::DialogMebiusFunction(QWidget *parent, bool mode) :
         ui->buttonBox->button(QDialogButtonBox::Ok)->setIcon(QIcon());
         isCancelExist = false;
     } else isCancelExist = true;
-
-    count = 0;
 }
 
 DialogMebiusFunction::~DialogMebiusFunction()

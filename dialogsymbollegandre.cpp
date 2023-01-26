@@ -2,8 +2,7 @@
 #include "ui_dialogsymbollegandre.h"
 
 DialogSymbolLegandre::DialogSymbolLegandre(QWidget *parent, bool mode) :
-    QDialog(parent),
-    ui(new Ui::DialogSymbolLegandre)
+    QDialog(parent), count(0), ui(new Ui::DialogSymbolLegandre)
 {
     ui->setupUi(this);
     ui->lineMinA->setText(QString::number(-1000));
@@ -26,7 +25,6 @@ DialogSymbolLegandre::DialogSymbolLegandre(QWidget *parent, bool mode) :
         ui->buttonBox->button(QDialogButtonBox::Ok)->setIcon(QIcon());
         isCancelExist = false;
     } else isCancelExist = true;
-    count = 0;
 }
 
 DialogSymbolLegandre::~DialogSymbolLegandre()
@@ -45,6 +43,7 @@ void DialogSymbolLegandre::on_buttonBox_accepted()
     if (ui->btn2->isChecked()) count += ui->spin2->value();
     if (ui->btnNotEvenPrimes->isChecked()) count += ui->spinNotEvenPrimes->value();
     emit dialogSymbolLegandreMeta(count); count = 0;
+
     if (ui->btnDefault->isChecked())
         emit dialogSymbolLegandre(ui->spinDefault->value(), tmp[0], tmp[1], SymbolLegandreOptions::Default);
     if (ui->btnPrimes->isChecked())

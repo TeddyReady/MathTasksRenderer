@@ -2,7 +2,7 @@
 #include "ui_dialogeulerfunction.h"
 
 DialogEulerFunction::DialogEulerFunction(QWidget *parent, bool mode) :
-    QDialog(parent), ui(new Ui::DialogEulerFunction)
+    QDialog(parent),  count(0), ui(new Ui::DialogEulerFunction)
 {
     ui->setupUi(this);
     ui->lineMin->setText(QString::number(1));
@@ -24,8 +24,6 @@ DialogEulerFunction::DialogEulerFunction(QWidget *parent, bool mode) :
         ui->buttonBox->button(QDialogButtonBox::Ok)->setIcon(QIcon());
         isCancelExist = false;
     } else isCancelExist = true;
-
-    count = 0;
 }
 
 DialogEulerFunction::~DialogEulerFunction()

@@ -2,8 +2,7 @@
 #include "ui_dialogsymboljacobi.h"
 
 DialogSymbolJacobi::DialogSymbolJacobi(QWidget *parent, bool mode) :
-    QDialog(parent),
-    ui(new Ui::DialogSymbolJacobi)
+    QDialog(parent), count(0), ui(new Ui::DialogSymbolJacobi)
 {
     ui->setupUi(this);
     ui->lineMinA->setText(QString::number(-1000));
@@ -26,7 +25,6 @@ DialogSymbolJacobi::DialogSymbolJacobi(QWidget *parent, bool mode) :
         ui->buttonBox->button(QDialogButtonBox::Ok)->setIcon(QIcon());
         isCancelExist = false;
     } else isCancelExist = true;
-    count = 0;
 }
 
 DialogSymbolJacobi::~DialogSymbolJacobi()
@@ -39,12 +37,14 @@ void DialogSymbolJacobi::on_buttonBox_accepted()
     QVector<std::pair<int, int>> tmp;
     tmp.push_back(std::make_pair(ui->lineMinA->text().toInt(), ui->lineMaxA->text().toInt() + 1));
     tmp.push_back(std::make_pair(ui->lineMinP->text().toInt(), ui->lineMaxP->text().toInt() + 1));
+
     if (ui->btnDefault->isChecked()) count += ui->spinDefault->value();
     if (ui->btnPrimes->isChecked()) count += ui->spinPrimes->value();
     if (ui->btn1->isChecked()) count += ui->spin1->value();
     if (ui->btn2->isChecked()) count += ui->spin2->value();
     if (ui->btnNotEvenPrimes->isChecked()) count += ui->spinNotEvenPrimes->value();
     emit dialogSymbolJacobiMeta(count); count = 0;
+
     if (ui->btnDefault->isChecked())
         emit dialogSymbolJacobi(ui->spinDefault->value(), tmp[0], tmp[1], SymbolJacobiOptions::Default);
     if (ui->btnPrimes->isChecked())

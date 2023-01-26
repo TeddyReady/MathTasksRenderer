@@ -191,23 +191,23 @@ void GeneratorWindow::on_genButton_clicked()
 
 void GeneratorWindow::slotDialogEulerFunctionMeta(const int &countOfTasks)
 {
-    if (countOfTasks > 0) {
-        curTaskCount = 1;
-        if (mode) {
-            totalTestTasks += countOfTasks;
-            statusBar()->showMessage("Задания на функцию Эйлера сгенерированы!", 1500);
-            ui->lcdNumber->display(totalTestTasks);
-        } else {
-            totalTaskCount = countOfTasks;
-            tasksForWork += "Вычислите~функцию~Эйлера:\\\\";
-            solvedWorkTasks += "Вычислите~функцию~Эйлера:\\\\";
-            ui->toolBar->actions().at(0)->setEnabled(true);
-            ui->toolBar->actions().at(1)->setEnabled(true);
-        }
+    if (!countOfTasks) return;
+    curTaskCount = 1;
+    if (mode) {
+        totalTestTasks += countOfTasks;
+        statusBar()->showMessage("Задания на функцию Эйлера сгенерированы!", 1500);
+        ui->lcdNumber->display(totalTestTasks);
+    } else {
+        totalTaskCount = countOfTasks;
+        tasksForWork += "Вычислите~функцию~Эйлера:\\\\";
+        solvedWorkTasks += "Вычислите~функцию~Эйлера:\\\\";
+        ui->toolBar->actions().at(0)->setEnabled(true);
+        ui->toolBar->actions().at(1)->setEnabled(true);
     }
 }
 void GeneratorWindow::slotDialogEulerFunction(const int &countOfTasks, const int &minNum, const int &maxNum, const EulerFunctionOptions &option)
 {
+    if (!countOfTasks) return;
     EulerFunction task;
     switch (option) {
     case EulerFunctionOptions::Default:
@@ -299,6 +299,7 @@ void GeneratorWindow::slotDialogEulerFunction(const int &countOfTasks, const int
 }
 
 void GeneratorWindow::slotDialogMebiusFunctionMeta(const int &countOfTasks){
+    if (!countOfTasks) return;
     curTaskCount = 1;
     if (mode) {
         totalTestTasks += countOfTasks;
@@ -313,6 +314,7 @@ void GeneratorWindow::slotDialogMebiusFunctionMeta(const int &countOfTasks){
     }
 }
 void GeneratorWindow::slotDialogMebiusFunction(const int &countOfTasks, const int &minNum, const int &maxNum, const MebiusFunctionOptions &option){
+    if (!countOfTasks) return;
     MebiusFunction task;
     switch (option) {
     case MebiusFunctionOptions::Default:
@@ -415,6 +417,7 @@ void GeneratorWindow::slotDialogMebiusFunction(const int &countOfTasks, const in
 }
 
 void GeneratorWindow::slotDialogSymbolLegandreMeta(const int &countOfTasks){
+    if (!countOfTasks) return;
     curTaskCount = 1;
     if (mode) {
         totalTestTasks += countOfTasks;
@@ -429,6 +432,7 @@ void GeneratorWindow::slotDialogSymbolLegandreMeta(const int &countOfTasks){
     }
 }
 void GeneratorWindow::slotDialogSymbolLegandre(const int &countOfTasks, const std::pair<int, int> &a, const std::pair<int, int> &p, const SymbolLegandreOptions &option){
+    if (!countOfTasks) return;
     SymbolLegandre task;
     switch (option) {
     case SymbolLegandreOptions::Default:
@@ -525,6 +529,7 @@ void GeneratorWindow::slotDialogSymbolLegandre(const int &countOfTasks, const st
 }
 
 void GeneratorWindow::slotDialogSymbolJacobiMeta(const int &countOfTasks){
+    if (!countOfTasks) return;
     curTaskCount = 1;
     if (mode) {
         totalTestTasks += countOfTasks;
@@ -539,6 +544,7 @@ void GeneratorWindow::slotDialogSymbolJacobiMeta(const int &countOfTasks){
     }
 }
 void GeneratorWindow::slotDialogSymbolJacobi(const int &countOfTasks, const std::pair<int, int> &a, const std::pair<int, int> &p, const SymbolJacobiOptions &option){
+    if (!countOfTasks) return;
     SymbolJacobi task;
     switch (option) {
     case SymbolJacobiOptions::Default:
@@ -635,6 +641,7 @@ void GeneratorWindow::slotDialogSymbolJacobi(const int &countOfTasks, const std:
 }
 
 void GeneratorWindow::slotDialogTranspositionGroupMeta(const int &countOfTasks){
+    if (!countOfTasks) return;
     curTaskCount = 1;
     totalTaskCount = countOfTasks;
     if (mode) {
@@ -958,24 +965,17 @@ void GeneratorWindow::slotDialogTranspositionGroup(const int &countOfTasks, cons
 
 void GeneratorWindow::slotDialogSetMeta(const int &countOfTasks)
 {
-    if (countOfTasks > 0) {
-        curTaskCount = 1;
-        if (mode) {
-            totalTestTasks += countOfTasks;
-            statusBar()->showMessage("Задания на Множества сгенерированы!", 1500);
-            ui->lcdNumber->display(totalTestTasks);
-        } else {
-            totalTaskCount = countOfTasks;
-            tasksForWork += "Чем~является~данная~Алгебраическая~Структура:\\\\";
-            solvedWorkTasks += "Чем~является~данная~Алгебраическая~Структура:\\\\";
-            ui->toolBar->actions().at(0)->setEnabled(true);
-            ui->toolBar->actions().at(1)->setEnabled(true);
-        }
+    if (!countOfTasks) return;
+    curTaskCount = 1;
+    totalTaskCount = countOfTasks;
+    if (mode) {
+        totalTestTasks += countOfTasks;
+        statusBar()->showMessage("Задания на Множества сгенерированы!", 1500);
+        ui->lcdNumber->display(totalTestTasks);
     }
 }
 void GeneratorWindow::slotDialogSet(const int &countOfTasks, const set_type &data, const SetOptions &option)
 {
-    if (!countOfTasks) return;
     int localCount = 1;
     ui->toolBar->actions().at(0)->setEnabled(true);
     ui->toolBar->actions().at(1)->setEnabled(true);
@@ -1003,13 +1003,17 @@ void GeneratorWindow::slotDialogSet(const int &countOfTasks, const set_type &dat
             solvedWorkTasks += "Является~ли~данная~операция~заданной~на~множестве:\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
+            QString answer;
+            if (QString(std::get<2>(data[i])).toInt() / 1000)
+                answer = "Да";
+            else answer = "Нет";
             if (!mode) {
                 tasksForWork += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
-                solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + std::get<2>(data[i]) + "\\\\";
+                solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + answer + "\\\\";
                 isReadyRender(); ++localCount;
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Чем~является~данная~Алгебраическая~Структура:\\\\\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?}\\end{align}";
-                tasksForTest.push_back(std::make_tuple(taskText, std::get<2>(data[i]), SupCommands::Name, 0));
+                tasksForTest.push_back(std::make_tuple(taskText, answer, SupCommands::Name, 0));
             } ++curTaskCount;
         } break;
 
@@ -1019,13 +1023,17 @@ void GeneratorWindow::slotDialogSet(const int &countOfTasks, const set_type &dat
             solvedWorkTasks += "Является~ли~данная~операция~коммутативной~на~множестве:\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
+            QString answer;
+            if (QString(std::get<2>(data[i])).toInt() / 100)
+                answer = "Да";
+            else answer = "Нет";
             if (!mode) {
                 tasksForWork += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
-                solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + std::get<2>(data[i]) + "\\\\";
+                solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + answer + "\\\\";
                 isReadyRender(); ++localCount;
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Чем~является~данная~Алгебраическая~Структура:\\\\\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?}\\end{align}";
-                tasksForTest.push_back(std::make_tuple(taskText, std::get<2>(data[i]), SupCommands::Name, 0));
+                tasksForTest.push_back(std::make_tuple(taskText, answer, SupCommands::Name, 0));
             } ++curTaskCount;
         } break;
 
@@ -1035,13 +1043,17 @@ void GeneratorWindow::slotDialogSet(const int &countOfTasks, const set_type &dat
             solvedWorkTasks += "Является~ли~данная~операция~ассоциативной~на~множестве:\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
+            QString answer;
+            if (QString(std::get<2>(data[i])).toInt() / 10)
+                answer = "Да";
+            else answer = "Нет";
             if (!mode) {
                 tasksForWork += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
-                solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + std::get<2>(data[i]) + "\\\\";
+                solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + answer + "\\\\";
                 isReadyRender(); ++localCount;
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Чем~является~данная~Алгебраическая~Структура:\\\\\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?}\\end{align}";
-                tasksForTest.push_back(std::make_tuple(taskText, std::get<2>(data[i]), SupCommands::Name, 0));
+                tasksForTest.push_back(std::make_tuple(taskText, answer, SupCommands::Name, 0));
             } ++curTaskCount;
         } break;
 
@@ -1051,13 +1063,17 @@ void GeneratorWindow::slotDialogSet(const int &countOfTasks, const set_type &dat
             solvedWorkTasks += "Существует~ли~нейтральный~элемент~на~заданной~алгебраической~структуре:\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
+            QString answer;
+            if (QString(std::get<2>(data[i])).toInt() % 10)
+                answer = "Да";
+            else answer = "Нет";
             if (!mode) {
                 tasksForWork += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
-                solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + std::get<2>(data[i]) + "\\\\";
+                solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + answer + "\\\\";
                 isReadyRender(); ++localCount;
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Чем~является~данная~Алгебраическая~Структура:\\\\\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?}\\end{align}";
-                tasksForTest.push_back(std::make_tuple(taskText, std::get<2>(data[i]), SupCommands::Name, 0));
+                tasksForTest.push_back(std::make_tuple(taskText, answer, SupCommands::Name, 0));
             } ++curTaskCount;
         } break;
     }
