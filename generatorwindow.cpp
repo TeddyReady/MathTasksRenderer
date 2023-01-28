@@ -4,8 +4,8 @@
 GeneratorWindow::GeneratorWindow(QWidget *parent)
     : QMainWindow(parent), totalTestTasks(0),
       totalTaskCount(0), curTaskCount(0), mode(false),
-      tasksForWork(QString("\\begin{align}\\color{sienna}{")),
-      solvedWorkTasks(QString("\\begin{align}\\color{sienna}{")),
+      tasksForWork(QString("\\begin{align}\\large{\\color{sienna}{")),
+      solvedWorkTasks(QString("\\begin{align}\\large{\\color{sienna}{")),
       random(QRandomGenerator::global()),
       ui(new Ui::GeneratorWindow)
 {
@@ -14,13 +14,14 @@ GeneratorWindow::GeneratorWindow(QWidget *parent)
 
     connect(ui->toolBar->actions().at(0), SIGNAL(triggered()), this, SLOT(checkAnswers()));
     connect(ui->toolBar->actions().at(1), SIGNAL(triggered()), this, SLOT(clearTasks()));
-    connect(ui->toolBar->actions().at(3), &QAction::triggered, [](){qApp->exit();});
+    connect(ui->toolBar->actions().at(3), SIGNAL(triggered()), this, SLOT(printTasks()));
+    connect(ui->toolBar->actions().at(5), SIGNAL(triggered()), this, SLOT(openManual()));
+    connect(ui->toolBar->actions().at(6), &QAction::triggered, [](){qApp->exit();});
 }
 
 GeneratorWindow::~GeneratorWindow()
 {
     saveSettings();
-    delete random;
     delete engine;
     delete ui;
 }
@@ -31,17 +32,21 @@ void GeneratorWindow::uploadUI()
     ui->genButton->setEnabled(true);
     ui->genButton->setCursor(Qt::PointingHandCursor);
     ui->pushButton->setCursor(Qt::PointingHandCursor);
-    ui->webView->load(QUrl("qrc:/web/theory.html"));
+    ui->webView->load(QUrl("qrc:/general/web/theory.html"));
     ui->webView->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->tabWidget->tabBar()->setCursor(Qt::PointingHandCursor);
     ui->taskView->setCursor(Qt::BlankCursor);
     ui->taskView->setContextMenuPolicy(Qt::CustomContextMenu);
     engine = new TeXEngine(ui->taskView);
+
     ui->toolBar->setContextMenuPolicy(Qt::CustomContextMenu);
-    ui->toolBar->addAction(new QAction(QPixmap("://img/checkAnswers.png"), "Показать ответы", this));
-    ui->toolBar->addAction(new QAction(QPixmap("://img/clearTasks.png"), "Очистить задачи", this));
+    ui->toolBar->addAction(new QAction(QPixmap("://general/img/checkAnswers.png"), "Показать ответы", ui->toolBar));
+    ui->toolBar->addAction(new QAction(QPixmap("://general/img/clearTasks.png"), "Очистить задачи", ui->toolBar));
     ui->toolBar->addSeparator();
-    ui->toolBar->addAction(new QAction(QPixmap("://img/quit.jpg"), "Выход...", this));
+    ui->toolBar->addAction(new QAction(QPixmap("://general/img/printer.png"), "Подготовить печатный вариант...", ui->toolBar));
+    ui->toolBar->addSeparator();
+    ui->toolBar->addAction(new QAction(QPixmap("://general/img/manual.png"), "Справочник", ui->toolBar));
+    ui->toolBar->addAction(new QAction(QPixmap("://general/img/quit.png"), "Выход...", ui->toolBar));
     ui->toolBar->actions().at(0)->setDisabled(true);
     ui->toolBar->actions().at(1)->setDisabled(true);
 
@@ -65,7 +70,7 @@ void GeneratorWindow::uploadSettings()
 void GeneratorWindow::isReadyRender(){
     if (curTaskCount == totalTaskCount) {
         QApplication::setOverrideCursor(Qt::WaitCursor);
-        engine->TeX2SVG(tasksForWork + "}\\end{align}", true);
+        engine->TeX2SVG(tasksForWork + "}}\\end{align}", true);
         totalTaskCount = 0;
         curTaskCount = 0;
         QApplication::restoreOverrideCursor();
@@ -74,7 +79,7 @@ void GeneratorWindow::isReadyRender(){
 
 void GeneratorWindow::checkAnswers(){
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    engine->TeX2SVG(solvedWorkTasks + "}\\end{align}", true);
+    engine->TeX2SVG(solvedWorkTasks + "}}\\end{align}", true);
     tasksForWork = solvedWorkTasks;
     ui->toolBar->actions().at(0)->setDisabled(true);
     QApplication::restoreOverrideCursor();
@@ -82,11 +87,45 @@ void GeneratorWindow::checkAnswers(){
 
 void GeneratorWindow::clearTasks()
 {
-    tasksForWork = "\\begin{align}\\color{sienna}{";
+    tasksForWork = "\\begin{align}\\large{\\color{sienna}{";
     solvedWorkTasks = tasksForWork;
-    engine->TeX2SVG("\\begin{align}\\color{sienna}{В~ожидании~генерации~задач...}\\end{align}", true);
+    engine->TeX2SVG("\\begin{align}\\Large{\\color{sienna}{\\pmb{В~ожидании~генерации~задач...}}}\\end{align}", true);
     ui->toolBar->actions().at(0)->setDisabled(true);
     ui->toolBar->actions().at(1)->setDisabled(true);
+}
+
+void GeneratorWindow::printTasks()
+{
+    //statusBar()->showMessage("Задачи сгенерированы", 2500);
+    QString fileName = QFileDialog::getSaveFileName(this, "Сохраните файл с заданиями", QDir::homePath(), "PDF файлы (*.tex)");
+    QFile texFile(fileName + ".tex");
+    if (!texFile.open(QFile::WriteOnly)) {
+        QMessageBox::warning(this, "Ошибка открытия файла", "Выбранный файл не может быть открыт или не существует.");
+        return;
+    } else {
+        QString prepare = tasksForWork.mid(35, tasksForWork.size());
+        QString texString = "\\documentclass[12pt, a4paper]{article}\n"
+                            "\\usepackage{graphicx}\n"
+                            "\\usepackage[T2A]{fontenc}\n"
+                            "\\usepackage[russian]{babel}\n"
+                            "\\title{Создано благодаря Algebra Madness}\n"
+                            "\\author{Teddy Ready}\n"
+                            "\\date{Январь, 2023}\n"
+                            "\\begin{document}\n"
+                            "\\maketitle\n"
+                            "\\large{\n"
+                             + prepare.replace("\\\\", "\\\\\n").replace("  ", "$").replace("?", "?$") +
+                            "}\n"
+                            "\\end{document}\n";
+        QTextStream out(&texFile);
+        out << texString;
+        texFile.close();
+    }
+}
+
+void GeneratorWindow::openManual()
+{
+    //statusBar()->showMessage("Справочник открыт", 2500);
 }
 
 void GeneratorWindow::on_tabWidget_currentChanged(int index)
@@ -94,12 +133,28 @@ void GeneratorWindow::on_tabWidget_currentChanged(int index)
     switch (index) {
     case 2:
         mode = 1;
-        ui->toolBar->hide();
+        ui->toolBar->actions().at(0)->setVisible(false);
+        ui->toolBar->actions().at(1)->setVisible(false);
+        ui->toolBar->actions().at(2)->setVisible(false);
+        ui->toolBar->actions().at(3)->setVisible(false);
+        ui->toolBar->actions().at(4)->setVisible(false);
         break;
     default:
         mode = 0;
-        if (index == 0) ui->toolBar->show();
-        else ui->toolBar->hide();
+        if (index == 0) {
+            ui->toolBar->actions().at(0)->setVisible(true);
+            ui->toolBar->actions().at(1)->setVisible(true);
+            ui->toolBar->actions().at(2)->setVisible(true);
+            ui->toolBar->actions().at(3)->setVisible(true);
+            ui->toolBar->actions().at(4)->setVisible(true);
+        }
+        else {
+            ui->toolBar->actions().at(0)->setVisible(false);
+            ui->toolBar->actions().at(1)->setVisible(false);
+            ui->toolBar->actions().at(2)->setVisible(false);
+            ui->toolBar->actions().at(3)->setVisible(false);
+            ui->toolBar->actions().at(4)->setVisible(false);
+        }
         break;
     }
 }
@@ -110,13 +165,13 @@ void GeneratorWindow::on_pushButton_clicked()
     statusBar()->showMessage("Перед запуском теста, необходимо сгенерировать задания!", 1500);
     else {
         DialogTestTimer *window = new DialogTestTimer(this);
-        connect(window, SIGNAL(timeRemaining(QTime)), this, SLOT(startTest(QTime)));
+        connect(window, SIGNAL(timeRemaining(const QTime&)), this, SLOT(startTest(const QTime&)));
         window->setWindowTitle("Конфигурация Теста");
         window->exec();
     }
 }
 
-void GeneratorWindow::startTest(QTime time)
+void GeneratorWindow::startTest(const QTime &time)
 {
     //Рандомная сортировка
     for (size_t i = 0; i < static_cast<size_t>(tasksForTest.size()); ++i) {
@@ -199,8 +254,8 @@ void GeneratorWindow::slotDialogEulerFunctionMeta(const int &countOfTasks)
         ui->lcdNumber->display(totalTestTasks);
     } else {
         totalTaskCount = countOfTasks;
-        tasksForWork += "Вычислите~функцию~Эйлера:\\\\";
-        solvedWorkTasks += "Вычислите~функцию~Эйлера:\\\\";
+        tasksForWork += "\\Large{\\textbf{Вычислите функцию Эйлера:}}\\\\";
+        solvedWorkTasks += "\\Large{\\textbf{Вычислите функцию Эйлера:}}\\\\";
         ui->toolBar->actions().at(0)->setEnabled(true);
         ui->toolBar->actions().at(1)->setEnabled(true);
     }
@@ -211,14 +266,14 @@ void GeneratorWindow::slotDialogEulerFunction(const int &countOfTasks, const int
     EulerFunction task;
     switch (option) {
     case EulerFunctionOptions::Default:
-        for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
+        for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {            
             task.setTask(random->bounded(minNum, maxNum));
             if (!mode) {
-                tasksForWork += QString::number(curTaskCount)  + ")~φ(" + QString::number(task.getTask()) + ")=~?\\\\";
-                solvedWorkTasks += QString::number(curTaskCount)  + ")~φ(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
+                tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=~?\\\\";
+                solvedWorkTasks += "  " + QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
                 isReadyRender();
             } else {
-                QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\φ(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
+                QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\phi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
             } ++curTaskCount;
         } break;
@@ -227,11 +282,11 @@ void GeneratorWindow::slotDialogEulerFunction(const int &countOfTasks, const int
             task.setTask(random->bounded(minNum, maxNum));
             if (isPrime(task.getTask())) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~φ(" + QString::number(task.getTask()) + ")=~?\\\\";
-                    solvedWorkTasks += QString::number(curTaskCount)  + ")~φ(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
+                    tasksForWork += QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=~?\\\\";
+                    solvedWorkTasks += QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
                     isReadyRender();
                 } else {
-                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\φ(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
+                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\phi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                     tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
                 } ++i; ++curTaskCount;
             }
@@ -242,11 +297,11 @@ void GeneratorWindow::slotDialogEulerFunction(const int &countOfTasks, const int
             auto data = decompositionToSimple(task.getTask());
             if (data.size() == 1 && data[0].second > 1) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~φ(" + QString::number(task.getTask()) + ")=~?\\\\";
-                    solvedWorkTasks += QString::number(curTaskCount)  + ")~φ(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
+                    tasksForWork += QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=~?\\\\";
+                    solvedWorkTasks += QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
                     isReadyRender();
                 } else {
-                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\φ(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
+                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\phi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                     tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
                 } ++i; ++curTaskCount;
             }
@@ -257,18 +312,18 @@ void GeneratorWindow::slotDialogEulerFunction(const int &countOfTasks, const int
             auto data = decompositionToSimple(task.getTask());
             if (data.size() == 1) continue;
             bool accessFlag = true;
-            for (size_t i = 0; i < data.size(); ++i){
+            for (size_t i = 0; i < data.size(); ++i) {
                 if (data[i].second != 1) {
                     accessFlag = false;
                     break;
                 }
             } if (accessFlag) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~φ(" + QString::number(task.getTask()) + ")=~?\\\\";
-                    solvedWorkTasks += QString::number(curTaskCount)  + ")~φ(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
+                    tasksForWork += QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=~?\\\\";
+                    solvedWorkTasks += QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
                     isReadyRender();
                 } else {
-                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\φ(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
+                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\phi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                     tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
                 } ++i; ++curTaskCount;
             }
@@ -286,11 +341,11 @@ void GeneratorWindow::slotDialogEulerFunction(const int &countOfTasks, const int
                 }
             } if (accessFlag) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~φ(" + QString::number(task.getTask()) + ")=~?\\\\";
-                    solvedWorkTasks += QString::number(curTaskCount)  + ")~φ(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
+                    tasksForWork += QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=~?\\\\";
+                    solvedWorkTasks += QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
                     isReadyRender();
                 } else {
-                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\φ(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
+                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\phi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                     tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
                 } ++i; ++curTaskCount;
             }

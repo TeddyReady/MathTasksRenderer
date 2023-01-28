@@ -20,7 +20,6 @@ DialogSet::DialogSet(QWidget *parent, bool mode) :
 
 DialogSet::~DialogSet()
 {
-    delete gen;
     delete ui;
 }
 
@@ -89,7 +88,7 @@ void DialogSet::uploadUI()
 
 void DialogSet::uploadData()
 {
-    QFile dataBase(":/data/set.csv");
+    QFile dataBase(":/general/data/set.csv");
     if (!dataBase.open(QFile::ReadOnly)) {
         QMessageBox::warning(this, "Внимание!", "Файл не существует!");
         return;

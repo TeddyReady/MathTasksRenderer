@@ -59,11 +59,13 @@ public slots:
 private slots:
     void checkAnswers();
     void clearTasks();
+    void startTest(const QTime&);
+    void printTasks();
+    void openManual();
     void on_genButton_clicked();
     void on_comboBox_currentTextChanged(const QString &task);
     void on_tabWidget_currentChanged(int index);
-    void on_pushButton_clicked();
-    void startTest(QTime);
+    void on_pushButton_clicked();   
 private:
     int totalTestTasks, totalTaskCount, curTaskCount;
     bool mode;

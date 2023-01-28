@@ -27,17 +27,17 @@ border: 2px solid Tan;
 border-radius: 10px;
 }
 QCheckBox::indicator:checked {
-image: url(":/img/checked.png");
+image: url(":/general/img/checked.png");
 width: 16px;
 height: 16px;
 }
 QCheckBox::indicator:checked:hover {
-image: url(":/img/checked_hover.png");
+image: url(":/general/img/checked_hover.png");
 width: 16px;
 height: 16px;
 }
 QCheckBox::indicator:unchecked:hover {
-image: url(":/img/unchecked_hover.png");
+image: url(":/general/img/unchecked_hover.png");
 width: 16px;
 height: 16px;
 }

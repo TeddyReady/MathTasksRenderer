@@ -1,20 +1,19 @@
 <RCC>
     <qresource prefix="/">
-        <file>web/index.html</file>
-        <file>web/styles/style.css</file>
-        <file>img/unchecked_hover.png</file>
-        <file>img/splash.png</file>
-        <file>img/checked_hover.png</file>
-        <file>img/checked.png</file>
-        <file>img/appIcon.png</file>
         <file>general/style.css</file>
         <file>general/settings.ini</file>
-        <file>web/scripts/main.js</file>
-        <file>img/checkAnswers.png</file>
-        <file>img/clearTasks.png</file>
-        <file>img/quit.jpg</file>
-        <file>img/reload.png</file>
-        <file>web/theory.html</file>
-        <file>data/set.csv</file>
+        <file>general/web/theory.html</file>
+        <file>general/img/appIcon.png</file>
+        <file>general/img/checkAnswers.png</file>
+        <file>general/img/checked.png</file>
+        <file>general/img/checked_hover.png</file>
+        <file>general/img/clearTasks.png</file>
+        <file>general/img/manual.png</file>
+        <file>general/img/printer.png</file>
+        <file>general/img/quit.png</file>
+        <file>general/img/reload.png</file>
+        <file>general/img/splash.png</file>
+        <file>general/img/unchecked_hover.png</file>
+        <file>general/data/set.csv</file>
     </qresource>
 </RCC>
