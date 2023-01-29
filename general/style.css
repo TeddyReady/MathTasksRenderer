@@ -182,6 +182,9 @@ margin-top: 2px;
 QWebView {
 background-color: #f7f9eb;
 }
+QWebView#pdfView {
+background-color: White;
+}
 QTableView {
 
 }

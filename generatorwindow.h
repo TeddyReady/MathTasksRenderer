@@ -14,6 +14,7 @@
 #include "dialogmebiusfunction.h"
 #include "dialogeulerfunction.h"
 #include "dialogsymboljacobi.h"
+#include "dialoglatexprinter.h"
 #include "dialogset.h"
 #include "testmode.h"
 
@@ -67,14 +68,12 @@ private slots:
     void on_tabWidget_currentChanged(int index);
     void on_pushButton_clicked();   
 private:
-    int totalTestTasks, totalTaskCount, curTaskCount;
+    int totalTestTasks, totalTaskCount, curTaskCount, TFWpastSize;
     bool mode;
     QVector<QString> generatedData;
     tasks_type tasksForTest;
-    QString tasksForWork, solvedWorkTasks;
-    QFile file;
+    QString tasksForWork, solvedWorkTasks, taskBuffer;
     QRandomGenerator *random;
-    QAction *testMode, *workMode;
     QSettings *settings;
     TeXEngine *engine;
     Ui::GeneratorWindow *ui;

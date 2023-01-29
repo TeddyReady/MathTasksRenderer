@@ -1,6 +1,7 @@
 #include <QSplashScreen>
 #include <QApplication>
 #include <QThread>
+
 #include "generatorwindow.h"
 
 int main(int argc, char *argv[])

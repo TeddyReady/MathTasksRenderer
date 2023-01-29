@@ -1,4 +1,4 @@
-QT       += core gui webkitwidgets
+QT       += core gui webkitwidgets printsupport
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Algebra_Madness
 TEMPLATE = app
@@ -7,6 +7,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     basemath.cpp \
     dialogeulerfunction.cpp \
+    dialoglatexprinter.cpp \
     dialogmebiusfunction.cpp \
     dialogset.cpp \
     dialogtesttimer.cpp \
@@ -26,6 +27,7 @@ SOURCES += \
 HEADERS += \
     basemath.h \
     dialogeulerfunction.h \
+    dialoglatexprinter.h \
     dialogmebiusfunction.h \
     dialogset.h \
     dialogtesttimer.h\
@@ -43,6 +45,7 @@ HEADERS += \
 
 FORMS += \
     dialogeulerfunction.ui \
+    dialoglatexprinter.ui \
     dialogmebiusfunction.ui \
     dialogset.ui \
     dialogtesttimer.ui \
