@@ -1,6 +1,7 @@
 #ifndef BASEMATH_H
 #define BASEMATH_H
 #include <QRandomGenerator>
+#include <algorithm>
 #include <vector>
 #include <cmath>
 

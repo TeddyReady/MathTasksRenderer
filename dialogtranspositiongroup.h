@@ -38,7 +38,6 @@ private slots:
     void on_btnCount_clicked();
     void on_btnOrder_clicked();
     void on_btnDec_clicked();
-
     void on_btnNeighbor_clicked();
 
 private:

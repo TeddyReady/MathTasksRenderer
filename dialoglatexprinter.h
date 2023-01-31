@@ -26,7 +26,7 @@ private slots:
     void on_buttonBox_rejected();
 private:
     QString data, answers;
-    TeXEngine *engine;
+    TeXEngine *engine, *engineAnswers;
     Ui::DialogLatexPrinter *ui;
 };
 

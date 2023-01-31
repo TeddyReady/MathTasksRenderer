@@ -33,7 +33,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideNone</enum>
@@ -84,7 +84,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QWebView" name="taskView" native="true"/>
+         <widget class="QWebView" name="taskView"/>
         </item>
         <item row="1" column="0" colspan="2">
          <widget class="QPushButton" name="genButton">
@@ -101,8 +101,8 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
-         <widget class="QWebView" name="webView" native="true">
-          <property name="url" stdset="0">
+         <widget class="QWebView" name="webView">
+          <property name="url">
            <url>
             <string>about:blank</string>
            </url>

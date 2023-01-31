@@ -82,8 +82,8 @@ void GeneratorWindow::isReadyRender(){
 
 void GeneratorWindow::checkAnswers(){
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    engine->TeX2SVG(solvedWorkTasks + "}}\\end{align}", true);
     taskBuffer = solvedWorkTasks;
+    engine->TeX2SVG(taskBuffer.replace("@", "").replace("#", "") + "}}\\end{align}", true);
     ui->toolBar->actions().at(0)->setDisabled(true);
     QApplication::restoreOverrideCursor();
 }
@@ -257,7 +257,7 @@ void GeneratorWindow::slotDialogEulerFunction(const int &countOfTasks, const int
             task.setTask(random->bounded(minNum, maxNum));
             if (!mode) {
                 tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=~?\\\\";
-                solvedWorkTasks += "  " + QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
+                solvedWorkTasks += QString::number(curTaskCount)  + "@)~\\phi(" + QString::number(task.getTask()) + ")=#" + QString::number(task.solve()) + "@\\\\#";
                 isReadyRender();
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\phi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
@@ -364,7 +364,7 @@ void GeneratorWindow::slotDialogMebiusFunction(const int &countOfTasks, const in
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             task.setTask(random->bounded(minNum, maxNum));
             if (!mode) {
-                tasksForWork += QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=~?\\\\";
+                tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=~?\\\\";
                 solvedWorkTasks += QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
                 isReadyRender();
             } else {
@@ -377,7 +377,7 @@ void GeneratorWindow::slotDialogMebiusFunction(const int &countOfTasks, const in
             task.setTask(random->bounded(minNum, maxNum));
             if (!isPrime(task.getTask())) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=~?\\\\";
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=~?\\\\";
                     solvedWorkTasks += QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
                     isReadyRender();
                 } else {
@@ -401,7 +401,7 @@ void GeneratorWindow::slotDialogMebiusFunction(const int &countOfTasks, const in
             }
             if (accessFlag) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=~?\\\\";
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=~?\\\\";
                     solvedWorkTasks += QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
                     isReadyRender();
                 } else {
@@ -425,7 +425,7 @@ void GeneratorWindow::slotDialogMebiusFunction(const int &countOfTasks, const in
             }
             if (accessFlag) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=~?\\\\";
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=~?\\\\";
                     solvedWorkTasks += QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
                     isReadyRender();
                 } else {
@@ -447,7 +447,7 @@ void GeneratorWindow::slotDialogMebiusFunction(const int &countOfTasks, const in
             }
             if (accessFlag) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=~?\\\\";
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=~?\\\\";
                     solvedWorkTasks += QString::number(curTaskCount)  + ")~\\mu(" + QString::number(task.getTask()) + ")=" + QString::number(task.solve()) + "\\\\";
                     isReadyRender();
                 } else {
@@ -484,7 +484,7 @@ void GeneratorWindow::slotDialogSymbolLegandre(const int &countOfTasks, const st
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (isPrime(task.getTask().second)) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\left(\\frac{" +
                        QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
                        "}\\right)=~?\\\\";
                     solvedWorkTasks += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
@@ -502,7 +502,7 @@ void GeneratorWindow::slotDialogSymbolLegandre(const int &countOfTasks, const st
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (isPrime(task.getTask().second) && !isPrime(task.getTask().first)) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\left(\\frac{" +
                        QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
                        "}\\right)=~?\\\\";
                     solvedWorkTasks += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
@@ -520,7 +520,7 @@ void GeneratorWindow::slotDialogSymbolLegandre(const int &countOfTasks, const st
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (isPrime(task.getTask().second)) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\left(\\frac{" +
                        QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
                        "}\\right)=~?\\\\";
                     solvedWorkTasks += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
@@ -538,7 +538,7 @@ void GeneratorWindow::slotDialogSymbolLegandre(const int &countOfTasks, const st
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (isPrime(task.getTask().second)) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\left(\\frac{" +
                        QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
                        "}\\right)=~?\\\\";
                     solvedWorkTasks += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
@@ -556,7 +556,7 @@ void GeneratorWindow::slotDialogSymbolLegandre(const int &countOfTasks, const st
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (isPrime(task.getTask().second) && !isPrime(task.getTask().first) && task.getTask().first % 2 != 0) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\left(\\frac{" +
                        QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
                        "}\\right)=~?\\\\";
                     solvedWorkTasks += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
@@ -597,7 +597,7 @@ void GeneratorWindow::slotDialogSymbolJacobi(const int &countOfTasks, const std:
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (!isPrime(task.getTask().second) && task.getTask().second % 2 != 0) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\left(\\frac{" +
                        QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
                        "}\\right)=~?\\\\";
                     solvedWorkTasks += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
@@ -615,7 +615,7 @@ void GeneratorWindow::slotDialogSymbolJacobi(const int &countOfTasks, const std:
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (!isPrime(task.getTask().second) && !isPrime(task.getTask().first) && task.getTask().second % 2 != 0) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\left(\\frac{" +
                        QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
                        "}\\right)=~?\\\\";
                     solvedWorkTasks += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
@@ -633,7 +633,7 @@ void GeneratorWindow::slotDialogSymbolJacobi(const int &countOfTasks, const std:
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (!isPrime(task.getTask().second) && task.getTask().second % 2 != 0) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\left(\\frac{" +
                        QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
                        "}\\right)=~?\\\\";
                     solvedWorkTasks += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
@@ -651,7 +651,7 @@ void GeneratorWindow::slotDialogSymbolJacobi(const int &countOfTasks, const std:
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (!isPrime(task.getTask().second) && task.getTask().second % 2 != 0) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\left(\\frac{" +
                        QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
                        "}\\right)=~?\\\\";
                     solvedWorkTasks += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
@@ -669,7 +669,7 @@ void GeneratorWindow::slotDialogSymbolJacobi(const int &countOfTasks, const std:
             task.setTask(random->bounded(a.first, a.second), random->bounded(p.first, p.second));
             if (!isPrime(task.getTask().second) && !isPrime(task.getTask().first) && task.getTask().first % 2 != 0 && task.getTask().second % 2 != 0) {
                 if (!mode) {
-                    tasksForWork += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\left(\\frac{" +
                        QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) +
                        "}\\right)=~?\\\\";
                     solvedWorkTasks += QString::number(curTaskCount)  + ")~\\left(\\frac{" +
@@ -716,10 +716,10 @@ void GeneratorWindow::slotDialogTranspositionGroup(const int &countOfTasks, cons
             task.setTask(random->bounded(minN, maxN), mode);
             if (!this->mode) {
                 if (task.getViewMode() == ViewMode::Standart) {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?\\\\";
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=" + task.writeToMode(ViewMode::Cycle) + "\\\\";
                 } else {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?\\\\";
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=" + task.writeToMode(ViewMode::Standart) + "\\\\";
                 } isReadyRender(); ++localCount;
             } else {
@@ -752,12 +752,12 @@ void GeneratorWindow::slotDialogTranspositionGroup(const int &countOfTasks, cons
             result = task * task2;
             if (!this->mode) {
                 if (task.getViewMode() == ViewMode::Standart) {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" +
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" +
                       task.writeToMode(ViewMode::Standart) + "·" + task2.writeToMode(ViewMode::Standart) + "=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" +
                       task.writeToMode(ViewMode::Standart) + "·" + task2.writeToMode(ViewMode::Standart) + "=" + result.writeToMode(ViewMode::Standart) + "\\\\";
                 } else {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" +
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" +
                       task.writeToMode(ViewMode::Cycle) + "·" + task2.writeToMode(ViewMode::Cycle) + "=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" +
                       task.writeToMode(ViewMode::Cycle) + "·" + task2.writeToMode(ViewMode::Cycle) + "=" + result.writeToMode(ViewMode::Cycle) + "\\\\";
@@ -778,11 +778,11 @@ void GeneratorWindow::slotDialogTranspositionGroup(const int &countOfTasks, cons
     case TranspositionGroupOptions::Inverse:
         if (!this->mode) {
             if (mode == ViewMode::Standart) {
-                tasksForWork += "Найдите~подстановку,~обратную~данной,~записанной~в~табличном~виде:\\\\";
-                solvedWorkTasks += "Найдите~подстановку,~обратную~данной,~записанной~в~табличном~виде:\\\\";
+                tasksForWork += "\\Large{\\textbf{Найдите подстановку, обратную данной, записанной в табличном виде:}}\\\\";
+                solvedWorkTasks += "\\Large{\\textbf{Найдите подстановку, обратную данной, записанной в табличном виде:}}\\\\";
             } else {
-                tasksForWork += "Найдите~подстановку,~обратную~данной,~записанной~в~циклическом~виде:\\\\";
-                solvedWorkTasks += "Найдите~подстановку,~обратную~данной,~записанной~в~циклическом~виде:\\\\";
+                tasksForWork += "\\Large{\\textbf{Найдите подстановку, обратную~данной, записанной в циклическом виде:}}\\\\";
+                solvedWorkTasks += "\\Large{\\textbf{Найдите подстановку, обратную~данной, записанной в циклическом виде:}}\\\\";
             }
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
@@ -790,11 +790,11 @@ void GeneratorWindow::slotDialogTranspositionGroup(const int &countOfTasks, cons
             result = ~task;
             if (!this->mode) {
                 if (task.getViewMode() == ViewMode::Standart) {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:{" + task.writeToMode(ViewMode::Standart) + "}^{-1}=~?\\\\";
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:{" + task.writeToMode(ViewMode::Standart) + "}^{-1}=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:{" + task.writeToMode(ViewMode::Standart) + "}^{-1}=" +
                       result.writeToMode(ViewMode::Standart) + "\\\\";
                 } else {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:{" + task.writeToMode(ViewMode::Cycle) + "}^{-1}=~?\\\\";
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:{" + task.writeToMode(ViewMode::Cycle) + "}^{-1}=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:{" + task.writeToMode(ViewMode::Cycle) + "}^{-1}=" +
                       result.writeToMode(ViewMode::Cycle) + "\\\\";
                 } isReadyRender(); ++localCount;
@@ -814,22 +814,22 @@ void GeneratorWindow::slotDialogTranspositionGroup(const int &countOfTasks, cons
     case TranspositionGroupOptions::Cycle:
         if (!this->mode) {
             if (mode == ViewMode::Standart) {
-                tasksForWork += "Найдите~цикловой~тип~подстановки,~записанной~в~табличном~виде:\\\\";
-                solvedWorkTasks += "Найдите~цикловой~тип~подстановки,~записанной~в~табличном~виде:\\\\";
+                tasksForWork += "\\Large{\\textbf{Найдите цикловой тип подстановки, записанной в табличном виде:}}\\\\";
+                solvedWorkTasks += "\\Large{\\textbf{Найдите цикловой тип подстановки, записанной в табличном виде:}}\\\\";
             } else {
-                tasksForWork += "Найдите~цикловой~тип~подстановки,~записанной~в~циклическом~виде:\\\\";
-                solvedWorkTasks += "Найдите~цикловой~тип~подстановки,~записанной~в~циклическом~виде:\\\\";
+                tasksForWork += "\\Large{\\textbf{Найдите цикловой тип подстановки, записанной в циклическом виде:}}\\\\";
+                solvedWorkTasks += "\\Large{\\textbf{Найдите цикловой тип подстановки, записанной в циклическом виде:}}\\\\";
             }
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
             task.setTask(random->bounded(minN, maxN), mode);
             if (!this->mode) {
                 if (task.getViewMode() == ViewMode::Standart) {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?\\\\";
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=" +
                          task.cycleType() + "\\\\";
                 } else {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?\\\\";
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=" +
                          task.cycleType() + "\\\\";
                 } isReadyRender(); ++localCount;
@@ -849,22 +849,22 @@ void GeneratorWindow::slotDialogTranspositionGroup(const int &countOfTasks, cons
     case TranspositionGroupOptions::Count:
         if (!this->mode) {
             if (mode == ViewMode::Standart) {
-                tasksForWork += "Вычислите~количество~беспорядков~подстановки,~записанной~в~табличном~виде:\\\\";
-                solvedWorkTasks += "Вычислите~количество~беспорядков~подстановки,~записанной~в~табличном~виде:\\\\";
+                tasksForWork += "\\Large{\\textbf{Вычислите количество беспорядков подстановки, записанной в табличном виде:}}\\\\";
+                solvedWorkTasks += "\\Large{\\textbf{Вычислите количество беспорядков подстановки, записанной в табличном виде:}}\\\\";
             } else {
-                tasksForWork += "Вычислите~количество~беспорядков~подстановки,~записанной~в~циклическом~виде:\\\\";
-                solvedWorkTasks += "Вычислите~количество~беспорядков~подстановки,~записанной~в~циклическом~виде:\\\\";
+                tasksForWork += "\\Large{\\textbf{Вычислите количество беспорядков подстановки, записанной в циклическом виде:}}\\\\";
+                solvedWorkTasks += "\\Large{\\textbf{Вычислите количество беспорядков подстановки, записанной в циклическом виде:}}\\\\";
             }
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
             task.setTask(random->bounded(minN, maxN), mode);
             if (!this->mode) {
                 if (task.getViewMode() == ViewMode::Standart) {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:\\Delta" + task.writeToMode(ViewMode::Standart) + "=~?\\\\";
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:\\Delta" + task.writeToMode(ViewMode::Standart) + "=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:\\Delta" + task.writeToMode(ViewMode::Standart) + "=" +
                          QString::number(task.getHaos()) + "\\\\";
                 } else {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:\\Delta" + task.writeToMode(ViewMode::Cycle) + "=~?\\\\";
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:\\Delta" + task.writeToMode(ViewMode::Cycle) + "=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:\\Delta" + task.writeToMode(ViewMode::Cycle) + "=" +
                          QString::number(task.getHaos()) + "\\\\";
                 } isReadyRender(); ++localCount;
@@ -884,22 +884,22 @@ void GeneratorWindow::slotDialogTranspositionGroup(const int &countOfTasks, cons
     case TranspositionGroupOptions::Mod2:
         if (!this->mode) {
             if (mode == ViewMode::Standart && this->mode) {
-                tasksForWork += "Определите~четность~подстановки,~записанной~в~табличном~виде:\\\\";
-                solvedWorkTasks += "Определите~четность~подстановки,~записанной~в~табличном~виде:\\\\";
+                tasksForWork += "\\Large{\\textbf{Определите четность подстановки, записанной в табличном виде:}}\\\\";
+                solvedWorkTasks += "\\Large{\\textbf{Определите четность подстановки, записанной в табличном виде:}}\\\\";
             } else {
-                tasksForWork += "Определите~четность~подстановки,~записанной~в~циклическом~виде:\\\\";
-                solvedWorkTasks += "Определите~четность~подстановки,~записанной~в~циклическом~виде:\\\\";
+                tasksForWork += "\\Large{\\textbf{Определите четность подстановки, записанной в циклическом виде:}}\\\\";
+                solvedWorkTasks += "\\Large{\\textbf{Определите четность подстановки, записанной в циклическом виде:}}\\\\";
             }
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
             task.setTask(random->bounded(minN, maxN), mode);
             if (!this->mode) {
                 if (task.getViewMode() == ViewMode::Standart) {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:\\delta" + task.writeToMode(ViewMode::Standart) + "\\Rightarrow~?\\\\";
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:\\delta" + task.writeToMode(ViewMode::Standart) + "\\Rightarrow~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:\\delta" + task.writeToMode(ViewMode::Standart) + "\\Rightarrow" +
                          task.getEven() + "\\\\";
                 } else {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:\\delta" + task.writeToMode(ViewMode::Cycle) + "\\Rightarrow~?\\\\";
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:\\delta" + task.writeToMode(ViewMode::Cycle) + "\\Rightarrow~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:\\delta" + task.writeToMode(ViewMode::Cycle) + "\\Rightarrow" +
                         task.getEven() + "\\\\";
                 } isReadyRender(); ++localCount;
@@ -919,22 +919,22 @@ void GeneratorWindow::slotDialogTranspositionGroup(const int &countOfTasks, cons
     case TranspositionGroupOptions::Order:
         if (!this->mode) {
             if (mode == ViewMode::Standart) {
-                tasksForWork += "Определите~порядок~подстановки,~записанной~в~табличном~виде:\\\\";
-                solvedWorkTasks += "Определите~порядок~подстановки,~записанной~в~табличном~виде:\\\\";
+                tasksForWork += "\\Large{\\textbf{Определите порядок подстановки, записанной в табличном виде:}}\\\\";
+                solvedWorkTasks += "\\Large{\\textbf{Определите порядок подстановки, записанной в табличном виде:}}\\\\";
             } else {
-                tasksForWork += "Определите~порядок~подстановки,~записанной~в~циклическом~виде:\\\\";
-                solvedWorkTasks += "Определите~порядок~подстановки,~записанной~в~циклическом~виде:\\\\";
+                tasksForWork += "\\Large{\\textbf{Определите порядок подстановки, записанной в циклическом виде:}}\\\\";
+                solvedWorkTasks += "\\Large{\\textbf{Определите порядок подстановки, записанной в циклическом виде:}}\\\\";
             }
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
             task.setTask(random->bounded(minN, maxN), mode);
             if (!this->mode) {
                 if (task.getViewMode() == ViewMode::Standart) {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:~ord" + task.writeToMode(ViewMode::Standart) + "=~?\\\\";
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:~ord" + task.writeToMode(ViewMode::Standart) + "=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:~ord" + task.writeToMode(ViewMode::Standart) + "=" +
                          QString::number(task.getOrder()) + "\\\\";
                 } else {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:~ord" + task.writeToMode(ViewMode::Cycle) + "=~?\\\\";
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:~ord" + task.writeToMode(ViewMode::Cycle) + "=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:~ord" + task.writeToMode(ViewMode::Cycle) + "=" +
                         QString::number(task.getOrder()) + "\\\\";
                 } isReadyRender(); ++localCount;
@@ -953,17 +953,17 @@ void GeneratorWindow::slotDialogTranspositionGroup(const int &countOfTasks, cons
 
     case TranspositionGroupOptions::Decomposition:
         if (!this->mode) {
-            tasksForWork += "Запишите~подстановку~в~виде~произведения~транспозиций:\\\\";
-            solvedWorkTasks += "Запишите~подстановку~в~виде~произведения~транспозиций:\\\\";
+            tasksForWork += "\\Large{\\textbf{Запишите подстановку в виде произведения транспозиций:}}\\\\";
+            solvedWorkTasks += "\\Large{\\textbf{Запишите подстановку в виде произведения транспозиций:}}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
             task.setTask(random->bounded(minN, maxN), mode, true);
             if (!this->mode) {
                 if (task.getViewMode() == ViewMode::Standart) {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?\\\\";
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=" + task.writeToMode(ViewMode::Decomposition) + "\\\\";
                 } else {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?\\\\";
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=" + task.writeToMode(ViewMode::Decomposition) + "\\\\";
                 } isReadyRender(); ++localCount;
             } else {
@@ -981,17 +981,17 @@ void GeneratorWindow::slotDialogTranspositionGroup(const int &countOfTasks, cons
 
     case TranspositionGroupOptions::Neighbor:
         if (!this->mode) {
-            tasksForWork += "Запишите~подстановку~в~виде~произведения~транспозиций~соседних~элементов:\\\\";
-            solvedWorkTasks += "Запишите~подстановку~в~виде~произведения~транспозиций~соседних~элементов:\\\\";
+            tasksForWork += "\\Large{\\textbf{Запишите подстановку в виде произведения транспозиций соседних элементов:}}\\\\";
+            solvedWorkTasks += "\\Large{\\textbf{Запишите подстановку в виде произведения транспозиций соседних элементов:}}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
             task.setTask(random->bounded(minN, maxN), mode, true);
             if (!this->mode) {
                 if (task.getViewMode() == ViewMode::Standart) {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?\\\\";
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=" + task.writeToMode(ViewMode::Neighbors) + "\\\\";
                 } else {
-                    tasksForWork += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?\\\\";
+                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=" + task.writeToMode(ViewMode::Neighbors) + "\\\\";
                 } isReadyRender(); ++localCount;
             } else {
@@ -1029,12 +1029,12 @@ void GeneratorWindow::slotDialogSet(const int &countOfTasks, const set_type &dat
     switch (option) {
     case SetOptions::Check:
         if (!this->mode) {
-            tasksForWork += "Чем~является~данная~Алгебраическая~Структура:\\\\";
-            solvedWorkTasks += "Чем~является~данная~Алгебраическая~Структура:\\\\";
+            tasksForWork += "\\Large{\\textbf{Чем является данная Алгебраическая Структура:}}\\\\";
+            solvedWorkTasks += "\\Large{\\textbf{Чем является данная Алгебраическая Структура:}}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             if (!mode) {
-                tasksForWork += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
+                tasksForWork += "  " + QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
                 solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + std::get<2>(data[i]) + "\\\\";
                 isReadyRender(); ++localCount;
             } else {
@@ -1045,8 +1045,8 @@ void GeneratorWindow::slotDialogSet(const int &countOfTasks, const set_type &dat
 
     case SetOptions::Oper:
         if (!this->mode) {
-            tasksForWork += "Является~ли~данная~операция~заданной~на~множестве:\\\\";
-            solvedWorkTasks += "Является~ли~данная~операция~заданной~на~множестве:\\\\";
+            tasksForWork += "\\Large{\\textbf{Является ли данная операция заданной на множестве:}}\\\\";
+            solvedWorkTasks += "\\Large{\\textbf{Является ли данная операция заданной на множестве:}}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             QString answer;
@@ -1054,7 +1054,7 @@ void GeneratorWindow::slotDialogSet(const int &countOfTasks, const set_type &dat
                 answer = "Да";
             else answer = "Нет";
             if (!mode) {
-                tasksForWork += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
+                tasksForWork += "  " + QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
                 solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + answer + "\\\\";
                 isReadyRender(); ++localCount;
             } else {
@@ -1065,8 +1065,8 @@ void GeneratorWindow::slotDialogSet(const int &countOfTasks, const set_type &dat
 
     case SetOptions::Abel:
         if (!this->mode) {
-            tasksForWork += "Является~ли~данная~операция~коммутативной~на~множестве:\\\\";
-            solvedWorkTasks += "Является~ли~данная~операция~коммутативной~на~множестве:\\\\";
+            tasksForWork += "\\Large{\\textbf{Является ли данная операция коммутативной на множестве:}}\\\\";
+            solvedWorkTasks += "\\Large{\\textbf{Является ли данная операция коммутативной на множестве:}}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             QString answer;
@@ -1074,7 +1074,7 @@ void GeneratorWindow::slotDialogSet(const int &countOfTasks, const set_type &dat
                 answer = "Да";
             else answer = "Нет";
             if (!mode) {
-                tasksForWork += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
+                tasksForWork += "  " + QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
                 solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + answer + "\\\\";
                 isReadyRender(); ++localCount;
             } else {
@@ -1085,8 +1085,8 @@ void GeneratorWindow::slotDialogSet(const int &countOfTasks, const set_type &dat
 
     case SetOptions::Associate:
         if (!this->mode) {
-            tasksForWork += "Является~ли~данная~операция~ассоциативной~на~множестве:\\\\";
-            solvedWorkTasks += "Является~ли~данная~операция~ассоциативной~на~множестве:\\\\";
+            tasksForWork += "\\Large{\\textbf{Является ли данная операция ассоциативной на множестве:}}\\\\";
+            solvedWorkTasks += "\\Large{\\textbf{Является ли данная операция ассоциативной на множестве:}}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             QString answer;
@@ -1094,7 +1094,7 @@ void GeneratorWindow::slotDialogSet(const int &countOfTasks, const set_type &dat
                 answer = "Да";
             else answer = "Нет";
             if (!mode) {
-                tasksForWork += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
+                tasksForWork += "  " + QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
                 solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + answer + "\\\\";
                 isReadyRender(); ++localCount;
             } else {
@@ -1105,8 +1105,8 @@ void GeneratorWindow::slotDialogSet(const int &countOfTasks, const set_type &dat
 
     case SetOptions::Neutral:
         if (!this->mode) {
-            tasksForWork += "Существует~ли~нейтральный~элемент~на~заданной~алгебраической~структуре:\\\\";
-            solvedWorkTasks += "Существует~ли~нейтральный~элемент~на~заданной~алгебраической~структуре:\\\\";
+            tasksForWork += "\\Large{\\textbf{Существует ли нейтральный элемент на заданной алгебраической структуре:}}\\\\";
+            solvedWorkTasks += "\\Large{\\textbf{Существует ли нейтральный элемент на заданной алгебраической структуре:}}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             QString answer;
@@ -1114,7 +1114,7 @@ void GeneratorWindow::slotDialogSet(const int &countOfTasks, const set_type &dat
                 answer = "Да";
             else answer = "Нет";
             if (!mode) {
-                tasksForWork += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
+                tasksForWork += "  " + QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
                 solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + answer + "\\\\";
                 isReadyRender(); ++localCount;
             } else {

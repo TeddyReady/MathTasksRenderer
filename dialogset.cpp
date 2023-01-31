@@ -98,7 +98,8 @@ void DialogSet::uploadData()
         std::vector<QString> operators;
         QStringList operLine = in.readLine().split(",");
         operLine.removeAt(0);
-        for (auto member: operLine) {
+        for (QString member: operLine) {
+            member.replace(" ", "");
             operators.emplace_back(member);
         }
         for (int i = 0; i < numOfSets; i++) {
@@ -113,12 +114,15 @@ void DialogSet::uploadData()
 void DialogSet::generateTasks(const int &countOfTasks, const SetOptions &option)
 {
     set_type data;
-    for(int i = 0; i < countOfTasks; ++i) {
+    for(int i = 0; i < countOfTasks;) {
         size_t index = static_cast<size_t>(gen->bounded(0, baseData.size()));
-        QString curSet = std::get<0>(baseData[index]);
-        QString curOper = std::get<1>(baseData[index]);
-        data.emplace_back(std::make_tuple(getCode(static_cast<Set>(curSet.toInt())),
-                                curOper, std::get<2>(baseData[index])));
+        if (option == SetOptions::Oper || QString(std::get<2>(baseData[index])).toInt() / 1000) {
+            QString curSet = std::get<0>(baseData[index]);
+            QString curOper = std::get<1>(baseData[index]);
+            data.emplace_back(std::make_tuple(getCode(static_cast<Set>(curSet.toInt())),
+                                    curOper, std::get<2>(baseData[index])));
+            ++i;
+        }
     }
     emit dialogSet(countOfTasks, data, option);
 }
@@ -136,13 +140,13 @@ QString DialogSet::getCode(const Set &set) const
         return "\\mathbb{Z}";
 
     case Set::Z0:
-        return "\\mathbb{Z} \\backslash \\{ 0 \\}";
+        return "\\mathbb{Z}\\backslash\\{0\\}";
 
     case Set::Q:
         return "\\mathbb{Q}";
 
     case Set::Q0:
-        return "\\mathbb{Q} \\backslash \\{ 0 \\}";
+        return "\\mathbb{Q}\\backslash\\{0\\}";
     }
 }
 QString DialogSet::getCode(const SetType &type) const

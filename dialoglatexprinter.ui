@@ -7,34 +7,22 @@
     <x>0</x>
     <y>0</y>
     <width>418</width>
-    <height>242</height>
+    <height>493</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
-   <item row="3" column="2">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="3">
-    <widget class="QWebView" name="pdfView" native="true">
-     <property name="url" stdset="0">
-      <url>
-       <string>about:blank</string>
-      </url>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0" colspan="3">
     <layout class="QGridLayout" name="gridLayout_2">
+     <item row="2" column="0">
+      <widget class="QCheckBox" name="btnLaTeX">
+       <property name="text">
+        <string>Создать готовый LaTeX файл </string>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
@@ -76,14 +64,63 @@
        </item>
       </layout>
      </item>
-     <item row="2" column="0">
-      <widget class="QCheckBox" name="btnLaTeX">
-       <property name="text">
-        <string>Создать готовый LaTeX файл </string>
+     <item row="3" column="0">
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="currentIndex">
+        <number>0</number>
        </property>
+       <widget class="QWidget" name="tab">
+        <attribute name="title">
+         <string>Задачи</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="0" column="0">
+          <widget class="QWebView" name="pdfView">
+           <property name="url">
+            <url>
+             <string>about:blank</string>
+            </url>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_2">
+        <attribute name="title">
+         <string>Ответы</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_5">
+         <item row="0" column="0">
+          <widget class="QWebView" name="pdfViewAnswers">
+           <property name="url">
+            <url>
+             <string>about:blank</string>
+            </url>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="3" column="0">
+    <widget class="QPushButton" name="btnShow">
+     <property name="text">
+      <string>Демонстрация</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
    </item>
    <item row="3" column="1">
     <spacer name="horizontalSpacer">
@@ -97,13 +134,6 @@
       </size>
      </property>
     </spacer>
-   </item>
-   <item row="3" column="0">
-    <widget class="QPushButton" name="btnShow">
-     <property name="text">
-      <string>Демонстрация</string>
-     </property>
-    </widget>
    </item>
   </layout>
  </widget>
