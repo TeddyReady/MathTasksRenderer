@@ -2,6 +2,12 @@
 #define MEBIUSFUNCTION_H
 #include "basemath.h"
 
+enum class MebiusFunctionOptions {
+    Default, Primes,
+    EvenPrimes, NotEvenPrimes,
+    PrimeDegree
+};
+
 class MebiusFunction {
 public:
     explicit MebiusFunction();

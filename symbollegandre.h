@@ -2,6 +2,12 @@
 #define SYMBOLLEGANDRE_H
 #include "basemath.h"
 
+enum class SymbolLegandreOptions {
+    Default, Primes,
+    aEqual_1, aEqual2,
+    NotEvenPrimes
+};
+
 class SymbolLegandre {
 public:
     explicit SymbolLegandre();
@@ -12,6 +18,20 @@ public:
     virtual int solve() const;
 protected:
     int a, p;
+};
+
+enum class SymbolJacobiOptions {
+    Default, Primes,
+    aEqual_1, aEqual2,
+    NotEvenPrimes
+};
+
+class SymbolJacobi : public SymbolLegandre {
+public:
+    explicit SymbolJacobi();
+    explicit SymbolJacobi(int a, int p);
+
+    int solve() const override;
 };
 
 #endif // SYMBOLLEGANDRE_H

@@ -9,24 +9,14 @@
 #include <QPixmap>
 #include <QUrl>
 
-#include "dialogtranspositiongroup.h"
-#include "dialogsymbollegandre.h"
-#include "dialogmebiusfunction.h"
-#include "dialogeulerfunction.h"
-#include "dialogsymboljacobi.h"
 #include "dialoglatexprinter.h"
+#include "dialogbase.h"
 #include "dialogset.h"
 #include "testmode.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GeneratorWindow; }
 QT_END_NAMESPACE
-
-enum AllTasks {
-    TaskEulerFunction, TaskMebiusFunction,
-    TaskSymbolLegandre, TaskSymbolJacobi,
-    TaskTranspositionGroup, TaskSet
-};
 
 class GeneratorWindow : public QMainWindow {
     Q_OBJECT
@@ -39,21 +29,9 @@ public:
     explicit GeneratorWindow(QWidget *parent = nullptr);
     ~GeneratorWindow();
 public slots:
-    //Эйлер
-    void slotDialogEulerFunctionMeta(const int&);
-    void slotDialogEulerFunction(const int&, const int&, const int&, const EulerFunctionOptions&);
-    //Мёбиус
-    void slotDialogMebiusFunctionMeta(const int&);
-    void slotDialogMebiusFunction(const int&, const int&, const int&, const MebiusFunctionOptions&);
-    //Лежандр
-    void slotDialogSymbolLegandreMeta(const int&);
-    void slotDialogSymbolLegandre(const int&, const std::pair<int, int>&, const std::pair<int, int>&, const SymbolLegandreOptions&);
-    //Якоби
-    void slotDialogSymbolJacobiMeta(const int&);
-    void slotDialogSymbolJacobi(const int&, const std::pair<int, int>&, const std::pair<int, int>&, const SymbolJacobiOptions&);
-    //Группа перестановок
-    void slotDialogTranspositionGroupMeta(const int&);
-    void slotDialogTranspositionGroup(const int&, const int&, const int&, const TranspositionGroupOptions&, const ViewMode&);
+    //Universal Dialog
+    void receivedMetaInfo(int countOfTasks, bool isRepeatable, QString taskText);
+    void receivedData(std::vector<int> data, AllTasks task, int subTask, ViewMode optional);
     //Алгебраические структуры
     void slotDialogSetMeta(const int&);
     void slotDialogSet(const int&, const set_type&, const SetOptions&);
@@ -68,6 +46,14 @@ private slots:
     void on_tabWidget_currentChanged(int index);
     void on_pushButton_clicked();   
 private:
+    //Run Algorithms
+    void runEulerFunction(int, int, int, EulerFunctionOptions);
+    void runMebiusFunction(int, int, int, MebiusFunctionOptions);
+    void runSymbolLegandre(int, std::pair<int, int>, std::pair<int, int>, SymbolLegandreOptions);
+    void runSymbolJacobi(int, std::pair<int, int>, std::pair<int, int>, SymbolJacobiOptions);
+    void runTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode);
+    void runSet(int, set_type, SetOptions);
+
     int totalTestTasks, totalTaskCount, curTaskCount, TFWpastSize;
     bool mode;
     QVector<QString> generatedData;

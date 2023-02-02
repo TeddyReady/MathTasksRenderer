@@ -2,6 +2,12 @@
 #define EULERFUNCTION_H
 #include "basemath.h"
 
+enum class EulerFunctionOptions {
+    Default, Primes,
+    PrimesDegrees, MultiplyPrimes,
+    MultiplyPrimesDegrees
+};
+
 class EulerFunction {
 public:
     explicit EulerFunction();

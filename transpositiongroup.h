@@ -8,10 +8,18 @@
 
 #include "basemath.h"
 
+enum class TranspositionGroupOptions {
+       Write, Multiply,
+    Inverse,  Order, Mod2,
+        Cycle, Count,
+        Decomposition,
+          Neighbor
+};
+
 enum class ViewMode {
     Standart, Cycle,
      Decomposition,
-       Neighbors
+    Neighbors, None
 };
 
 class TranspositionGroup {

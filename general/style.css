@@ -7,7 +7,7 @@ border-radius: 3px;
 QStatusBar {
 color: SaddleBrown;
 }
-QDialog > QLabel {
+QLabel {
 background-color: Wheat;
 color: SaddleBrown;
 font-size: 22px;
