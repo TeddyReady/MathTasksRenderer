@@ -80,7 +80,7 @@ public:
     explicit GenWidget(AllTasks task, const QString &optionName = "", QWidget *parent = nullptr);
     std::pair<int, int> getRange() const { return std::make_pair(sbMin->value(), sbMax->value() + 1); }
 private:
-    void loadSettings(AllTasks task);
+    void loadSettings(AllTasks task, const QString &optionName);
 
     QSpinBox *sbMin, *sbMax;
 };

@@ -101,7 +101,7 @@ GenWidget::GenWidget(AllTasks task, const QString &optionName, QWidget *parent) 
 {
     sbMin = new QSpinBox(this);
     sbMax = new QSpinBox(this);
-    loadSettings(task);
+    loadSettings(task, optionName);
 
     setLayout(new QHBoxLayout(this));
     layout()->setContentsMargins(0, 0, 0, 0);
@@ -117,7 +117,7 @@ GenWidget::GenWidget(AllTasks task, const QString &optionName, QWidget *parent) 
     connect(sbMax, &QSpinBox::editingFinished, [&](){ sbMin->setMaximum(sbMax->value()); });
 }
 
-void GenWidget::loadSettings(AllTasks task)
+void GenWidget::loadSettings(AllTasks task, const QString &optionName)
 {
     switch (task) {
     case AllTasks::EulerFunction:
@@ -130,10 +130,17 @@ void GenWidget::loadSettings(AllTasks task)
 
     case AllTasks::SymbolLegandre:
     case AllTasks::SymbolJacobi:
-        sbMin->setValue(-100);
-        sbMin->setMinimum(-100000);
-        sbMax->setValue(100);
-        sbMax->setMaximum(100000);
+        if (optionName == "a") {
+            sbMin->setValue(-100);
+            sbMin->setMinimum(-100000);
+            sbMax->setValue(100);
+            sbMax->setMaximum(100000);
+        } else {
+            sbMin->setValue(2);
+            sbMin->setMinimum(1);
+            sbMax->setValue(100);
+            sbMax->setMaximum(100000);
+        }
         return;
 
     case AllTasks::TranspositionGroup:
