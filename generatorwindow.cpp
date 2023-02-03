@@ -2,12 +2,11 @@
 #include "ui_generatorwindow.h"
 
 GeneratorWindow::GeneratorWindow(QWidget *parent)
-    : QMainWindow(parent), totalTestTasks(0), mode(false),
-      totalTaskCount(0), curTaskCount(0), TFWpastSize(0),
+    : QMainWindow(parent), totalTestTasks(0), totalTaskCount(0),
+            curTaskCount(0), TFWpastSize(0), mode(false),
       tasksForWork(QString("\\begin{align}\\large{\\color{sienna}{")),
       solvedWorkTasks(QString("\\begin{align}\\large{\\color{sienna}{")),
-      random(QRandomGenerator::global()),
-      ui(new Ui::GeneratorWindow)
+      random(QRandomGenerator::global()), ui(new Ui::GeneratorWindow)
 {
     uploadSettings();
     uploadUI();
@@ -205,13 +204,9 @@ void GeneratorWindow::on_genButton_clicked()
         connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
 
     } else if (ui->tasksList->currentItem()->text() == "Алгебраические Структуры") {
-        DialogSet *window = new DialogSet(this);
-        window->setWindowTitle("Выберите настройки генерации");
-        window->show();
-        connect(window, SIGNAL(dialogSetMeta(const int&)),
-                this, SLOT(slotDialogSetMeta(const int&)));
-        connect(window, SIGNAL(dialogSet(const int&, const set_type &, const SetOptions&)),
-                this, SLOT(slotDialogSet(const int&, const set_type &, const SetOptions&)));
+        DialogBase *window = new DialogBase(AllTasks::Set, true, this);
+        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
+        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
     }
 }
 
@@ -231,6 +226,7 @@ void GeneratorWindow::receivedMetaInfo(int countOfTasks, bool isRepeatable, QStr
         ui->toolBar->actions().at(3)->setEnabled(true);
     }
 }
+
 void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int subTask, ViewMode optional)
 {
     switch (task) {
@@ -251,125 +247,9 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
     case AllTasks::TranspositionGroup:
         runTranspositionGroup(data[0], data[1], data[2], static_cast<TranspositionGroupOptions>(subTask), static_cast<ViewMode>(optional));
         break;
-    /*case AllTasks::Set:
-        runSet(data[0], static_cast<SetOptions>(subTask), 2);
-        break;*/
-    }
-}
-
-void GeneratorWindow::slotDialogSetMeta(const int &countOfTasks)
-{
-    if (!countOfTasks) return;
-    curTaskCount = 1;
-    totalTaskCount = countOfTasks;
-    if (mode) {
-        totalTestTasks += countOfTasks;
-        statusBar()->showMessage("Задания на Множества сгенерированы!", 1500);
-        ui->lcdNumber->display(totalTestTasks);
-    }
-}
-void GeneratorWindow::slotDialogSet(const int &countOfTasks, const set_type &data, const SetOptions &option)
-{
-    int localCount = 1;
-    ui->toolBar->actions().at(0)->setEnabled(true);
-    ui->toolBar->actions().at(1)->setEnabled(true);
-    ui->toolBar->actions().at(3)->setEnabled(true);
-    switch (option) {
-    case SetOptions::Check:
-        if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Чем является данная Алгебраическая Структура:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Чем является данная Алгебраическая Структура:}}\\\\";
-        }
-        for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
-            if (!mode) {
-                tasksForWork += "  " + QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
-                solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + std::get<2>(data[i]) + "\\\\";
-                isReadyRender(); ++localCount;
-            } else {
-                QString taskText = "\\begin{align}\\color{sienna}{Чем~является~данная~Алгебраическая~Структура:\\\\\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?}\\end{align}";
-                tasksForTest.push_back(std::make_tuple(taskText, std::get<2>(data[i]), SupCommands::Name, 0));
-            } ++curTaskCount;
-        } break;
-
-    case SetOptions::Oper:
-        if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Является ли данная операция заданной на множестве:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Является ли данная операция заданной на множестве:}}\\\\";
-        }
-        for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
-            QString answer;
-            if (QString(std::get<2>(data[i])).toInt() / 1000)
-                answer = "Да";
-            else answer = "Нет";
-            if (!mode) {
-                tasksForWork += "  " + QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
-                solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + answer + "\\\\";
-                isReadyRender(); ++localCount;
-            } else {
-                QString taskText = "\\begin{align}\\color{sienna}{Чем~является~данная~Алгебраическая~Структура:\\\\\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?}\\end{align}";
-                tasksForTest.push_back(std::make_tuple(taskText, answer, SupCommands::Name, 0));
-            } ++curTaskCount;
-        } break;
-
-    case SetOptions::Abel:
-        if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Является ли данная операция коммутативной на множестве:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Является ли данная операция коммутативной на множестве:}}\\\\";
-        }
-        for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
-            QString answer;
-            if (QString(std::get<2>(data[i])).toInt() / 100)
-                answer = "Да";
-            else answer = "Нет";
-            if (!mode) {
-                tasksForWork += "  " + QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
-                solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + answer + "\\\\";
-                isReadyRender(); ++localCount;
-            } else {
-                QString taskText = "\\begin{align}\\color{sienna}{Чем~является~данная~Алгебраическая~Структура:\\\\\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?}\\end{align}";
-                tasksForTest.push_back(std::make_tuple(taskText, answer, SupCommands::Name, 0));
-            } ++curTaskCount;
-        } break;
-
-    case SetOptions::Associate:
-        if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Является ли данная операция ассоциативной на множестве:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Является ли данная операция ассоциативной на множестве:}}\\\\";
-        }
-        for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
-            QString answer;
-            if (QString(std::get<2>(data[i])).toInt() / 10)
-                answer = "Да";
-            else answer = "Нет";
-            if (!mode) {
-                tasksForWork += "  " + QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
-                solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + answer + "\\\\";
-                isReadyRender(); ++localCount;
-            } else {
-                QString taskText = "\\begin{align}\\color{sienna}{Чем~является~данная~Алгебраическая~Структура:\\\\\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?}\\end{align}";
-                tasksForTest.push_back(std::make_tuple(taskText, answer, SupCommands::Name, 0));
-            } ++curTaskCount;
-        } break;
-
-    case SetOptions::Neutral:
-        if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Существует ли нейтральный элемент на заданной алгебраической структуре:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Существует ли нейтральный элемент на заданной алгебраической структуре:}}\\\\";
-        }
-        for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
-            QString answer;
-            if (QString(std::get<2>(data[i])).toInt() % 10)
-                answer = "Да";
-            else answer = "Нет";
-            if (!mode) {
-                tasksForWork += "  " + QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?\\\\";
-                solvedWorkTasks += QString::number(localCount)  + ")~\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow" + answer + "\\\\";
-                isReadyRender(); ++localCount;
-            } else {
-                QString taskText = "\\begin{align}\\color{sienna}{Чем~является~данная~Алгебраическая~Структура:\\\\\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?}\\end{align}";
-                tasksForTest.push_back(std::make_tuple(taskText, answer, SupCommands::Name, 0));
-            } ++curTaskCount;
-        } break;
+    case AllTasks::Set:
+        runSet(data[0], static_cast<SetOptions>(subTask));
+        break;
     }
 }
 
@@ -408,11 +288,9 @@ void GeneratorWindow::on_comboBox_currentTextChanged(const QString &task)
         ui->mainLayout->addWidget(window);
 
     } else if (task == "Алгебраические Структуры") {
-        DialogSet *window = new DialogSet(this, mode);
-        connect(window, SIGNAL(dialogSetMeta(const int&)),
-                this, SLOT(slotDialogSetMeta(const int&)));
-        connect(window, SIGNAL(dialogSet(const int&, const set_type &, const SetOptions&)),
-                this, SLOT(slotDialogSet(const int&, const set_type &, const SetOptions&)));
+        DialogBase *window = new DialogBase(AllTasks::Set, false, this);
+        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
+        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
         ui->mainLayout->addWidget(window);
     }
 }
@@ -808,11 +686,12 @@ void GeneratorWindow::runSymbolJacobi(int countOfTasks, std::pair<int, int> a, s
 
 void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN, TranspositionGroupOptions option, ViewMode mode)
 {
-    TranspositionGroup task, task2, result; int localCount = 1;
+    int localCount = 1;
     totalTaskCount = countOfTasks;
     ui->toolBar->actions().at(0)->setEnabled(true);
     ui->toolBar->actions().at(1)->setEnabled(true);
     ui->toolBar->actions().at(3)->setEnabled(true);
+    TranspositionGroup task, task2, result;
     switch (option) {
     case TranspositionGroupOptions::Write:
         if (!this->mode) {
@@ -1121,12 +1000,15 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
     }
 }
 
-void GeneratorWindow::runSet(int countOfTasks, set_type data, SetOptions option)
-{
+void GeneratorWindow::runSet(int countOfTasks, SetOptions option)
+{   
     int localCount = 1;
+    totalTaskCount = countOfTasks;
     ui->toolBar->actions().at(0)->setEnabled(true);
     ui->toolBar->actions().at(1)->setEnabled(true);
     ui->toolBar->actions().at(3)->setEnabled(true);
+    AlgebraStructures AS;
+    set_type data = std::move(AS.generateTasks(countOfTasks, option));
     switch (option) {
     case SetOptions::Check:
         if (!this->mode) {

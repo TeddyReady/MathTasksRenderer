@@ -11,7 +11,6 @@
 
 #include "dialoglatexprinter.h"
 #include "dialogbase.h"
-#include "dialogset.h"
 #include "testmode.h"
 
 QT_BEGIN_NAMESPACE
@@ -32,9 +31,6 @@ public slots:
     //Universal Dialog
     void receivedMetaInfo(int countOfTasks, bool isRepeatable, QString taskText);
     void receivedData(std::vector<int> data, AllTasks task, int subTask, ViewMode optional);
-    //Алгебраические структуры
-    void slotDialogSetMeta(const int&);
-    void slotDialogSet(const int&, const set_type&, const SetOptions&);
 private slots:
     void checkAnswers();
     void clearTasks();
@@ -52,7 +48,7 @@ private:
     void runSymbolLegandre(int, std::pair<int, int>, std::pair<int, int>, SymbolLegandreOptions);
     void runSymbolJacobi(int, std::pair<int, int>, std::pair<int, int>, SymbolJacobiOptions);
     void runTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode);
-    void runSet(int, set_type, SetOptions);
+    void runSet(int, SetOptions);
 
     int totalTestTasks, totalTaskCount, curTaskCount, TFWpastSize;
     bool mode;

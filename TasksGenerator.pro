@@ -5,38 +5,37 @@ TEMPLATE = app
 CONFIG += c++20
 DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
-    basemath.cpp \
+    libs/mathlib/basemath.cpp \
     dialogbase.cpp \
     dialoglatexprinter.cpp \
-    dialogset.cpp \
     dialogtesttimer.cpp \
     dialogresults.cpp \
-    eulerfunction.cpp \
+    libs/mathlib/eulerfunction.cpp \
     main.cpp \
     generatorwindow.cpp \
-    mebiusfunction.cpp \
-    symbollegandre.cpp \
+    libs/mathlib/mebiusfunction.cpp \
+    libs/mathlib/symbollegandre.cpp \
     testmode.cpp \
-    transpositiongroup.cpp
+    libs/mathlib/transpositiongroup.cpp \
+    libs/mathlib/algebrastructures.cpp
 
 HEADERS += \
-    basemath.h \
+    libs/mathlib/basemath.h \
     dialogbase.h \
     dialoglatexprinter.h \
-    dialogset.h \
     dialogtesttimer.h\
     dialogresults.h \
-    eulerfunction.h \
+    libs/mathlib/eulerfunction.h \
     generatorwindow.h \
-    mebiusfunction.h \
-    symbollegandre.h \
+    libs/mathlib/mebiusfunction.h \
+    libs/mathlib/symbollegandre.h \
     testmode.h \
-    transpositiongroup.h
+    libs/mathlib/transpositiongroup.h \
+    libs/mathlib/algebrastructures.h
 
 FORMS += \
     dialogbase.ui \
     dialoglatexprinter.ui \
-    dialogset.ui \
     dialogtesttimer.ui \
     dialogresults.ui \
     generatorwindow.ui \

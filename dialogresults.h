@@ -6,7 +6,7 @@
 #include <QDialog>
 #include <QDebug>
 
-#include "transpositiongroup.h"
+#include "libs/mathlib/transpositiongroup.h"
 
 enum class SupCommands {
     Number, Transposition, CycleType, Even,

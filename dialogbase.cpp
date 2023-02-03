@@ -1,12 +1,11 @@
 #include "dialogbase.h"
 #include "ui_dialogbase.h"
-#include <QDebug>
-DialogBase::DialogBase(AllTasks task, bool deleteMode, QWidget *parent) :
-    QDialog(parent), ui(new Ui::DialogBase)
+DialogBase::DialogBase(AllTasks curTask, bool deleteMode, QWidget *parent) :
+    task(curTask), QDialog(parent), ui(new Ui::DialogBase)
 {
     ui->setupUi(this);
     setWindowTitle("Выберите настройки генерации");
-    uploadUI(task);
+    uploadUI();
 
     if (!deleteMode) {
         ui->buttonBox->button(QDialogButtonBox::Cancel)->hide();
@@ -14,15 +13,14 @@ DialogBase::DialogBase(AllTasks task, bool deleteMode, QWidget *parent) :
         ui->buttonBox->button(QDialogButtonBox::Ok)->setIcon(QIcon());
     }
 
-    connect(ui->buttonBox, &QDialogButtonBox::accepted, [&, task, deleteMode](){
+    connect(ui->buttonBox, &QDialogButtonBox::accepted, [&, deleteMode](){
         //Sending Meta Info
         int countOfTasks = 0;
-        for (int i = 0; i < ui->baseWidgetLayout->count(); ++i)
+        for (std::size_t i = 0; i < widgets.size(); ++i)
         {
-            BaseWidget *pWidget = dynamic_cast<BaseWidget*>(ui->baseWidgetLayout->itemAt(i)->widget());
-            if (pWidget->isChecked()) countOfTasks += pWidget->getCount();
+            if (widgets[i]->isChecked()) countOfTasks += widgets[i]->getCount();
         } if (!countOfTasks) deleteLater();
-        emit sendingMetaInfo(countOfTasks, isRepeatable(task), getTaskText(task));
+        emit sendingMetaInfo(countOfTasks, isRepeatable(), getTaskText());
 
         //Upload Ranges
         for (int i = 0; i < ui->genWidgetLayout->count(); ++i)
@@ -32,12 +30,11 @@ DialogBase::DialogBase(AllTasks task, bool deleteMode, QWidget *parent) :
         }
 
         //Sending OtherInfo
-        for (int i = 0; i < ui->baseWidgetLayout->count(); ++i)
+        for (std::size_t i = 0; i < widgets.size(); ++i)
         {
             std::vector<int> data;
-            BaseWidget *pWidget = dynamic_cast<BaseWidget*>(ui->baseWidgetLayout->itemAt(i)->widget());
-            if (pWidget->isChecked()) {
-                data.emplace_back(pWidget->getCount());
+            if (widgets[i]->isChecked()) {
+                data.emplace_back(widgets[i]->getCount());
                 if (static_cast<AllTasks>(task) == AllTasks::SymbolLegandre ||
                     static_cast<AllTasks>(task) == AllTasks::SymbolJacobi) {
                     data.emplace_back(ranges[0].first);
@@ -48,7 +45,7 @@ DialogBase::DialogBase(AllTasks task, bool deleteMode, QWidget *parent) :
                     data.emplace_back(ranges[0].first);
                     data.emplace_back(ranges[0].second);
                 }
-                emit sendingData(data, task, i, pWidget->getViewMode());
+                emit sendingData(data, task, i, widgets[i]->getViewMode());
             }
         }
         if (deleteMode) deleteLater();
@@ -63,29 +60,14 @@ DialogBase::~DialogBase()
     delete ui;
 }
 
-void DialogBase::addItem(WidgetRole role, const QString &name, bool option)
-{
-    switch (role) {
-    case Gen:
-        ui->genWidgetLayout->addWidget(new GenWidget(name, this));
-        break;
-    case Base:
-        ui->baseWidgetLayout->addWidget(new BaseWidget(name, option, this));
-        break;
-    }
-}
-
 BaseWidget::BaseWidget(const QString &cbName, bool isTP, QWidget *parent) :
     QWidget(parent), vm(ViewMode::None), isTP(isTP)
 {
+    setLayout(new QGridLayout(this));
     cb = new QCheckBox(cbName, this);
     sb = new QSpinBox(this);
     sb->setDisabled(true);
-
-    setLayout(new QHBoxLayout(this));
-    layout()->setContentsMargins(0, 0, 0, 0);
     layout()->addWidget(cb);
-    layout()->addItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
     if (isTP) {
         pb = new QPushButton("Выбрать вид...", this);
         pb->setMenu(new QMenu(pb));
@@ -115,15 +97,11 @@ BaseWidget::BaseWidget(const QString &cbName, bool isTP, QWidget *parent) :
     layout()->addWidget(sb);
 }
 
-GenWidget::GenWidget(const QString &optionName, QWidget *parent) : QWidget(parent)
+GenWidget::GenWidget(AllTasks task, const QString &optionName, QWidget *parent) : QWidget(parent)
 {
     sbMin = new QSpinBox(this);
-    sbMin->setValue(1);
-    sbMin->setMinimum(-10000);
-
     sbMax = new QSpinBox(this);
-    sbMax->setValue(100);
-    sbMax->setMaximum(10000);
+    loadSettings(task);
 
     setLayout(new QHBoxLayout(this));
     layout()->setContentsMargins(0, 0, 0, 0);
@@ -139,7 +117,38 @@ GenWidget::GenWidget(const QString &optionName, QWidget *parent) : QWidget(paren
     connect(sbMax, &QSpinBox::editingFinished, [&](){ sbMin->setMaximum(sbMax->value()); });
 }
 
-void DialogBase::uploadUI(AllTasks task)
+void GenWidget::loadSettings(AllTasks task)
+{
+    switch (task) {
+    case AllTasks::EulerFunction:
+    case AllTasks::MebiusFunction:
+        sbMin->setValue(1);
+        sbMin->setMinimum(1);
+        sbMax->setValue(100);
+        sbMax->setMaximum(1000000);
+        return;
+
+    case AllTasks::SymbolLegandre:
+    case AllTasks::SymbolJacobi:
+        sbMin->setValue(-100);
+        sbMin->setMinimum(-100000);
+        sbMax->setValue(100);
+        sbMax->setMaximum(100000);
+        return;
+
+    case AllTasks::TranspositionGroup:
+        sbMin->setValue(3);
+        sbMin->setMinimum(2);
+        sbMax->setValue(10);
+        sbMax->setMaximum(30);
+        return;
+
+    default:
+        return;
+    }
+}
+
+void DialogBase::uploadUI()
 {
     switch (task) {
     case AllTasks::EulerFunction:
@@ -169,6 +178,8 @@ void DialogBase::uploadUI(AllTasks task)
         addItem(Base, "a и p взаимно просты и нечетны");
         break;
     case AllTasks::TranspositionGroup:
+        ui->baseWidgetLayout->addWidget(new QLabel("Количество"), 0, 2);
+        dynamic_cast<QLabel *>(ui->baseWidgetLayout->itemAt(1)->widget())->setText("Вид перестановки");
         addItem(Gen);
         addItem(Base, "Записать подстановку указанным способом", true);
         addItem(Base, "Произведение подстановок", true);
@@ -192,7 +203,7 @@ void DialogBase::uploadUI(AllTasks task)
     if (ui->genWidgetLayout->isEmpty()) ui->lblGen->hide();
 }
 
-bool DialogBase::isRepeatable(AllTasks task) const
+bool DialogBase::isRepeatable() const
 {
     switch (task) {
     case AllTasks::TranspositionGroup:
@@ -204,7 +215,7 @@ bool DialogBase::isRepeatable(AllTasks task) const
     }
 }
 
-QString DialogBase::getTaskText(AllTasks task) const
+QString DialogBase::getTaskText() const
 {
     switch (task) {
     case AllTasks::EulerFunction:
@@ -218,5 +229,21 @@ QString DialogBase::getTaskText(AllTasks task) const
 
     default:
         return QString("");
+    }
+}
+
+void DialogBase::addItem(WidgetRole role, const QString &name, bool option)
+{
+    switch (role) {
+    case Gen:
+        ui->genWidgetLayout->addWidget(new GenWidget(task, name));
+        break;
+    case Base:
+        BaseWidget *pWidget = new BaseWidget(name, option, this);
+        ui->baseWidgetLayout->addWidget(pWidget->getCheckBox());
+        if (option) ui->baseWidgetLayout->addWidget(pWidget->getPushButton());
+        ui->baseWidgetLayout->addWidget(pWidget->getSpinBox());
+        widgets.emplace_back(pWidget);
+        break;
     }
 }
