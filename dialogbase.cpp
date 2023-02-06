@@ -35,8 +35,7 @@ DialogBase::DialogBase(AllTasks curTask, bool deleteMode, QWidget *parent) :
             std::vector<int> data;
             if (widgets[i]->isChecked()) {
                 data.emplace_back(widgets[i]->getCount());
-                if (static_cast<AllTasks>(task) == AllTasks::SymbolLegandre ||
-                    static_cast<AllTasks>(task) == AllTasks::SymbolJacobi) {
+                if (isHaveMoreGens()) {
                     data.emplace_back(ranges[0].first);
                     data.emplace_back(ranges[0].second);
                     data.emplace_back(ranges[1].first);
@@ -123,18 +122,18 @@ void GenWidget::loadSettings(AllTasks task, const QString &optionName)
     case AllTasks::EulerFunction:
     case AllTasks::MebiusFunction:
         sbMin->setValue(1);
-        sbMin->setMinimum(1);
         sbMax->setValue(100);
-        sbMax->setMaximum(1000000);
+        sbMin->setRange(1, sbMax->value());
+        sbMax->setRange(sbMin->value(), 9999);
         return;
 
     case AllTasks::SymbolLegandre:
     case AllTasks::SymbolJacobi:
         if (optionName == "a") {
             sbMin->setValue(-100);
-            sbMin->setMinimum(-100000);
             sbMax->setValue(100);
-            sbMax->setMaximum(100000);
+            sbMin->setRange(-9999, sbMax->value());
+            sbMax->setRange(sbMin->value(), 9999);
         } else {
             sbMin->setValue(2);
             sbMin->setMinimum(1);
@@ -149,7 +148,18 @@ void GenWidget::loadSettings(AllTasks task, const QString &optionName)
         sbMax->setValue(10);
         sbMax->setMaximum(30);
         return;
-
+    case AllTasks::Matrix:
+        if (optionName == "Размер") {
+            sbMin->setValue(2);
+            sbMin->setMinimum(2);
+            sbMax->setValue(6);
+            sbMax->setMaximum(8);
+        } else {
+            sbMin->setValue(-100);
+            sbMin->setMinimum(-999);
+            sbMax->setValue(100);
+            sbMax->setMaximum(999);
+        }
     default:
         return;
     }
@@ -205,6 +215,20 @@ void DialogBase::uploadUI()
         addItem(Base, "Ассоциативность операции");
         addItem(Base, "Существование нейтрального");
         break;
+    case AllTasks::GroupProperties:
+        addItem(Base, "Перечислить подгруппы");
+        addItem(Base, "Перечислить нормальные подгруппы");
+        addItem(Base, "Нахождение центра группы");
+        addItem(Base, "Вычислить порядок группы");
+        break;
+    case AllTasks::Matrix:
+        addItem(Gen, "Размер");
+        addItem(Gen, "Коэффициенты");
+        addItem(Base, "Сумма матриц");
+        addItem(Base, "Разность матриц");
+        addItem(Base, "Умножение матриц");
+        addItem(Base, "Найти обратную к матрице");
+        break;
     }
 
     if (ui->genWidgetLayout->isEmpty()) ui->lblGen->hide();
@@ -215,6 +239,8 @@ bool DialogBase::isRepeatable() const
     switch (task) {
     case AllTasks::TranspositionGroup:
     case AllTasks::Set:
+    case AllTasks::GroupProperties:
+    case AllTasks::Matrix:
         return false;
 
     default:
@@ -252,5 +278,18 @@ void DialogBase::addItem(WidgetRole role, const QString &name, bool option)
         ui->baseWidgetLayout->addWidget(pWidget->getSpinBox());
         widgets.emplace_back(pWidget);
         break;
+    }
+}
+
+bool DialogBase::isHaveMoreGens()
+{
+    switch (task) {
+    case AllTasks::SymbolLegandre:
+    case AllTasks::SymbolJacobi:
+    case AllTasks::Matrix:
+        return true;
+
+    default:
+        return false;
     }
 }

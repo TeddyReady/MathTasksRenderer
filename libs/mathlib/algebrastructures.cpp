@@ -1,6 +1,6 @@
 #include "algebrastructures.h"
 
-const int AlgebraStructures::numOfSets = 6, AlgebraStructures::numOfOperators = 4;
+const int AlgebraStructures::numOfSets = 12;
 
 AlgebraStructures::AlgebraStructures() :
     count(0), gen(QRandomGenerator::global())
@@ -21,7 +21,8 @@ AlgebraStructures::AlgebraStructures() :
         for (int i = 0; i < numOfSets; i++) {
             QStringList tmp = in.readLine().split(",");
             for (int j = 0; j < operators.size(); j++)
-                baseData.emplace_back(std::make_tuple(tmp.at(0), operators[j], tmp.at(j + 1)));
+                if (QString(tmp.at(j + 1)).toInt() / 1000 >= 0)
+                    baseData.emplace_back(std::make_tuple(tmp.at(0), operators[j], tmp.at(j + 1)));
 
         } dataBase.close();
     }
@@ -64,21 +65,30 @@ QString AlgebraStructures::getCode(Set set) const
     switch (set) {
     case Set::N:
         return "\\mathbb{N}";
-
     case Set::No:
         return "\\mathbb{N}_0";
-
     case Set::Z:
         return "\\mathbb{Z}";
-
     case Set::Z0:
         return "\\mathbb{Z}\\backslash\\{0\\}";
-
     case Set::Q:
         return "\\mathbb{Q}";
-
     case Set::Q0:
         return "\\mathbb{Q}\\backslash\\{0\\}";
+    case Set::R:
+        return "\\mathbb{R}";
+    case Set::R0:
+        return "\\mathbb{R}\\backslash\\{0\\}";
+    case Set::C:
+        return "\\mathbb{C}";
+    case Set::Sn:
+        return "\\mathbb{S}_n";
+    case Set::Dn:
+        return "\\mathbb{D}_n";
+    case Set::An:
+        return "\\mathbb{A}_n";
+    case Set::V4:
+        return "\\mathbb{V}_4";
     }
 }
 

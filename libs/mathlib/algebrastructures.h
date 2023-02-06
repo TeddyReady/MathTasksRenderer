@@ -45,7 +45,7 @@ public:
     QString getCode(Set) const;
     QString getCode(SetType) const;
 private:
-    static const int numOfSets, numOfOperators;
+    static const int numOfSets;
     int count; bool isCancelExist;
     set_type baseData;
     QRandomGenerator *gen;

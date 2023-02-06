@@ -68,15 +68,14 @@ void GeneratorWindow::uploadSettings()
 }
 
 void GeneratorWindow::isReadyRender(){
-    if (curTaskCount == totalTaskCount) {
-        QApplication::setOverrideCursor(Qt::WaitCursor);
-        taskBuffer += tasksForWork.right(tasksForWork.size() - TFWpastSize);
-        TFWpastSize = tasksForWork.size();
-        engine->TeX2SVG(taskBuffer + "}}\\end{align}", true);
-        totalTaskCount = 0;
-        curTaskCount = 0;
-        QApplication::restoreOverrideCursor();
-    }
+    if (curTaskCount == totalTaskCount) return;
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    taskBuffer += tasksForWork.right(tasksForWork.size() - TFWpastSize);
+    TFWpastSize = tasksForWork.size();
+    engine->TeX2SVG(taskBuffer + "}}\\end{align}");
+    totalTaskCount = 0;
+    curTaskCount = 0;
+    QApplication::restoreOverrideCursor();
 }
 
 void GeneratorWindow::checkAnswers(){
@@ -207,6 +206,10 @@ void GeneratorWindow::on_genButton_clicked()
         DialogBase *window = new DialogBase(AllTasks::Set, true, this);
         connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
         connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
+    } else if (ui->tasksList->currentItem()->text() == "Матрицы") {
+        DialogBase *window = new DialogBase(AllTasks::Matrix, true, this);
+        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
+        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
     }
 }
 
@@ -250,6 +253,13 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
     case AllTasks::Set:
         runSet(data[0], static_cast<SetOptions>(subTask));
         break;
+    case AllTasks::GroupProperties:
+        runSet(data[0], static_cast<SetOptions>(subTask));
+        break;
+    case AllTasks::Matrix:
+        runMatrix(data[0], std::make_pair(data[1], data[2]),
+                std::make_pair(data[3], data[4]), static_cast<MatrixOptions>(subTask));
+        break;
     }
 }
 
@@ -291,6 +301,16 @@ void GeneratorWindow::on_comboBox_currentTextChanged(const QString &task)
         DialogBase *window = new DialogBase(AllTasks::Set, false, this);
         connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
         connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
+        ui->mainLayout->addWidget(window);
+    } else if (task == "Группы и их свойства") {
+        DialogBase *window = new DialogBase(AllTasks::GroupProperties, false, this);
+            connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
+            connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
+        ui->mainLayout->addWidget(window);
+    } else if (task == "Матрицы") {
+        DialogBase *window = new DialogBase(AllTasks::Matrix, false, this);
+            connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
+            connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
         ui->mainLayout->addWidget(window);
     }
 }
@@ -744,14 +764,14 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
             if (!this->mode) {
                 if (task.getViewMode() == ViewMode::Standart) {
                     tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" +
-                            task.writeToMode(ViewMode::Standart) + "·" + task2.writeToMode(ViewMode::Standart) + "=~?\\\\";
+                            task.writeToMode(ViewMode::Standart) + "\\cdot" + task2.writeToMode(ViewMode::Standart) + "=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" +
-                            task.writeToMode(ViewMode::Standart) + "·" + task2.writeToMode(ViewMode::Standart) + "=" + result.writeToMode(ViewMode::Standart) + "\\\\";
+                            task.writeToMode(ViewMode::Standart) + "\\cdot" + task2.writeToMode(ViewMode::Standart) + "=" + result.writeToMode(ViewMode::Standart) + "\\\\";
                 } else {
                     tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" +
-                            task.writeToMode(ViewMode::Cycle) + "·" + task2.writeToMode(ViewMode::Cycle) + "=~?\\\\";
+                            task.writeToMode(ViewMode::Cycle) + "\\cdot" + task2.writeToMode(ViewMode::Cycle) + "=~?\\\\";
                     solvedWorkTasks += QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" +
-                            task.writeToMode(ViewMode::Cycle) + "·" + task2.writeToMode(ViewMode::Cycle) + "=" + result.writeToMode(ViewMode::Cycle) + "\\\\";
+                            task.writeToMode(ViewMode::Cycle) + "\\cdot" + task2.writeToMode(ViewMode::Cycle) + "=" + result.writeToMode(ViewMode::Cycle) + "\\\\";
                 } isReadyRender(); ++localCount;
             } else {
                 if (task.getViewMode() == ViewMode::Standart) {
@@ -1103,6 +1123,95 @@ void GeneratorWindow::runSet(int countOfTasks, SetOptions option)
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Чем~является~данная~Алгебраическая~Структура:\\\\\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, answer, SupCommands::Name, 0));
+            } ++curTaskCount;
+        } break;
+    }
+}
+
+void GeneratorWindow::runGroupProperties(int countOfTasks, GroupPropertiesOptions option)
+{}
+
+void GeneratorWindow::runMatrix(int countOfTasks, std::pair<int, int> rangeSize, std::pair<int, int> rangeK, MatrixOptions option)
+{
+    int localCount = 1;
+    totalTaskCount = countOfTasks;
+    ui->toolBar->actions().at(0)->setEnabled(true);
+    ui->toolBar->actions().at(1)->setEnabled(true);
+    ui->toolBar->actions().at(3)->setEnabled(true);
+    Matrix<int> matrix, subMat;
+    switch (option) {
+    case MatrixOptions::Sum:
+        if (!this->mode) {
+            tasksForWork += "\\Large{\\textbf{Вычислите сумму матриц:}}\\\\";
+            solvedWorkTasks += "\\Large{\\textbf{Вычислите сумму матриц:}}\\\\";
+        }
+        for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
+            size_t rows = static_cast<size_t>(random->bounded(rangeSize.first, rangeSize.second));
+            size_t cols = static_cast<size_t>(random->bounded(rangeSize.first, rangeSize.second));
+            matrix.setTask(rows, cols, rangeK.first, rangeK.second);
+            subMat.setTask(rows, cols, rangeK.first, rangeK.second);
+            if (!mode) {
+                tasksForWork += "  " + QString::number(localCount)  + ")~" + matrix.getMatrix() + "+" + subMat.getMatrix() + "=~?\\\\";
+                solvedWorkTasks += QString::number(localCount)  + ")~" + matrix.getMatrix() + "+" + subMat.getMatrix() + "=~" + (matrix + subMat).getMatrix() + "\\\\";
+                isReadyRender(); ++localCount;
+            } else {
+                QString taskText = "\\begin{align}\\color{sienna}{Вычислите~сумму~матриц:\\\\" + matrix.getMatrix() + "+" + subMat.getMatrix() + "=~?}\\end{align}";
+                tasksForTest.push_back(std::make_tuple(taskText, (matrix + subMat).getMatrix(), SupCommands::Name, 0));
+            } ++curTaskCount;
+        } break;
+    case MatrixOptions::Diff:
+        if (!this->mode) {
+            tasksForWork += "\\Large{\\textbf{Найдите разность матриц:}}\\\\";
+            solvedWorkTasks += "\\Large{\\textbf{Найдите разность матриц:}}\\\\";
+        }
+        for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
+            size_t rows = static_cast<size_t>(random->bounded(rangeSize.first, rangeSize.second));
+            size_t cols = static_cast<size_t>(random->bounded(rangeSize.first, rangeSize.second));
+            matrix.setTask(rows, cols, rangeK.first, rangeK.second);
+            subMat.setTask(rows, cols, rangeK.first, rangeK.second);
+            if (!mode) {
+                tasksForWork += "  " + QString::number(localCount)  + ")~" + matrix.getMatrix() + "-" + subMat.getMatrix() + "=~?\\\\";
+                solvedWorkTasks += QString::number(localCount)  + ")~" + matrix.getMatrix() + "-" + subMat.getMatrix() + "=~" + (matrix - subMat).getMatrix() + "\\\\";
+                isReadyRender(); ++localCount;
+            } else {
+                QString taskText = "\\begin{align}\\color{sienna}{Найдите~разность~матриц:\\\\" + matrix.getMatrix() + "-" + subMat.getMatrix() + "=~?}\\end{align}";
+                tasksForTest.push_back(std::make_tuple(taskText, (matrix - subMat).getMatrix(), SupCommands::Name, 0));
+            } ++curTaskCount;
+        } break;
+    case MatrixOptions::Multy:
+        if (!this->mode) {
+            tasksForWork += "\\Large{\\textbf{Найдите произведение матриц:}}\\\\";
+            solvedWorkTasks += "\\Large{\\textbf{Найдите произведение матриц:}}\\\\";
+        }
+        for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
+            size_t rows = static_cast<size_t>(random->bounded(rangeSize.first, rangeSize.second));
+            size_t cols = static_cast<size_t>(random->bounded(rangeSize.first, rangeSize.second));
+            matrix.setTask(rows, cols, rangeK.first, rangeK.second);
+            subMat.setTask(cols, rows, rangeK.first, rangeK.second);
+            if (!mode) {
+                tasksForWork += "  " + QString::number(localCount)  + ")~" + matrix.getMatrix() + "\\cdot" + subMat.getMatrix() + "=~?\\\\";
+                solvedWorkTasks += QString::number(localCount)  + ")~" + matrix.getMatrix() + "\\cdot" + subMat.getMatrix() + "=~" + (matrix * subMat).getMatrix() + "\\\\";
+                isReadyRender(); ++localCount;
+            } else {
+                QString taskText = "\\begin{align}\\color{sienna}{Найдите~произведение~матриц:\\\\" + matrix.getMatrix() + "\\cdot" + subMat.getMatrix() + "=~?}\\end{align}";
+                tasksForTest.push_back(std::make_tuple(taskText, (matrix * subMat).getMatrix(), SupCommands::Name, 0));
+            } ++curTaskCount;
+        } break;
+    case MatrixOptions::Inverse:
+        if (!this->mode) {
+            tasksForWork += "\\Large{\\textbf{Найдите матрицу, обратную данной:}}\\\\";
+            solvedWorkTasks += "\\Large{\\textbf{Найдите матрицу, обратную данной:}}\\\\";
+        }
+        for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
+            size_t rows = static_cast<size_t>(random->bounded(rangeSize.first, rangeSize.second));
+            Matrix<double> matrix; matrix.setTask(rows, rows, rangeK.first, rangeK.second);
+            if (!mode) {
+                tasksForWork += "  " + QString::number(localCount)  + ")~{" + matrix.getMatrix() + "}^{-1}" + "=~?\\\\";
+                solvedWorkTasks += QString::number(localCount)  + ")~{" + matrix.getMatrix() + "}^{-1}=~" + (~matrix).getMatrix() + "\\\\";
+                isReadyRender(); ++localCount;
+            } else {
+                QString taskText = "\\begin{align}\\color{sienna}{Найдите~матрицу,~обратную~данной:\\\\{" + matrix.getMatrix() + "}^{-1}=~?}\\end{align}";
+                tasksForTest.push_back(std::make_tuple(taskText, (~matrix).getMatrix(), SupCommands::Name, 0));
             } ++curTaskCount;
         } break;
     }

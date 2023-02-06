@@ -17,14 +17,17 @@
 
 #include "libs/mathlib/transpositiongroup.h"
 #include "libs/mathlib/algebrastructures.h"
+#include "libs/mathlib/groupproperties.h"
 #include "libs/mathlib/symbollegandre.h"
 #include "libs/mathlib/mebiusfunction.h"
 #include "libs/mathlib/eulerfunction.h"
+#include "libs/mathlib/matrix.tpp"
 
 enum class AllTasks {
     EulerFunction, MebiusFunction,
     SymbolLegandre, SymbolJacobi,
-    TranspositionGroup, Set
+    TranspositionGroup, Set,
+    GroupProperties, Matrix
 };
 
 enum WidgetRole { Gen, Base };
@@ -46,6 +49,7 @@ private:
     void uploadUI();
     void addItem(WidgetRole role, const QString &name = "", bool option = false);
     bool isRepeatable() const ;
+    bool isHaveMoreGens();
     QString getTaskText() const ;
 
     AllTasks task;

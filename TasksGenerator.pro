@@ -2,7 +2,7 @@ QT       += core gui webkitwidgets printsupport
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Algebra_Madness
 TEMPLATE = app
-CONFIG += c++20
+CONFIG += c++17
 DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     libs/mathlib/basemath.cpp \
@@ -11,6 +11,7 @@ SOURCES += \
     dialogtesttimer.cpp \
     dialogresults.cpp \
     libs/mathlib/eulerfunction.cpp \
+    libs/mathlib/groupproperties.cpp \
     main.cpp \
     generatorwindow.cpp \
     libs/mathlib/mebiusfunction.cpp \
@@ -27,6 +28,8 @@ HEADERS += \
     dialogresults.h \
     libs/mathlib/eulerfunction.h \
     generatorwindow.h \
+    libs/mathlib/groupproperties.h \
+    libs/mathlib/matrix.tpp \
     libs/mathlib/mebiusfunction.h \
     libs/mathlib/symbollegandre.h \
     testmode.h \

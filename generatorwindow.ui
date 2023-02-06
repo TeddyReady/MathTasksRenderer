@@ -58,7 +58,22 @@
           </item>
           <item>
            <property name="text">
+            <string>Группы и их свойства</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>Группа Перестановок</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Кольцо Вычетов</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Матрицы</string>
            </property>
           </item>
           <item>

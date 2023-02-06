@@ -1,0 +1,97 @@
+#ifndef MATRIX_H
+#define MATRIX_H
+
+#include <QRandomGenerator>
+#include <QString>
+
+#include <vector>
+#include <cmath>
+
+enum class MatrixOptions {
+    Sum, Diff, Multy,
+        Inverse
+};
+
+template <class T>
+class Matrix {
+public:
+    Matrix(): rows(0), cols(0) {}
+    Matrix(std::size_t rows, std::size_t cols, T diagonalValue): rows(rows), cols(cols)
+    {
+        data.resize(rows);
+        for(std::size_t i = 0; i < rows; ++i){
+            for(std::size_t j = 0; j < cols; ++j){
+                if (i == j)
+                    data[i].emplace_back(diagonalValue);
+                else data[i].emplace_back(0);
+            }
+        }
+    }
+    
+    Matrix<T> operator +(const Matrix<T> &matrix) const {
+        if (rows == matrix.rows && cols == matrix.cols){
+            Matrix<T> tmp(rows, cols, 0);
+    
+            for (std::size_t i = 0; i < rows; ++i)
+                for (std::size_t j = 0; j < cols; ++j)
+                    tmp.data[i][j] = data[i][j] + matrix.data[i][j];
+    
+            return tmp;
+        }
+        return *this;
+    }
+    Matrix<T> operator -(const Matrix<T> &matrix) const {
+        if(rows == matrix.rows && cols == matrix.cols) {
+            Matrix<T> tmp(rows, cols, 0);
+    
+            for (std::size_t i = 0; i < rows; ++i)
+                for (std::size_t j = 0; j < cols; ++j)
+                    tmp.data[i][j] = data[i][j] - matrix.data[i][j];
+    
+            return tmp;
+        }
+        return *this;
+    }
+    Matrix<T> operator *(const Matrix<T> &matrix) const {
+        if (matrix.rows == cols && rows == matrix.cols) {
+            Matrix<T> tmp(rows, matrix.cols, 0);
+    
+            for(std::size_t i = 0; i < rows; ++i)
+                for(std::size_t j = 0; j < matrix.cols; ++j)
+                    for(std::size_t k = 0; k < matrix.rows; ++k)
+                        tmp.data[i][j] += data[i][k] * matrix.data[k][j];
+    
+            return tmp;
+        }
+        return *this;
+    }
+    Matrix<T> operator ~() const {
+        if(isSquare() && det() != 0) {
+            Matrix<T> tmp(rows, cols, 0);
+            for (std::size_t i = 0; i < rows; ++i)
+            {
+                for (std::size_t j = 0; j < cols; ++j)
+                    tmp.data[i][j] = minor(i, j).det() * ((1 / det()) * pow(-1, i + j));
+    
+            }
+            return tmp.trans();
+        }
+        return *this;
+    }
+
+    bool isSquare() const {
+        if (cols != rows) return false;
+        return true;
+    }
+    double det() const;
+    Matrix<T> trans() const;
+    Matrix<T> minor(std::size_t, std::size_t) const;
+    QString getMatrix() const;
+    void setTask(std::size_t rows, std::size_t cols, int minN, int maxN);
+private:
+    std::size_t rows, cols;
+    std::vector<std::vector<T>> data;
+    QRandomGenerator *gen;
+};
+
+#endif // MATRIX_H
