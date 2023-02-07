@@ -1,6 +1,6 @@
 #include "algebrastructures.h"
 
-const int AlgebraStructures::numOfSets = 12;
+const int AlgebraStructures::numOfSets = 18;
 
 AlgebraStructures::AlgebraStructures() :
     count(0), gen(QRandomGenerator::global())
@@ -89,6 +89,18 @@ QString AlgebraStructures::getCode(Set set) const
         return "\\mathbb{A}_n";
     case Set::V4:
         return "\\mathbb{V}_4";
+    case Set::O8:
+        return "\\mathbb{Q}_8";
+    case Set::Zn:
+        return "\\mathbb{Z}_n";
+    case Set::Mm_Z:
+        return "\\mathbb{M}_{n\\times n}\\left(\\mathbb{Z}\\right)";
+    case Set::Mm_R:
+        return "\\mathbb{M}_{n\\times n}\\left(\\mathbb{R}\\right)";
+    case Set::Mn_Z:
+        return "\\mathbb{M}_{n\\times m}\\left(\\mathbb{Z}\\right)";
+    case Set::Mn_R:
+        return "\\mathbb{M}_{n\\times m}\\left(\\mathbb{R}\\right)";
     }
 }
 

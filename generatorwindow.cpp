@@ -1206,12 +1206,29 @@ void GeneratorWindow::runMatrix(int countOfTasks, std::pair<int, int> rangeSize,
             size_t rows = static_cast<size_t>(random->bounded(rangeSize.first, rangeSize.second));
             Matrix<double> matrix; matrix.setTask(rows, rows, rangeK.first, rangeK.second);
             if (!mode) {
-                tasksForWork += "  " + QString::number(localCount)  + ")~{" + matrix.getMatrix() + "}^{-1}" + "=~?\\\\";
+                tasksForWork += "  " + QString::number(localCount)  + ")~{" + matrix.getMatrix() + "}^{-1}=~?\\\\";
                 solvedWorkTasks += QString::number(localCount)  + ")~{" + matrix.getMatrix() + "}^{-1}=~" + (~matrix).getMatrix() + "\\\\";
                 isReadyRender(); ++localCount;
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Найдите~матрицу,~обратную~данной:\\\\{" + matrix.getMatrix() + "}^{-1}=~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, (~matrix).getMatrix(), SupCommands::Name, 0));
+            } ++curTaskCount;
+        } break;
+    case MatrixOptions::Det:
+        if (!this->mode) {
+            tasksForWork += "\\Large{\\textbf{Вычислить детерминант матрицы:}}\\\\";
+            solvedWorkTasks += "\\Large{\\textbf{Вычислить детерминант матрицы:}}\\\\";
+        }
+        for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
+            size_t rows = static_cast<size_t>(random->bounded(rangeSize.first, rangeSize.second));
+            matrix.setTask(rows, rows, rangeK.first, rangeK.second);
+            if (!mode) {
+                tasksForWork += "  " + QString::number(localCount)  + ")~" + matrix.getMatrix().replace("pmatrix", "vmatrix") + "=~?\\\\";
+                solvedWorkTasks += QString::number(localCount)  + ")~" + matrix.getMatrix().replace("pmatrix", "vmatrix") + "=~" + QString::number(matrix.det()) + "\\\\";
+                isReadyRender(); ++localCount;
+            } else {
+                QString taskText = "\\begin{align}\\color{sienna}{Вычислить~детерминант~матрицы:\\\\" + matrix.getMatrix().replace("pmatrix", "vmatrix") + "=~?}\\end{align}";
+                tasksForTest.push_back(std::make_tuple(taskText, QString::number(matrix.det()), SupCommands::Number, 0));
             } ++curTaskCount;
         } break;
     }

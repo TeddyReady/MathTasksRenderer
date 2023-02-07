@@ -228,6 +228,7 @@ void DialogBase::uploadUI()
         addItem(Base, "Разность матриц");
         addItem(Base, "Умножение матриц");
         addItem(Base, "Найти обратную к матрице");
+        addItem(Base, "Вычислить детерминант матрицы");
         break;
     }
 

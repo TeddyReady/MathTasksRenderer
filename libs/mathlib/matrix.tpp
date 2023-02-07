@@ -9,7 +9,7 @@
 
 enum class MatrixOptions {
     Sum, Diff, Multy,
-        Inverse
+      Inverse, Det
 };
 
 template <class T>
@@ -119,8 +119,8 @@ public:
     {
         Matrix<T> matrix(cols, rows, 0);
 
-        for(int i = 0; i < cols; ++i)
-            for(int j = 0; j < rows; ++j)
+        for(std::size_t i = 0; i < cols; ++i)
+            for(std::size_t j = 0; j < rows; ++j)
                 matrix.data[i][j] = data[j][i];
 
         return matrix;
@@ -148,14 +148,14 @@ public:
     }
     QString getMatrix() const
     {
-        QString result = "\\left(\\begin{smallmatrix}";
+        QString result = "\\begin{pmatrix}";
         for (std::size_t i = 0; i < data.size(); ++i) {
             for (std::size_t j = 0; j < data[i].size(); ++j) {
                 result += QString::number(data[i][j]);
                 if (j + 1 != data[i].size()) result += "&";
                 else result += "\\\\";
             }
-        } result += "\\end{smallmatrix}\\right)";
+        } result += "\\end{pmatrix}";
         return result;
     }
     void setTask(std::size_t rows, std::size_t cols, int minN, int maxN)
