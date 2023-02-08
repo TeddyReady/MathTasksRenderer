@@ -4,8 +4,8 @@
 GeneratorWindow::GeneratorWindow(QWidget *parent)
     : QMainWindow(parent), totalTestTasks(0), totalTaskCount(0),
             curTaskCount(0), TFWpastSize(0), mode(false),
-      tasksForWork(QString("\\begin{align}\\large{\\color{sienna}{")),
-      solvedWorkTasks(QString("\\begin{align}\\large{\\color{sienna}{")),
+      tasksForWork(QString("\\begin{aligned}\\large{\\color{sienna}{")),
+      solvedWorkTasks(QString("\\begin{aligned}\\large{\\color{sienna}{")),
       random(QRandomGenerator::global()), ui(new Ui::GeneratorWindow)
 {
     uploadSettings();
@@ -72,7 +72,7 @@ void GeneratorWindow::isReadyRender(){
     QApplication::setOverrideCursor(Qt::WaitCursor);
     taskBuffer += tasksForWork.right(tasksForWork.size() - TFWpastSize);
     TFWpastSize = tasksForWork.size();
-    engine->TeX2SVG(taskBuffer + "}}\\end{align}");
+    engine->TeX2SVG(taskBuffer + "}}\\end{aligned}");
     totalTaskCount = 0;
     curTaskCount = 0;
     QApplication::restoreOverrideCursor();
@@ -81,18 +81,18 @@ void GeneratorWindow::isReadyRender(){
 void GeneratorWindow::checkAnswers(){
     QApplication::setOverrideCursor(Qt::WaitCursor);
     taskBuffer = solvedWorkTasks;
-    engine->TeX2SVG(taskBuffer.replace("@", "").replace("#", "") + "}}\\end{align}", true);
+    engine->TeX2SVG(taskBuffer.replace("@", "").replace("#", "") + "}}\\end{aligned}", true);
     ui->toolBar->actions().at(0)->setDisabled(true);
     QApplication::restoreOverrideCursor();
 }
 
 void GeneratorWindow::clearTasks()
 {
-    tasksForWork = "\\begin{align}\\large{\\color{sienna}{";
+    tasksForWork = "\\begin{aligned}\\large{\\color{sienna}{";
     solvedWorkTasks = tasksForWork;
     taskBuffer.clear();
     TFWpastSize = 0;
-    engine->TeX2SVG("\\begin{align}\\Large{\\color{sienna}{\\Large{\\textbf{В ожидании генерации задач...}}}}\\end{align}", true);
+    engine->TeX2SVG("\\begin{aligned}\\Large{\\color{sienna}{\\Large{\\textbf{В ожидании генерации задач...}}}}\\end{aligned}", true);
     ui->toolBar->actions().at(0)->setDisabled(true);
     ui->toolBar->actions().at(1)->setDisabled(true);
     ui->toolBar->actions().at(3)->setDisabled(true);
@@ -109,7 +109,9 @@ void GeneratorWindow::printTasks()
 
 void GeneratorWindow::openManual()
 {
-    //statusBar()->showMessage("Справочник открыт", 2500);
+    DialogManual *window = new DialogManual(this);
+    window->setWindowTitle("Руководство по условным обозначениям");
+    window->show();
 }
 
 void GeneratorWindow::on_tabWidget_currentChanged(int index)

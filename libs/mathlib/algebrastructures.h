@@ -44,6 +44,8 @@ public:
     set_type generateTasks(int, SetOptions);
     QString getCode(Set) const;
     QString getCode(SetType) const;
+    QString getSetName(Set) const ;
+    static int getSetsCount() { return numOfSets; }
 private:
     static const int numOfSets;
     int count; bool isCancelExist;

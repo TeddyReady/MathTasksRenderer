@@ -123,3 +123,47 @@ QString AlgebraStructures::getCode(SetType type) const
         return "Группа";
     } return "";
 }
+
+QString AlgebraStructures::getSetName(Set set) const
+{
+    switch (set) {
+    case Set::N:
+        return "Множество~натуральных~чисел";
+    case Set::No:
+        return "Множество~натуральных~с~нулём";
+    case Set::Z:
+        return "Множество~целых~чисел";
+    case Set::Z0:
+        return "Множество~целых~чисел~без~нуля";
+    case Set::Q:
+        return "Множество~рациональных~чисел";
+    case Set::Q0:
+        return "Множество~рациональных~без~0";
+    case Set::R:
+        return "Множество~действительных~чисел";
+    case Set::R0:
+        return "Множество~действительных~без~нуля";
+    case Set::C:
+        return "Множество~комплексных~чисел";
+    case Set::Sn:
+        return "Группа~перестановок~из~n~элементов";
+    case Set::Dn:
+        return "Группа~Диэдра";
+    case Set::An:
+        return "Знакопеременная~группа~или~группа~четных~подстановок";
+    case Set::V4:
+        return "Четвертная~группа~Клейна";
+    case Set::O8:
+        return "Группа~Кватернионов";
+    case Set::Zn:
+        return "Кольцо~Вычетов";
+    case Set::Mm_Z:
+        return "Множество~квадратных~матриц~с~целыми~коэффициентами";
+    case Set::Mm_R:
+        return "Множество~квадратных~матриц~с~рациональными~коэффициентами";
+    case Set::Mn_Z:
+        return "Множество~прямоугольных~матриц~с~целыми~коэффициентами";
+    case Set::Mn_R:
+        return "Множество~прямоугольных~матриц~с~рациональными~коэффициентами";
+    }
+}

@@ -10,6 +10,7 @@
 #include <QUrl>
 
 #include "dialoglatexprinter.h"
+#include "dialogmanual.h"
 #include "dialogbase.h"
 #include "testmode.h"
 

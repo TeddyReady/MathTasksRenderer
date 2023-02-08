@@ -5,6 +5,7 @@ TEMPLATE = app
 CONFIG += c++17
 DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
+    dialogmanual.cpp \
     libs/mathlib/basemath.cpp \
     dialogbase.cpp \
     dialoglatexprinter.cpp \
@@ -21,6 +22,7 @@ SOURCES += \
     libs/mathlib/algebrastructures.cpp
 
 HEADERS += \
+    dialogmanual.h \
     libs/mathlib/basemath.h \
     dialogbase.h \
     dialoglatexprinter.h \
@@ -39,6 +41,7 @@ HEADERS += \
 FORMS += \
     dialogbase.ui \
     dialoglatexprinter.ui \
+    dialogmanual.ui \
     dialogtesttimer.ui \
     dialogresults.ui \
     generatorwindow.ui \
