@@ -8,7 +8,7 @@ DialogBase::DialogBase(AllTasks curTask, bool deleteMode, QWidget *parent) :
     uploadUI();
 
     if (!deleteMode) {
-        ui->buttonBox->button(QDialogButtonBox::Cancel)->hide();
+        ui->buttonBox->button(QDialogButtonBox::Cancel)->deleteLater();
         ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Сгенерировать задания");
         ui->buttonBox->button(QDialogButtonBox::Ok)->setIcon(QIcon());
     }

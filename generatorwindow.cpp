@@ -4,8 +4,6 @@
 GeneratorWindow::GeneratorWindow(QWidget *parent)
     : QMainWindow(parent), totalTestTasks(0), totalTaskCount(0),
             curTaskCount(0), TFWpastSize(0), mode(false),
-      tasksForWork(QString("\\begin{aligned}\\large{\\color{sienna}{")),
-      solvedWorkTasks(QString("\\begin{aligned}\\large{\\color{sienna}{")),
       random(QRandomGenerator::global()), ui(new Ui::GeneratorWindow)
 {
     uploadSettings();
@@ -72,7 +70,7 @@ void GeneratorWindow::isReadyRender(){
     QApplication::setOverrideCursor(Qt::WaitCursor);
     taskBuffer += tasksForWork.right(tasksForWork.size() - TFWpastSize);
     TFWpastSize = tasksForWork.size();
-    engine->TeX2SVG(taskBuffer + "}}\\end{aligned}");
+    engine->TeX2SVG("\\begin{aligned}\\Large{\\color{sienna}{" + taskBuffer + "}}\\end{aligned}");
     totalTaskCount = 0;
     curTaskCount = 0;
     QApplication::restoreOverrideCursor();
@@ -81,15 +79,15 @@ void GeneratorWindow::isReadyRender(){
 void GeneratorWindow::checkAnswers(){
     QApplication::setOverrideCursor(Qt::WaitCursor);
     taskBuffer = solvedWorkTasks;
-    engine->TeX2SVG(taskBuffer.replace("@", "").replace("#", "") + "}}\\end{aligned}", true);
+    engine->TeX2SVG("\\begin{aligned}\\Large{\\color{sienna}{" + taskBuffer.replace("@", "").replace("#", "") + "}}\\end{aligned}", true);
     ui->toolBar->actions().at(0)->setDisabled(true);
     QApplication::restoreOverrideCursor();
 }
 
 void GeneratorWindow::clearTasks()
 {
-    tasksForWork = "\\begin{aligned}\\large{\\color{sienna}{";
-    solvedWorkTasks = tasksForWork;
+    tasksForWork.clear();
+    solvedWorkTasks.clear();
     taskBuffer.clear();
     TFWpastSize = 0;
     engine->TeX2SVG("\\begin{aligned}\\Large{\\color{sienna}{\\Large{\\textbf{В ожидании генерации задач...}}}}\\end{aligned}", true);
@@ -212,6 +210,10 @@ void GeneratorWindow::on_genButton_clicked()
         DialogBase *window = new DialogBase(AllTasks::Matrix, true, this);
         connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
         connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
+    } else if (ui->tasksList->currentItem()->text() == "Группы и их свойства") {
+        DialogBase *window = new DialogBase(AllTasks::GroupProperties, true, this);
+        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
+        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
     }
 }
 
@@ -224,8 +226,8 @@ void GeneratorWindow::receivedMetaInfo(int countOfTasks, bool isRepeatable, QStr
         ui->lcdNumber->display(totalTestTasks);
     } else if (isRepeatable) {
         totalTaskCount = countOfTasks;
-        tasksForWork += "\\Large{\\textbf{" + taskText + "}}\\\\";
-        solvedWorkTasks += "\\Large{\\textbf{" + taskText + "}}\\\\";
+        tasksForWork += "\\textbf{" + taskText + "}\\\\";
+        solvedWorkTasks += "\\textbf{" + taskText + "}\\\\";
         ui->toolBar->actions().at(0)->setEnabled(true);
         ui->toolBar->actions().at(1)->setEnabled(true);
         ui->toolBar->actions().at(3)->setEnabled(true);
@@ -313,6 +315,11 @@ void GeneratorWindow::on_comboBox_currentTextChanged(const QString &task)
         DialogBase *window = new DialogBase(AllTasks::Matrix, false, this);
             connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
             connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
+        ui->mainLayout->addWidget(window);
+    } else if (task == "Группы и их свойства") {
+        DialogBase *window = new DialogBase(AllTasks::GroupProperties, false, this);
+        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
+        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);ui->mainLayout->addWidget(window);
         ui->mainLayout->addWidget(window);
     }
 }
@@ -718,11 +725,11 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
     case TranspositionGroupOptions::Write:
         if (!this->mode) {
             if (mode == ViewMode::Standart) {
-                tasksForWork += "\\Large{\\textbf{Запишите подстановку в виде произведения независимых циклов:}}\\\\";
-                solvedWorkTasks += "\\Large{\\textbf{Запишите подстановку в виде произведения независимых циклов:}}\\\\";
+                tasksForWork += "\\textbf{Запишите подстановку в виде произведения независимых циклов:}\\\\";
+                solvedWorkTasks += "\\textbf{Запишите подстановку в виде произведения независимых циклов:}\\\\";
             } else {
-                tasksForWork += "\\Large{\\textbf{Запишите подстановку в табличном виде:}}\\\\";
-                solvedWorkTasks += "\\Large{\\textbf{Запишите подстановку в табличном виде:}}\\\\";
+                tasksForWork += "\\textbf{Запишите подстановку в табличном виде:}\\\\";
+                solvedWorkTasks += "\\textbf{Запишите подстановку в табличном виде:}\\\\";
             }
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
@@ -751,11 +758,11 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
     case TranspositionGroupOptions::Multiply:
         if (!this->mode) {
             if (mode == ViewMode::Standart) {
-                tasksForWork += "\\Large{\\textbf{Найдите произведение подстановок, записанных в табличном виде:}}\\\\";
-                solvedWorkTasks += "\\Large{\\textbf{Найдите произведение подстановок, записанных в табличном виде:}}\\\\";
+                tasksForWork += "\\textbf{Найдите произведение подстановок, записанных в табличном виде:}\\\\";
+                solvedWorkTasks += "\\textbf{Найдите произведение подстановок, записанных в табличном виде:}\\\\";
             } else {
-                tasksForWork += "\\Large{\\textbf{Найдите произведение подстановок, записанных в циклическом виде:}}\\\\";
-                solvedWorkTasks += "\\Large{\\textbf{Найдите произведение подстановок, записанных в циклическом виде:}}\\\\";
+                tasksForWork += "\\textbf{Найдите произведение подстановок, записанных в циклическом виде:}\\\\";
+                solvedWorkTasks += "\\textbf{Найдите произведение подстановок, записанных в циклическом виде:}\\\\";
             }
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
@@ -791,11 +798,11 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
     case TranspositionGroupOptions::Inverse:
         if (!this->mode) {
             if (mode == ViewMode::Standart) {
-                tasksForWork += "\\Large{\\textbf{Найдите подстановку, обратную данной, записанной в табличном виде:}}\\\\";
-                solvedWorkTasks += "\\Large{\\textbf{Найдите подстановку, обратную данной, записанной в табличном виде:}}\\\\";
+                tasksForWork += "\\textbf{Найдите подстановку, обратную данной, записанной в табличном виде:}\\\\";
+                solvedWorkTasks += "\\textbf{Найдите подстановку, обратную данной, записанной в табличном виде:}\\\\";
             } else {
-                tasksForWork += "\\Large{\\textbf{Найдите подстановку, обратную~данной, записанной в циклическом виде:}}\\\\";
-                solvedWorkTasks += "\\Large{\\textbf{Найдите подстановку, обратную~данной, записанной в циклическом виде:}}\\\\";
+                tasksForWork += "\\textbf{Найдите подстановку, обратную~данной, записанной в циклическом виде:}\\\\";
+                solvedWorkTasks += "\\textbf{Найдите подстановку, обратную~данной, записанной в циклическом виде:}\\\\";
             }
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
@@ -827,11 +834,11 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
     case TranspositionGroupOptions::Cycle:
         if (!this->mode) {
             if (mode == ViewMode::Standart) {
-                tasksForWork += "\\Large{\\textbf{Найдите цикловой тип подстановки, записанной в табличном виде:}}\\\\";
-                solvedWorkTasks += "\\Large{\\textbf{Найдите цикловой тип подстановки, записанной в табличном виде:}}\\\\";
+                tasksForWork += "\\textbf{Найдите цикловой тип подстановки, записанной в табличном виде:}\\\\";
+                solvedWorkTasks += "\\textbf{Найдите цикловой тип подстановки, записанной в табличном виде:}\\\\";
             } else {
-                tasksForWork += "\\Large{\\textbf{Найдите цикловой тип подстановки, записанной в циклическом виде:}}\\\\";
-                solvedWorkTasks += "\\Large{\\textbf{Найдите цикловой тип подстановки, записанной в циклическом виде:}}\\\\";
+                tasksForWork += "\\textbf{Найдите цикловой тип подстановки, записанной в циклическом виде:}\\\\";
+                solvedWorkTasks += "\\textbf{Найдите цикловой тип подстановки, записанной в циклическом виде:}\\\\";
             }
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
@@ -862,11 +869,11 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
     case TranspositionGroupOptions::Count:
         if (!this->mode) {
             if (mode == ViewMode::Standart) {
-                tasksForWork += "\\Large{\\textbf{Вычислите количество беспорядков подстановки, записанной в табличном виде:}}\\\\";
-                solvedWorkTasks += "\\Large{\\textbf{Вычислите количество беспорядков подстановки, записанной в табличном виде:}}\\\\";
+                tasksForWork += "\\textbf{Вычислите количество беспорядков подстановки, записанной в табличном виде:}\\\\";
+                solvedWorkTasks += "\\textbf{Вычислите количество беспорядков подстановки, записанной в табличном виде:}\\\\";
             } else {
-                tasksForWork += "\\Large{\\textbf{Вычислите количество беспорядков подстановки, записанной в циклическом виде:}}\\\\";
-                solvedWorkTasks += "\\Large{\\textbf{Вычислите количество беспорядков подстановки, записанной в циклическом виде:}}\\\\";
+                tasksForWork += "\\textbf{Вычислите количество беспорядков подстановки, записанной в циклическом виде:}\\\\";
+                solvedWorkTasks += "\\textbf{Вычислите количество беспорядков подстановки, записанной в циклическом виде:}\\\\";
             }
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
@@ -897,11 +904,11 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
     case TranspositionGroupOptions::Mod2:
         if (!this->mode) {
             if (mode == ViewMode::Standart && this->mode) {
-                tasksForWork += "\\Large{\\textbf{Определите четность подстановки, записанной в табличном виде:}}\\\\";
-                solvedWorkTasks += "\\Large{\\textbf{Определите четность подстановки, записанной в табличном виде:}}\\\\";
+                tasksForWork += "\\textbf{Определите четность подстановки, записанной в табличном виде:}\\\\";
+                solvedWorkTasks += "\\textbf{Определите четность подстановки, записанной в табличном виде:}\\\\";
             } else {
-                tasksForWork += "\\Large{\\textbf{Определите четность подстановки, записанной в циклическом виде:}}\\\\";
-                solvedWorkTasks += "\\Large{\\textbf{Определите четность подстановки, записанной в циклическом виде:}}\\\\";
+                tasksForWork += "\\textbf{Определите четность подстановки, записанной в циклическом виде:}\\\\";
+                solvedWorkTasks += "\\textbf{Определите четность подстановки, записанной в циклическом виде:}\\\\";
             }
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
@@ -932,11 +939,11 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
     case TranspositionGroupOptions::Order:
         if (!this->mode) {
             if (mode == ViewMode::Standart) {
-                tasksForWork += "\\Large{\\textbf{Определите порядок подстановки, записанной в табличном виде:}}\\\\";
-                solvedWorkTasks += "\\Large{\\textbf{Определите порядок подстановки, записанной в табличном виде:}}\\\\";
+                tasksForWork += "\\textbf{Определите порядок подстановки, записанной в табличном виде:}\\\\";
+                solvedWorkTasks += "\\textbf{Определите порядок подстановки, записанной в табличном виде:}\\\\";
             } else {
-                tasksForWork += "\\Large{\\textbf{Определите порядок подстановки, записанной в циклическом виде:}}\\\\";
-                solvedWorkTasks += "\\Large{\\textbf{Определите порядок подстановки, записанной в циклическом виде:}}\\\\";
+                tasksForWork += "\\textbf{Определите порядок подстановки, записанной в циклическом виде:}\\\\";
+                solvedWorkTasks += "\\textbf{Определите порядок подстановки, записанной в циклическом виде:}\\\\";
             }
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
@@ -966,8 +973,8 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
 
     case TranspositionGroupOptions::Decomposition:
         if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Запишите подстановку в виде произведения транспозиций:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Запишите подстановку в виде произведения транспозиций:}}\\\\";
+            tasksForWork += "\\textbf{Запишите подстановку в виде произведения транспозиций:}\\\\";
+            solvedWorkTasks += "\\textbf{Запишите подстановку в виде произведения транспозиций:}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
             task.setTask(random->bounded(minN, maxN), mode, true);
@@ -994,8 +1001,8 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
 
     case TranspositionGroupOptions::Neighbor:
         if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Запишите подстановку в виде произведения транспозиций соседних элементов:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Запишите подстановку в виде произведения транспозиций соседних элементов:}}\\\\";
+            tasksForWork += "\\textbf{Запишите подстановку в виде произведения транспозиций соседних элементов:}\\\\";
+            solvedWorkTasks += "\\textbf{Запишите подстановку в виде произведения транспозиций соседних элементов:}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
             task.setTask(random->bounded(minN, maxN), mode, true);
@@ -1034,8 +1041,8 @@ void GeneratorWindow::runSet(int countOfTasks, SetOptions option)
     switch (option) {
     case SetOptions::Check:
         if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Чем является данная Алгебраическая Структура:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Чем является данная Алгебраическая Структура:}}\\\\";
+            tasksForWork += "\\textbf{Чем является данная Алгебраическая Структура:}\\\\";
+            solvedWorkTasks += "\\textbf{Чем является данная Алгебраическая Структура:}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             if (!mode) {
@@ -1050,8 +1057,8 @@ void GeneratorWindow::runSet(int countOfTasks, SetOptions option)
 
     case SetOptions::Oper:
         if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Является ли данная операция заданной на множестве:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Является ли данная операция заданной на множестве:}}\\\\";
+            tasksForWork += "\\textbf{Является ли данная операция заданной на множестве:}\\\\";
+            solvedWorkTasks += "\\textbf{Является ли данная операция заданной на множестве:}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             QString answer;
@@ -1070,8 +1077,8 @@ void GeneratorWindow::runSet(int countOfTasks, SetOptions option)
 
     case SetOptions::Abel:
         if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Является ли данная операция коммутативной на множестве:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Является ли данная операция коммутативной на множестве:}}\\\\";
+            tasksForWork += "\\textbf{Является ли данная операция коммутативной на множестве:}\\\\";
+            solvedWorkTasks += "\\textbf{Является ли данная операция коммутативной на множестве:}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             QString answer;
@@ -1090,8 +1097,8 @@ void GeneratorWindow::runSet(int countOfTasks, SetOptions option)
 
     case SetOptions::Associate:
         if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Является ли данная операция ассоциативной на множестве:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Является ли данная операция ассоциативной на множестве:}}\\\\";
+            tasksForWork += "\\textbf{Является ли данная операция ассоциативной на множестве:}\\\\";
+            solvedWorkTasks += "\\textbf{Является ли данная операция ассоциативной на множестве:}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             QString answer;
@@ -1110,8 +1117,8 @@ void GeneratorWindow::runSet(int countOfTasks, SetOptions option)
 
     case SetOptions::Neutral:
         if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Существует ли нейтральный элемент на заданной алгебраической структуре:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Существует ли нейтральный элемент на заданной алгебраической структуре:}}\\\\";
+            tasksForWork += "\\textbf{Существует ли нейтральный элемент на заданной алгебраической структуре:}\\\\";
+            solvedWorkTasks += "\\textbf{Существует ли нейтральный элемент на заданной алгебраической структуре:}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             QString answer;
@@ -1144,8 +1151,8 @@ void GeneratorWindow::runMatrix(int countOfTasks, std::pair<int, int> rangeSize,
     switch (option) {
     case MatrixOptions::Sum:
         if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Вычислите сумму матриц:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Вычислите сумму матриц:}}\\\\";
+            tasksForWork += "\\textbf{Вычислите сумму матриц:}\\\\";
+            solvedWorkTasks += "\\textbf{Вычислите сумму матриц:}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             size_t rows = static_cast<size_t>(random->bounded(rangeSize.first, rangeSize.second));
@@ -1163,8 +1170,8 @@ void GeneratorWindow::runMatrix(int countOfTasks, std::pair<int, int> rangeSize,
         } break;
     case MatrixOptions::Diff:
         if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Найдите разность матриц:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Найдите разность матриц:}}\\\\";
+            tasksForWork += "\\textbf{Найдите разность матриц:}\\\\";
+            solvedWorkTasks += "\\textbf{Найдите разность матриц:}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             size_t rows = static_cast<size_t>(random->bounded(rangeSize.first, rangeSize.second));
@@ -1182,8 +1189,8 @@ void GeneratorWindow::runMatrix(int countOfTasks, std::pair<int, int> rangeSize,
         } break;
     case MatrixOptions::Multy:
         if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Найдите произведение матриц:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Найдите произведение матриц:}}\\\\";
+            tasksForWork += "\\textbf{Найдите произведение матриц:}\\\\";
+            solvedWorkTasks += "\\textbf{Найдите произведение матриц:}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             size_t rows = static_cast<size_t>(random->bounded(rangeSize.first, rangeSize.second));
@@ -1201,8 +1208,8 @@ void GeneratorWindow::runMatrix(int countOfTasks, std::pair<int, int> rangeSize,
         } break;
     case MatrixOptions::Inverse:
         if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Найдите матрицу, обратную данной:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Найдите матрицу, обратную данной:}}\\\\";
+            tasksForWork += "\\textbf{Найдите матрицу, обратную данной:}\\\\";
+            solvedWorkTasks += "\\textbf{Найдите матрицу, обратную данной:}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             size_t rows = static_cast<size_t>(random->bounded(rangeSize.first, rangeSize.second));
@@ -1218,8 +1225,8 @@ void GeneratorWindow::runMatrix(int countOfTasks, std::pair<int, int> rangeSize,
         } break;
     case MatrixOptions::Det:
         if (!this->mode) {
-            tasksForWork += "\\Large{\\textbf{Вычислить детерминант матрицы:}}\\\\";
-            solvedWorkTasks += "\\Large{\\textbf{Вычислить детерминант матрицы:}}\\\\";
+            tasksForWork += "\\textbf{Вычислить детерминант матрицы:}\\\\";
+            solvedWorkTasks += "\\textbf{Вычислить детерминант матрицы:}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             size_t rows = static_cast<size_t>(random->bounded(rangeSize.first, rangeSize.second));
