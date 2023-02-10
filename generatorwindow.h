@@ -53,7 +53,7 @@ private:
     void runGroupProperties(int, GroupPropertiesOptions);
     void runMatrix(int, std::pair<int, int>, std::pair<int, int>, MatrixOptions);
 
-    int totalTestTasks, totalTaskCount, curTaskCount, TFWpastSize;
+    int totalTestTasks, totalTaskCount, TFWpastSize;
     bool mode;
     QVector<QString> generatedData;
     tasks_type tasksForTest;
