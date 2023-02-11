@@ -96,18 +96,13 @@ void GeneratorWindow::clearTasks()
 
 void GeneratorWindow::printTasks()
 {
-    DialogLatexPrinter *window = new DialogLatexPrinter(tasksForWork.mid(35, tasksForWork.size()),
-                                                        solvedWorkTasks.mid(35, tasksForWork.size()), this);
-    window->setWindowTitle("Создание LaTeX & PDF файлов");
-    window->setModal(true);
-    window->exec();
+    new DialogLatexPrinter(tasksForWork.mid(35, tasksForWork.size()),
+                        solvedWorkTasks.mid(35, tasksForWork.size()), this);
 }
 
 void GeneratorWindow::openManual()
 {
-    DialogManual *window = new DialogManual(this);
-    window->setWindowTitle("Руководство по условным обозначениям");
-    window->show();
+    new DialogManual(this);
 }
 
 void GeneratorWindow::on_tabWidget_currentChanged(int index)
@@ -269,7 +264,7 @@ void GeneratorWindow::on_comboBox_currentTextChanged(const QString &task)
     if (!ui->mainLayout->isEmpty())
         delete ui->mainLayout->takeAt(0)->widget();
     if (task == "Группа Перестановок") {
-        DialogBase *window = new DialogBase(AllTasks::EulerFunction, false, this);
+        DialogBase *window = new DialogBase(AllTasks::TranspositionGroup, false, this);
         connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
         connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
         ui->mainLayout->addWidget(window);

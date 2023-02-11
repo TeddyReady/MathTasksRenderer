@@ -13,6 +13,8 @@ DialogLatexPrinter::DialogLatexPrinter(QString data, QString answers, QWidget *p
     engineAnswers = new TeXEngine(ui->pdfViewAnswers);
     setMinimumWidth(1200);
     setMinimumHeight(800);
+    setWindowTitle("Создание LaTeX & PDF файлов");
+    setModal(true);
 
     this->answers.replace(QRegularExpression("(@.+?#)"), "~");
 
@@ -24,6 +26,7 @@ DialogLatexPrinter::DialogLatexPrinter(QString data, QString answers, QWidget *p
               "84 & десятичное \\\\"
               "\\hline"
               "\\end{array}$$";*/
+    exec();
 }
 
 DialogLatexPrinter::~DialogLatexPrinter()

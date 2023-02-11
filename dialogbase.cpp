@@ -1,55 +1,14 @@
 #include "dialogbase.h"
 #include "ui_dialogbase.h"
 DialogBase::DialogBase(AllTasks curTask, bool deleteMode, QWidget *parent) :
-    task(curTask), QDialog(parent), ui(new Ui::DialogBase)
+    task(curTask), deleteMode(deleteMode), QDialog(parent), ui(new Ui::DialogBase)
 {
     ui->setupUi(this);
     setWindowTitle("Выберите настройки генерации");
     uploadUI();
 
-    if (!deleteMode) {
-        ui->buttonBox->button(QDialogButtonBox::Cancel)->deleteLater();
-        ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Сгенерировать задания");
-        ui->buttonBox->button(QDialogButtonBox::Ok)->setIcon(QIcon());
-    }
-
-    connect(ui->buttonBox, &QDialogButtonBox::accepted, [&, deleteMode](){
-        //Sending Meta Info
-        int countOfTasks = 0;
-        for (std::size_t i = 0; i < widgets.size(); ++i)
-        {
-            if (widgets[i]->isChecked()) countOfTasks += widgets[i]->getCount();
-        } if (!countOfTasks) deleteLater();
-        emit sendingMetaInfo(countOfTasks, isRepeatable(), getTaskText());
-
-        //Upload Ranges
-        for (int i = 0; i < ui->genWidgetLayout->count(); ++i)
-        {
-            GenWidget *pWidget = dynamic_cast<GenWidget*>(ui->genWidgetLayout->itemAt(i)->widget());
-            ranges.emplace_back(std::move(pWidget->getRange()));
-        }
-
-        //Sending OtherInfo
-        for (std::size_t i = 0; i < widgets.size(); ++i)
-        {
-            std::vector<int> data;
-            if (widgets[i]->isChecked()) {
-                data.emplace_back(widgets[i]->getCount());
-                if (isHaveMoreGens()) {
-                    data.emplace_back(ranges[0].first);
-                    data.emplace_back(ranges[0].second);
-                    data.emplace_back(ranges[1].first);
-                    data.emplace_back(ranges[1].second);
-                } else if (static_cast<AllTasks>(task) != AllTasks::Set) {
-                    data.emplace_back(ranges[0].first);
-                    data.emplace_back(ranges[0].second);
-                }
-                emit sendingData(data, task, i, widgets[i]->getViewMode());
-            }
-        }
-        if (deleteMode) deleteLater();
-    });
-    connect(ui->buttonBox, &QDialogButtonBox::rejected, [this](){ deleteLater(); });
+    connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &DialogBase::accept);
+    connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &DialogBase::reject);
 
     show();
 }
@@ -167,6 +126,16 @@ void GenWidget::loadSettings(AllTasks task, const QString &optionName)
 
 void DialogBase::uploadUI()
 {
+    ui->buttonBox->buttons().at(0)->setText("Сгенерировать задания");
+    ui->buttonBox->buttons().at(0)->setIcon(QIcon());
+    if (!deleteMode)
+        ui->buttonBox->buttons().at(1)->deleteLater();
+    else {
+        setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        ui->buttonBox->buttons().at(1)->setText("Выход");
+        ui->buttonBox->buttons().at(1)->setIcon(QIcon());
+    }
+
     switch (task) {
     case AllTasks::EulerFunction:
         addItem(Gen);
@@ -293,4 +262,46 @@ bool DialogBase::isHaveMoreGens()
     default:
         return false;
     }
+}
+
+void DialogBase::accept()
+{
+    //Sending Meta Info
+    int countOfTasks = 0;
+    for (std::size_t i = 0; i < widgets.size(); ++i)
+    {
+        if (widgets[i]->isChecked()) countOfTasks += widgets[i]->getCount();
+    } if (!countOfTasks) deleteLater();
+    emit sendingMetaInfo(countOfTasks, isRepeatable(), getTaskText());
+
+    //Upload Ranges
+    for (int i = 0; i < ui->genWidgetLayout->count(); ++i)
+    {
+        GenWidget *pWidget = dynamic_cast<GenWidget*>(ui->genWidgetLayout->itemAt(i)->widget());
+        ranges.emplace_back(std::move(pWidget->getRange()));
+    }
+
+    //Sending OtherInfo
+    for (std::size_t i = 0; i < widgets.size(); ++i)
+    {
+        std::vector<int> data;
+        if (widgets[i]->isChecked()) {
+            data.emplace_back(widgets[i]->getCount());
+            if (isHaveMoreGens()) {
+                data.emplace_back(ranges[0].first);
+                data.emplace_back(ranges[0].second);
+                data.emplace_back(ranges[1].first);
+                data.emplace_back(ranges[1].second);
+            } else if (static_cast<AllTasks>(task) != AllTasks::Set) {
+                data.emplace_back(ranges[0].first);
+                data.emplace_back(ranges[0].second);
+            }
+            emit sendingData(data, task, i, widgets[i]->getViewMode());
+        }
+    }
+    if (deleteMode) QDialog::accept();
+}
+void DialogBase::reject()
+{
+    QDialog::reject();
 }

@@ -3,7 +3,7 @@
 const int AlgebraStructures::numOfSets = 18;
 
 AlgebraStructures::AlgebraStructures() :
-    count(0), gen(QRandomGenerator::global())
+    gen(QRandomGenerator::global())
 {
     QFile dataBase(":/general/data/set.csv");
     if (!dataBase.open(QFile::ReadOnly)) {

@@ -45,6 +45,9 @@ public:
 signals:
     void sendingMetaInfo(int count, bool isRepeatable, QString taskText);
     void sendingData(std::vector<int> data, AllTasks task, int subTask, ViewMode optional);
+protected slots:
+    void accept();
+    void reject();
 private:
     void uploadUI();
     void addItem(WidgetRole role, const QString &name = "", bool option = false);
@@ -53,6 +56,7 @@ private:
     QString getTaskText() const ;
 
     AllTasks task;
+    bool deleteMode;
     std::vector<std::pair<int, int>> ranges;
     std::vector<BaseWidget*> widgets;
     Ui::DialogBase *ui;

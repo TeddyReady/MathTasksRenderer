@@ -48,7 +48,6 @@ public:
     static int getSetsCount() { return numOfSets; }
 private:
     static const int numOfSets;
-    int count; bool isCancelExist;
     set_type baseData;
     QRandomGenerator *gen;
 };

@@ -9,6 +9,8 @@ DialogManual::DialogManual(QWidget *parent) :
     engine = new TeXEngine(ui->webView);
     setMinimumWidth(1280);
     setMinimumHeight(720);
+    setWindowTitle("Руководство по условным обозначениям");
+    ui->label->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     AlgebraStructures AS;
     QString result;
@@ -23,6 +25,7 @@ DialogManual::DialogManual(QWidget *parent) :
     connect(ui->btnReload, &QPushButton::clicked, [=](){
         engine->TeX2SVG("\\begin{align}\\large{\\color{sienna}{" + result + "}}\\end{align}", true);
     });
+    show();
 }
 
 DialogManual::~DialogManual()
