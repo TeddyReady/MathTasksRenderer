@@ -7,6 +7,9 @@ DialogTestTimer::DialogTestTimer(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->timeEdit->setTime(QTime(0, 0, 0, 0));
+    setWindowTitle("Конфигурация Теста");
+    setModal(true);
+    exec();
 }
 
 DialogTestTimer::~DialogTestTimer()
@@ -19,12 +22,12 @@ void DialogTestTimer::on_buttonBox_accepted()
     if (!ui->checkBox->isChecked())
         ui->timeEdit->setTime(QTime(0, 0, 0, 0));
     emit timeRemaining(ui->timeEdit->time());
-    close();
+    deleteLater();
 }
 
 
 void DialogTestTimer::on_buttonBox_rejected()
 {
-    close();
+    deleteLater();
 }
 

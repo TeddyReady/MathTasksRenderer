@@ -57,10 +57,12 @@ private:
     bool mode;
     QVector<QString> generatedData;
     tasks_type tasksForTest;
-    QString tasksForWork, solvedWorkTasks, taskBuffer;
+    QString tasksForWork, taskBuffer;
+    std::vector<QString> solvedWorkTasks;
     QRandomGenerator *random;
     QSettings *settings;
     TeXEngine *engine;
     Ui::GeneratorWindow *ui;
 };
+
 #endif //GENERATORWINDOW_H

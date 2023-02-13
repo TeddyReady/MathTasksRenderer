@@ -1,8 +1,8 @@
 #include "dialoglatexprinter.h"
 #include "ui_dialoglatexprinter.h"
 
-DialogLatexPrinter::DialogLatexPrinter(QString data, QString answers, QWidget *parent) :
-    data(data), answers(answers), QDialog(parent),
+DialogLatexPrinter::DialogLatexPrinter(const QString &data, const std::vector<QString> &answersData, QWidget *parent) :
+    data(data), QDialog(parent),
     ui(new Ui::DialogLatexPrinter)
 {
     ui->setupUi(this);
@@ -16,16 +16,14 @@ DialogLatexPrinter::DialogLatexPrinter(QString data, QString answers, QWidget *p
     setWindowTitle("Создание LaTeX & PDF файлов");
     setModal(true);
 
-    this->answers.replace(QRegularExpression("(@.+?#)"), "~");
+    answers = QString("\\begin{array}{|r|l|}\\hline");
 
-    /*answers = "$$\\begin{array}{|r|l|}"
-              "\\hline"
-              "Вопрос & Ответ \\\\"
-              "Вопрос & Ответ \\\\"
-              "Вопрос & Ответ \\\\"
-              "84 & десятичное \\\\"
-              "\\hline"
-              "\\end{array}$$";*/
+    for (std::size_t i = 0; i < answersData.size(); ++i)
+    {
+        answers.append(QString::number(i + 1) + " & " + answersData[i] + " \\\\");
+    }
+
+    answers.append("\\hline\\end{array}");
     exec();
 }
 
@@ -85,7 +83,7 @@ void DialogLatexPrinter::printData()
 
 void DialogLatexPrinter::on_btnShow_clicked()
 {
-    QString tmp = data, answers = this->answers;
+    QString tmp = data; //answers = this->answers;
     if (ui->btnDate->isChecked()) {
         tmp = "\\large{\\text{" + ui->lineDate->text() + "}}\\\\" + tmp;
         answers = "\\large{\\text{" + ui->lineDate->text() + "}}\\\\" + answers;

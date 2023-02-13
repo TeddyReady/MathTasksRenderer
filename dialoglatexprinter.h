@@ -7,7 +7,7 @@
 #include <QPrinter>
 #include <QString>
 #include <QDialog>
-
+#include <vector>
 #include "texengine.h"
 
 namespace Ui {
@@ -18,7 +18,7 @@ class DialogLatexPrinter : public QDialog {
     Q_OBJECT
     void printData();
 public:
-    explicit DialogLatexPrinter(QString data, QString answers, QWidget *parent = nullptr);
+    explicit DialogLatexPrinter(const QString &data, const std::vector<QString> &answers, QWidget *parent = nullptr);
     ~DialogLatexPrinter();
 private slots:
     void on_btnShow_clicked();
