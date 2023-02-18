@@ -18,4 +18,7 @@ int GCD(int a, int b);
 //НОК
 int LCM(int a, int b);
 
+//Быстрое (бинарное) возведение в степень
+long fastPower(long num, long deg);
+
 #endif // BASEMATH_H

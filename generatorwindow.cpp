@@ -149,11 +149,11 @@ void GeneratorWindow::on_pushButton_clicked()
         statusBar()->showMessage("Перед запуском теста, необходимо сгенерировать задания!", 1500);
     else {
         DialogTestTimer *window = new DialogTestTimer(this);
-        connect(window, SIGNAL(timeRemaining(const QTime&)), this, SLOT(startTest(const QTime&)));
+        connect(window, &DialogTestTimer::timeRemaining, this, &GeneratorWindow::startTest);
     }
 }
 
-void GeneratorWindow::startTest(const QTime &time)
+void GeneratorWindow::startTest(QTime time)
 {
     //Рандомная сортировка
     for (size_t i = 0; i < static_cast<size_t>(tasksForTest.size()); ++i) {
@@ -175,44 +175,46 @@ void GeneratorWindow::on_genButton_clicked()
         statusBar()->showMessage("Перед генерацией выберите типаж задания!");
         return;
     }
-    if (ui->tasksList->currentItem()->text() == "Функция Эйлера") {
-        DialogBase *window = new DialogBase(AllTasks::EulerFunction, true, this);
-        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
+    runTaskManager(ui->tasksList->currentItem()->text(), true);
+}
 
-    } else if (ui->tasksList->currentItem()->text() == "Функция Мёбиуса") {
-        DialogBase *window = new DialogBase(AllTasks::MebiusFunction, true, this);
-        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
+void GeneratorWindow::on_comboBox_currentTextChanged(const QString &task)
+{
+    runTaskManager(task, false);
+}
 
-    } else if (ui->tasksList->currentItem()->text() == "Символ Лежандра") {
-        DialogBase *window = new DialogBase(AllTasks::SymbolLegandre, true, this);
-        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
+void GeneratorWindow::runTaskManager(const QString &task, bool closeMode)
+{
+    if (!ui->mainLayout->isEmpty() && !closeMode)
+        delete ui->mainLayout->takeAt(0)->widget();
 
-    } else if (ui->tasksList->currentItem()->text() == "Символ Якоби") {
-        DialogBase *window = new DialogBase(AllTasks::SymbolJacobi, true, this);
-        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
+    DialogBase *window;
+    if (task == "Группа Перестановок")
+        window = new DialogBase(AllTasks::TranspositionGroup, closeMode, this);
+    else if (task == "Функция Эйлера")
+        window = new DialogBase(AllTasks::EulerFunction, closeMode, this);
+    else if (task == "Функция Мёбиуса")
+        window = new DialogBase(AllTasks::MebiusFunction, closeMode, this);
+    else if (task == "Символ Лежандра")
+        window = new DialogBase(AllTasks::SymbolLegandre, closeMode, this);
+    else if (task == "Символ Якоби")
+        window = new DialogBase(AllTasks::SymbolJacobi, closeMode, this);
+    else if (task == "Алгебраические Структуры")
+        window = new DialogBase(AllTasks::Set, closeMode, this);
+    else if (task == "Группы и их свойства")
+        window = new DialogBase(AllTasks::GroupProperties, closeMode, this);
+    else if (task == "Матрицы")
+        window = new DialogBase(AllTasks::Matrix, closeMode, this);
+    else if (task == "Группы и их свойства")
+        window = new DialogBase(AllTasks::GroupProperties, closeMode, this);
+    else if (task == "Кольцо Вычетов")
+        window = new DialogBase(AllTasks::RingResidue, closeMode, this);
 
-    } else if (ui->tasksList->currentItem()->text() == "Группа Перестановок") {
-        DialogBase *window = new DialogBase(AllTasks::TranspositionGroup, true, this);
-        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
+    connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
+    connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
 
-    } else if (ui->tasksList->currentItem()->text() == "Алгебраические Структуры") {
-        DialogBase *window = new DialogBase(AllTasks::Set, true, this);
-        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
-    } else if (ui->tasksList->currentItem()->text() == "Матрицы") {
-        DialogBase *window = new DialogBase(AllTasks::Matrix, true, this);
-        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
-    } else if (ui->tasksList->currentItem()->text() == "Группы и их свойства") {
-        DialogBase *window = new DialogBase(AllTasks::GroupProperties, true, this);
-        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
-    }
+    if (!closeMode)
+        ui->mainLayout->addWidget(window);
 }
 
 void GeneratorWindow::receivedMetaInfo(int countOfTasks, bool isRepeatable, QString taskText)
@@ -260,63 +262,6 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
         runMatrix(data[0], std::make_pair(data[1], data[2]),
                 std::make_pair(data[3], data[4]), static_cast<MatrixOptions>(subTask));
         break;
-    }
-}
-
-void GeneratorWindow::on_comboBox_currentTextChanged(const QString &task)
-{
-    if (!ui->mainLayout->isEmpty())
-        delete ui->mainLayout->takeAt(0)->widget();
-    if (task == "Группа Перестановок") {
-        DialogBase *window = new DialogBase(AllTasks::TranspositionGroup, false, this);
-        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
-        ui->mainLayout->addWidget(window);
-
-    } else if (task == "Функция Эйлера") {
-        DialogBase *window = new DialogBase(AllTasks::EulerFunction, false, this);
-        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
-        ui->mainLayout->addWidget(window);
-
-    } else if (task == "Функция Мёбиуса") {
-        DialogBase *window = new DialogBase(AllTasks::MebiusFunction, false, this);
-        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
-        ui->mainLayout->addWidget(window);
-
-    } else if (task == "Символ Лежандра") {
-        DialogBase *window = new DialogBase(AllTasks::SymbolLegandre, false, this);
-        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
-        ui->mainLayout->addWidget(window);
-
-    } else if (task == "Символ Якоби") {
-        DialogBase *window = new DialogBase(AllTasks::SymbolJacobi, false, this);
-        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
-        ui->mainLayout->addWidget(window);
-
-    } else if (task == "Алгебраические Структуры") {
-        DialogBase *window = new DialogBase(AllTasks::Set, false, this);
-        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
-        ui->mainLayout->addWidget(window);
-    } else if (task == "Группы и их свойства") {
-        DialogBase *window = new DialogBase(AllTasks::GroupProperties, false, this);
-            connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-            connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
-        ui->mainLayout->addWidget(window);
-    } else if (task == "Матрицы") {
-        DialogBase *window = new DialogBase(AllTasks::Matrix, false, this);
-            connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-            connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
-        ui->mainLayout->addWidget(window);
-    } else if (task == "Группы и их свойства") {
-        DialogBase *window = new DialogBase(AllTasks::GroupProperties, false, this);
-        connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
-        connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);ui->mainLayout->addWidget(window);
-        ui->mainLayout->addWidget(window);
     }
 }
 

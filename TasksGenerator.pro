@@ -17,6 +17,7 @@ SOURCES += \
     generatorwindow.cpp \
     libs/mathlib/mebiusfunction.cpp \
     libs/mathlib/symbollegandre.cpp \
+    libs/mathlib/ringresidue.cpp \
     testmode.cpp \
     libs/mathlib/transpositiongroup.cpp \
     libs/mathlib/algebrastructures.cpp
@@ -34,6 +35,7 @@ HEADERS += \
     libs/mathlib/matrix.tpp \
     libs/mathlib/mebiusfunction.h \
     libs/mathlib/symbollegandre.h \
+    libs/mathlib/ringresidue.h \
     testmode.h \
     libs/mathlib/transpositiongroup.h \
     libs/mathlib/algebrastructures.h

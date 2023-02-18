@@ -80,44 +80,44 @@ void GenWidget::loadSettings(AllTasks task, const QString &optionName)
     switch (task) {
     case AllTasks::EulerFunction:
     case AllTasks::MebiusFunction:
+        sbMin->setRange(1, 100);
+        sbMax->setRange(1, 9999);
         sbMin->setValue(1);
         sbMax->setValue(100);
-        sbMin->setRange(1, sbMax->value());
-        sbMax->setRange(sbMin->value(), 9999);
         return;
 
     case AllTasks::SymbolLegandre:
     case AllTasks::SymbolJacobi:
         if (optionName == "a") {
+            sbMin->setRange(-9999, 100);
+            sbMax->setRange(-100, 9999);
             sbMin->setValue(-100);
             sbMax->setValue(100);
-            sbMin->setRange(-9999, sbMax->value());
-            sbMax->setRange(sbMin->value(), 9999);
         } else {
-            sbMin->setValue(2);
             sbMin->setMinimum(1);
-            sbMax->setValue(100);
             sbMax->setMaximum(100000);
+            sbMin->setValue(2);
+            sbMax->setValue(100);
         }
         return;
 
     case AllTasks::TranspositionGroup:
-        sbMin->setValue(3);
         sbMin->setMinimum(2);
-        sbMax->setValue(10);
         sbMax->setMaximum(30);
+        sbMin->setValue(3);
+        sbMax->setValue(10);
         return;
     case AllTasks::Matrix:
         if (optionName == "Размер") {
-            sbMin->setValue(2);
             sbMin->setMinimum(2);
-            sbMax->setValue(6);
             sbMax->setMaximum(8);
+            sbMin->setValue(2);
+            sbMax->setValue(4);
         } else {
-            sbMin->setValue(-100);
             sbMin->setMinimum(-999);
-            sbMax->setValue(100);
             sbMax->setMaximum(999);
+            sbMin->setValue(-100);
+            sbMax->setValue(100);
         }
     default:
         return;
@@ -126,14 +126,14 @@ void GenWidget::loadSettings(AllTasks task, const QString &optionName)
 
 void DialogBase::uploadUI()
 {
-    ui->buttonBox->buttons().at(0)->setText("Сгенерировать задания");
-    ui->buttonBox->buttons().at(0)->setIcon(QIcon());
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Сгенерировать задания");
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setIcon(QIcon());
     if (!deleteMode)
-        ui->buttonBox->buttons().at(1)->deleteLater();
+        ui->buttonBox->button(QDialogButtonBox::Cancel)->deleteLater();
     else {
         setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        ui->buttonBox->buttons().at(1)->setText("Выход");
-        ui->buttonBox->buttons().at(1)->setIcon(QIcon());
+        ui->buttonBox->button(QDialogButtonBox::Cancel)->setText("Выход");
+        ui->buttonBox->button(QDialogButtonBox::Cancel)->setIcon(QIcon());
     }
 
     switch (task) {
@@ -199,6 +199,12 @@ void DialogBase::uploadUI()
         addItem(Base, "Найти обратную к матрице");
         addItem(Base, "Вычислить детерминант матрицы");
         break;
+    case AllTasks::RingResidue:
+        addItem(Gen);
+        addItem(Base, "Количество образующих");
+        addItem(Base, "Возведение числа в степень по модулю");
+        addItem(Base, "Нахождение порядка элемента");
+        break;
     }
 
     if (ui->genWidgetLayout->isEmpty()) ui->lblGen->hide();
@@ -211,6 +217,7 @@ bool DialogBase::isRepeatable() const
     case AllTasks::Set:
     case AllTasks::GroupProperties:
     case AllTasks::Matrix:
+    case AllTasks::RingResidue:
         return false;
 
     default:

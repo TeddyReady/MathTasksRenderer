@@ -7,9 +7,12 @@ DialogTestTimer::DialogTestTimer(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->timeEdit->setTime(QTime(0, 0, 0, 0));
+
+    connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &DialogTestTimer::accept);
+    connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &DialogTestTimer::reject);
+
     setWindowTitle("Конфигурация Теста");
-    setModal(true);
-    exec();
+    show();
 }
 
 DialogTestTimer::~DialogTestTimer()
@@ -17,7 +20,7 @@ DialogTestTimer::~DialogTestTimer()
     delete ui;
 }
 
-void DialogTestTimer::on_buttonBox_accepted()
+void DialogTestTimer::accept()
 {
     if (!ui->checkBox->isChecked())
         ui->timeEdit->setTime(QTime(0, 0, 0, 0));
@@ -26,7 +29,7 @@ void DialogTestTimer::on_buttonBox_accepted()
 }
 
 
-void DialogTestTimer::on_buttonBox_rejected()
+void DialogTestTimer::reject()
 {
     deleteLater();
 }

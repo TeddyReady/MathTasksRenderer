@@ -14,10 +14,10 @@ public:
     explicit DialogTestTimer(QWidget *parent = nullptr);
     ~DialogTestTimer();
 signals:
-    void timeRemaining(const QTime&);
+    void timeRemaining(QTime time);
 private slots:
-    void on_buttonBox_accepted();
-    void on_buttonBox_rejected();
+    void accept();
+    void reject();
 private:
     Ui::DialogTestTimer *ui;
 };

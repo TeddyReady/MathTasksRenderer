@@ -27,7 +27,8 @@ enum class AllTasks {
     EulerFunction, MebiusFunction,
     SymbolLegandre, SymbolJacobi,
     TranspositionGroup, Set,
-    GroupProperties, Matrix
+    GroupProperties, Matrix,
+    RingResidue
 };
 
 enum WidgetRole { Gen, Base };

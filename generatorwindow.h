@@ -35,14 +35,16 @@ public slots:
 private slots:
     void checkAnswers();
     void clearTasks();
-    void startTest(const QTime&);
     void printTasks();
     void openManual();
+    void startTest(QTime time);
     void on_genButton_clicked();
     void on_comboBox_currentTextChanged(const QString &task);
     void on_tabWidget_currentChanged(int index);
     void on_pushButton_clicked();   
 private:
+    //Main parser
+    void runTaskManager(const QString &task, bool closeMode);
     //Run Algorithms
     void runEulerFunction(int, int, int, EulerFunctionOptions);
     void runMebiusFunction(int, int, int, MebiusFunctionOptions);
@@ -52,6 +54,7 @@ private:
     void runSet(int, SetOptions);
     void runGroupProperties(int, GroupPropertiesOptions);
     void runMatrix(int, std::pair<int, int>, std::pair<int, int>, MatrixOptions);
+    void runRingResidue();
 
     int totalTestTasks, totalTaskCount, TFWpastSize;
     bool mode;
