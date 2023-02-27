@@ -54,7 +54,7 @@ private:
     void runSet(int, SetOptions);
     void runGroupProperties(int, GroupPropertiesOptions);
     void runMatrix(int, std::pair<int, int>, std::pair<int, int>, MatrixOptions);
-    void runRingResidue();
+    void runRingResidue(int, int, int, RingResidueOptions);
 
     int totalTestTasks, totalTaskCount, TFWpastSize;
     bool mode;

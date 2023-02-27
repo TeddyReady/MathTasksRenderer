@@ -11,6 +11,6 @@ int MebiusFunction::solve() const {
             if (data[i].second > 1)
                 return 0;
         }
-        return pow(-1, data.size());
+        return fastPower(-1, data.size());
     }
 }

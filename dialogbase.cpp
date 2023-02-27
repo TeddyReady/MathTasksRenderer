@@ -118,7 +118,13 @@ void GenWidget::loadSettings(AllTasks task, const QString &optionName)
             sbMax->setMaximum(999);
             sbMin->setValue(-100);
             sbMax->setValue(100);
-        }
+        } return;
+    case AllTasks::RingResidue:
+        sbMin->setMinimum(2);
+        sbMax->setMaximum(99);
+        sbMin->setValue(2);
+        sbMax->setValue(50);
+        return;
     default:
         return;
     }
@@ -203,7 +209,7 @@ void DialogBase::uploadUI()
         addItem(Gen);
         addItem(Base, "Количество образующих");
         addItem(Base, "Возведение числа в степень по модулю");
-        addItem(Base, "Нахождение порядка элемента");
+        addItem(Base, "Вычисление порядка элемента");
         break;
     }
 

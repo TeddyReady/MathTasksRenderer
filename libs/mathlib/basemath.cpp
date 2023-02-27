@@ -56,3 +56,12 @@ long fastPower(long num, long deg) {
         }
     } return result;
 }
+
+long modulePower(long num, long deg, int module) {
+  if (deg == 0) return 1;
+  int subNum = modulePower(num, deg / 2, module);
+  if (deg % 2 == 0)
+    return (subNum * subNum) % module;
+  else
+    return (num * subNum * subNum) % module;
+}

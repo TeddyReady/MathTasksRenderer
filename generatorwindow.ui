@@ -172,36 +172,6 @@
             <string>Выберите задание...</string>
            </property>
           </item>
-          <item>
-           <property name="text">
-            <string>Алгебраические Структуры</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Группа Перестановок</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Символ Лежандра</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Символ Якоби</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Функция Мёбиуса</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Функция Эйлера</string>
-           </property>
-          </item>
          </widget>
         </item>
         <item row="1" column="0" colspan="2">

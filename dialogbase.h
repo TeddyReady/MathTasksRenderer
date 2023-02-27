@@ -21,6 +21,7 @@
 #include "libs/mathlib/symbollegandre.h"
 #include "libs/mathlib/mebiusfunction.h"
 #include "libs/mathlib/eulerfunction.h"
+#include "libs/mathlib/ringresidue.h"
 #include "libs/mathlib/matrix.tpp"
 
 enum class AllTasks {

@@ -21,4 +21,7 @@ int LCM(int a, int b);
 //Быстрое (бинарное) возведение в степень
 long fastPower(long num, long deg);
 
+//Быстрое (бинарное) возведение в степень по модулю
+long modulePower(long num, long deg, int module);
+
 #endif // BASEMATH_H

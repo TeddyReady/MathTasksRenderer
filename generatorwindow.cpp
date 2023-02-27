@@ -48,6 +48,11 @@ void GeneratorWindow::uploadUI()
     ui->toolBar->actions().at(1)->setDisabled(true);
     ui->toolBar->actions().at(3)->setDisabled(true);
 
+    for (int i = 0; i < ui->tasksList->count(); ++i)
+    {
+        ui->comboBox->addItem(ui->tasksList->item(i)->text());
+    }
+
     setCursor(Qt::ArrowCursor);
     setAttribute(Qt::WA_DeleteOnClose);
 }
@@ -234,6 +239,9 @@ void GeneratorWindow::receivedMetaInfo(int countOfTasks, bool isRepeatable, QStr
 
 void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int subTask, ViewMode optional)
 {
+    //If tasksCount is null
+    if (data[0] == 0) return;
+
     switch (task) {
     case AllTasks::EulerFunction:
         runEulerFunction(data[0], data[1], data[2], static_cast<EulerFunctionOptions>(subTask));
@@ -262,6 +270,8 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
         runMatrix(data[0], std::make_pair(data[1], data[2]),
                 std::make_pair(data[3], data[4]), static_cast<MatrixOptions>(subTask));
         break;
+    case AllTasks::RingResidue:
+        runRingResidue(data[0], data[1], data[2], static_cast<RingResidueOptions>(subTask));
     }
 }
 
@@ -1111,6 +1121,77 @@ void GeneratorWindow::runMatrix(int countOfTasks, std::pair<int, int> rangeSize,
                 QString taskText = "\\begin{align}\\color{sienna}{Вычислить~детерминант~матрицы:\\\\" + matrix.getMatrix().replace("pmatrix", "vmatrix") + "=~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, QString::number(matrix.det()), SupCommands::Number, 0));
             }
+        } break;
+    }
+    if (!mode) isReadyRender();
+}
+
+void GeneratorWindow::runRingResidue(int countOfTasks, int minNum, int maxNum, RingResidueOptions option)
+{
+    int curTaskCount = 1;
+    totalTaskCount = countOfTasks;
+    ui->toolBar->actions().at(0)->setEnabled(true);
+    ui->toolBar->actions().at(1)->setEnabled(true);
+    ui->toolBar->actions().at(3)->setEnabled(true);
+    RingResidue task;
+    switch (option) {
+    case RingResidueOptions::GenCount:
+        if (!this->mode)
+            tasksForWork += "\\textbf{Вычислите количество образующих элементов группы Вычетов:}\\\\";
+
+        for (std::size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
+            task.setOrder(random->bounded(minNum, maxNum));
+            task.setType(static_cast<RingResidueType>(random->bounded(0, 2)));
+            if (!mode) {
+                tasksForWork += "  " + QString::number(curTaskCount)  + ")~" + task.getCode() + "=~?\\\\";
+                solvedWorkTasks.emplace_back(QString::number(task.countOfGenerators()));
+            } else {
+                QString taskText = "\\begin{align}\\color{sienna}{Вычислите~количество~образующих~элементов~группы~Вычетов:\\\\\\left(\\mathbb{Z}_{" + QString::number(task.getOrder()) + "}, +\\right)=~?}\\end{align}";
+                tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.countOfGenerators()), SupCommands::Number, 0));
+            } ++curTaskCount;
+        } break;
+    case RingResidueOptions::A_in_M:
+        if (!this->mode)
+            tasksForWork += "\\textbf{Найдите значение выражения:}\\\\";
+
+        for (std::size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
+            task.setOrder(random->bounded(minNum, maxNum));
+            task.setType(static_cast<RingResidueType>(random->bounded(0, 2)));
+            int a;
+            do {
+                a = static_cast<int>(random->bounded(1, task.getOrder()));
+            } while(GCD(task.getOrder(), a) != 1);
+            int m = static_cast<int>(random->bounded(2, 20));
+            if (!mode) {
+                tasksForWork += "  " + QString::number(curTaskCount)  + ")~" + task.getCode() + ":~" +
+                        QString::number(a) + "^{" + QString::number(m) + "}=~?\\\\";
+                solvedWorkTasks.emplace_back(QString::number(task.solve(a, m)));
+            } else {
+                QString taskText = "\\begin{align}\\color{sienna}{Найдите~значение~выражения:\\\\" + task.getCode() + ":~" +
+                        QString::number(a) + "^{" + QString::number(m) + "}=~?}\\end{align}";
+                tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve(a, m)), SupCommands::Number, 0));
+            } ++curTaskCount;
+        } break;
+    case RingResidueOptions::Order:
+        if (!this->mode)
+            tasksForWork += "\\textbf{Вычислите порядок элемента:}\\\\";
+
+        for (std::size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
+            task.setOrder(random->bounded(minNum, maxNum));
+            task.setType(static_cast<RingResidueType>(random->bounded(0, 2)));
+            int element;
+            do {
+                element = static_cast<int>(random->bounded(1, task.getOrder()));
+            } while(GCD(task.getOrder(), element) != 1);
+            if (!mode) {
+                tasksForWork += "  " + QString::number(curTaskCount)  + ")~" + task.getCode() + ":~" +
+                            "ord(" + QString::number(element) + ")=~?\\\\";
+                solvedWorkTasks.emplace_back(QString::number(task.getOrd(element)));
+            } else {
+                QString taskText = "\\begin{align}\\color{sienna}{\\textbf{Вычислите порядок элемента:}\\\\" +
+                        task.getCode() + ":~" +"ord(" + QString::number(element) + ")=~?}\\end{align}";
+                tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.getOrd(element)), SupCommands::Number, 0));
+            } ++curTaskCount;
         } break;
     }
     if (!mode) isReadyRender();
