@@ -43,10 +43,8 @@ void DialogLatexPrinter::printData()
     printer.setPaperSize(QPrinter::A4);
     printer.setPageMargins(QMarginsF(15, 15, 15, 15));
     printer.setOutputFileName("auto_" + fileName + ".pdf");
-    ui->pdfView->print(&printer);
+    //ui->pdfView->print(&printer);
 
-    //TeX TASKS File
-    if (!ui->btnLaTeX->isChecked()) return;
     QString title = "", theme = "", date = "";
     if (ui->btnDate->isChecked())
         date = ui->lineDate->text();
@@ -54,7 +52,8 @@ void DialogLatexPrinter::printData()
         theme = ui->lineTheme->text();
     if (ui->btnTitle->isChecked())
         title = ui->lineTitle->text();
-
+    //TeX TASKS File
+    if (!ui->btnLaTeX->isChecked()) return;
     QFile texFile(fileName + ".tex");
     if (!texFile.open(QFile::WriteOnly)) {
         QMessageBox::warning(this, "Ошибка открытия файла", "Выбранный файл не может быть открыт или не существует.");
@@ -63,7 +62,7 @@ void DialogLatexPrinter::printData()
         QString texString = "\\documentclass[12pt, a4paper]{article}\n"
                             "\\usepackage{graphicx}\n"
                             "\\usepackage[T2A]{fontenc}\n"
-                            "\\usepackage[russian]{babel}\n"
+                            "\\usepackage[english, russian]{babel}\n"
                             "\\usepackage{amsmath}\n"
                             "\\usepackage{amsfonts}\n"
                             "\\title{" + title + "}\n"
@@ -77,6 +76,30 @@ void DialogLatexPrinter::printData()
                             "\\end{document}\n";
         QTextStream out(&texFile);
         out << texString;
+        texFile.close();
+    } close();
+    // Answers file
+    texFile.setFileName(fileName + "_answers.tex");
+    if (!texFile.open(QFile::WriteOnly)) {
+        QMessageBox::warning(this, "Ошибка открытия файла", "Выбранный файл не может быть открыт или не существует.");
+        return;
+    } else {
+        QTextStream out(&texFile);
+        QString texString = "\\documentclass[12pt, a4paper]{article}\n"
+                            "\\usepackage{graphicx}\n"
+                            "\\usepackage[T2A]{fontenc}\n"
+                            "\\usepackage[english, russian]{babel}\n"
+                            "\\usepackage{amsmath}\n"
+                            "\\usepackage{amsfonts}\n"
+                            "\\title{" + title + "}\n"
+                            "\\author{" + theme + "}\n"
+                            "\\date{" + date + "}\n"
+                            "\\begin{document}\n"
+                            "\\begin{document}\n"
+                            "\\maketitle\n"
+                            "\\large{\n";
+        out << texString + answers + "}\n"
+                                     "\\end{document}\n";
         texFile.close();
     } close();
 }
