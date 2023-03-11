@@ -1,15 +1,17 @@
 #ifndef RINGRESIDUE_H
 #define RINGRESIDUE_H
 
+#include "libs/mathlib/symbollegandre.h"
 #include "libs/mathlib/eulerfunction.h"
 
 enum class RingResidueOptions {
-    GenCount, A_in_M,
-    Order, A_X_equal_B,
+          GenCount, A_in_M,
+    Order, A_X_equal_B, XX_equal_p,
+    XX_equal_pq
 };
 
 enum class RingResidueType {
-    Multiply, Summary, Undefined
+    Summary, Multiply, Undefined
 };
 
 class RingResidue {
@@ -23,6 +25,8 @@ public:
 
     int countOfGenerators() const;
     int solve(int base, int degree) const;
+    QString solveLinear(int a, int b, int mod) const;
+    QString solveSimpleQuadro(int a, int mod) const;
     int getOrd(int num);
 private:
     int n;

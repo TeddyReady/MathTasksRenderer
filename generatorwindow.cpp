@@ -1141,7 +1141,7 @@ void GeneratorWindow::runRingResidue(int countOfTasks, int minNum, int maxNum, R
 
         for (std::size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             task.setOrder(random->bounded(minNum, maxNum));
-            task.setType(static_cast<RingResidueType>(random->bounded(0, 2)));
+            task.setType(RingResidueType::Summary);
             if (!mode) {
                 tasksForWork += "  " + QString::number(curTaskCount)  + ")~" + task.getCode() + "=~?\\\\";
                 solvedWorkTasks.emplace_back(QString::number(task.countOfGenerators()));
@@ -1157,10 +1157,7 @@ void GeneratorWindow::runRingResidue(int countOfTasks, int minNum, int maxNum, R
         for (std::size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             task.setOrder(random->bounded(minNum, maxNum));
             task.setType(static_cast<RingResidueType>(random->bounded(0, 2)));
-            int a;
-            do {
-                a = static_cast<int>(random->bounded(1, task.getOrder()));
-            } while(GCD(task.getOrder(), a) != 1);
+            int a = static_cast<int>(random->bounded(1, task.getOrder()));
             int m = static_cast<int>(random->bounded(2, 20));
             if (!mode) {
                 tasksForWork += "  " + QString::number(curTaskCount)  + ")~" + task.getCode() + ":~" +
@@ -1179,10 +1176,7 @@ void GeneratorWindow::runRingResidue(int countOfTasks, int minNum, int maxNum, R
         for (std::size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             task.setOrder(random->bounded(minNum, maxNum));
             task.setType(static_cast<RingResidueType>(random->bounded(0, 2)));
-            int element;
-            do {
-                element = static_cast<int>(random->bounded(1, task.getOrder()));
-            } while(GCD(task.getOrder(), element) != 1);
+            int element = static_cast<int>(random->bounded(1, task.getOrder()));
             if (!mode) {
                 tasksForWork += "  " + QString::number(curTaskCount)  + ")~" + task.getCode() + ":~" +
                             "ord(" + QString::number(element) + ")=~?\\\\";
@@ -1191,6 +1185,49 @@ void GeneratorWindow::runRingResidue(int countOfTasks, int minNum, int maxNum, R
                 QString taskText = "\\begin{align}\\color{sienna}{\\textbf{Вычислите порядок элемента:}\\\\" +
                         task.getCode() + ":~" +"ord(" + QString::number(element) + ")=~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.getOrd(element)), SupCommands::Number, 0));
+            } ++curTaskCount;
+        } break;
+    case RingResidueOptions::A_X_equal_B:
+        if (!this->mode)
+            tasksForWork += "\\textbf{Решите линейное сравнение:}\\\\";
+
+        for (std::size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
+            task.setOrder(random->bounded(minNum, maxNum));
+            int a, b;
+            do {
+                task.setOrder(random->bounded(minNum, maxNum));
+                a = static_cast<int>(random->bounded(1, task.getOrder()));
+                b = static_cast<int>(random->bounded(1, task.getOrder()));
+            } while(task.solveLinear(a, b, task.getOrder()) == "Нет корней");
+            if (!mode) {
+                tasksForWork += "  " + QString::number(curTaskCount) + ")~" + task.getCode() + ":~" +
+                            QString::number(a) + "\\cdot x\\equiv" + QString::number(b) + ",~x=~?\\\\";
+                solvedWorkTasks.emplace_back("\\{" + task.solveLinear(a, b, task.getOrder()) + "\\}");
+            } else {
+                QString taskText = "\\begin{align}\\color{sienna}{\\textbf{Решите линейное сравнение:}\\\\" +
+                        task.getCode() + ":~" + QString::number(a) + "\\cdot x\\equiv" + QString::number(b) + ",~x=~?}\\end{align}";
+                tasksForTest.push_back(std::make_tuple(taskText, "\\{" + task.solveLinear(a, b, task.getOrder()) + "\\}", SupCommands::Name, 0));
+            } ++curTaskCount;
+        } break;
+    case RingResidueOptions::XX_equal_p:
+        if (!this->mode)
+            tasksForWork += "\\textbf{Решите квадратичное сравнение по простому модулю:}\\\\";
+
+        for (std::size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
+            task.setOrder(random->bounded(minNum, maxNum));
+            int a;
+            do {
+                task.setOrder(random->bounded(minNum, maxNum));
+                a = static_cast<int>(random->bounded(1, task.getOrder()));
+            } while(task.solveSimpleQuadro(a, task.getOrder()) == "Нет корней");
+            if (!mode) {
+                tasksForWork += "  " + QString::number(curTaskCount) + ")~" + task.getCode() + ":~" +
+                            "x^2\\equiv" + QString::number(a) + ",~x=~?\\\\";
+                solvedWorkTasks.emplace_back("\\{" + task.solveSimpleQuadro(a, task.getOrder()) + "\\}");
+            } else {
+                QString taskText = "\\begin{align}\\color{sienna}{\\textbf{Решите квадратичное сравнение по простому модулю:}\\\\" +
+                        task.getCode() + ":~" + "x^2\\equiv" + QString::number(a) + ",~x=~?}\\end{align}";
+                tasksForTest.push_back(std::make_tuple(taskText, "\\{" + task.solveSimpleQuadro(a, task.getOrder()) + "\\}", SupCommands::Name, 0));
             } ++curTaskCount;
         } break;
     }

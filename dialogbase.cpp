@@ -116,13 +116,13 @@ void GenWidget::loadSettings(AllTasks task, const QString &optionName)
         } else {
             sbMin->setMinimum(-999);
             sbMax->setMaximum(999);
-            sbMin->setValue(-100);
-            sbMax->setValue(100);
+            sbMin->setValue(-10);
+            sbMax->setValue(10);
         } return;
     case AllTasks::RingResidue:
-        sbMin->setMinimum(2);
+        sbMin->setMinimum(3);
         sbMax->setMaximum(99);
-        sbMin->setValue(2);
+        sbMin->setValue(5);
         sbMax->setValue(50);
         return;
     default:
@@ -210,9 +210,11 @@ void DialogBase::uploadUI()
         addItem(Base, "Количество образующих");
         addItem(Base, "Возведение числа в степень по модулю");
         addItem(Base, "Вычисление порядка элемента");
+        addItem(Base, "Линейное сравнение");
+        addItem(Base, "Квадратичное сравнение по простому модулю");
+        addItem(Base, "Квадратичное сравнение по составному модулю");
         break;
     }
-
     if (ui->genWidgetLayout->isEmpty()) ui->lblGen->hide();
 }
 
