@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/general">
+        <file>settings.ini</file>
+        <file>style.css</file>
+        <file>web/index.html</file>
+        <file>web/theory.html</file>
+        <file>web/styles/style.css</file>
+        <file>web/scripts/main.js</file>
+        <file>img/unchecked_hover.png</file>
+        <file>img/splash.png</file>
+        <file>img/reload.png</file>
+        <file>img/quit.png</file>
+        <file>img/printer.png</file>
+        <file>img/manual.png</file>
+        <file>img/clearTasks.png</file>
+        <file>img/checked_hover.png</file>
+        <file>img/checked.png</file>
+        <file>img/checkAnswers.png</file>
+        <file>img/appIcon.png</file>
+        <file>data/set.csv</file>
+        <file>data/groupProperties.csv</file>
+    </qresource>
+</RCC>
