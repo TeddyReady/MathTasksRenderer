@@ -33,7 +33,7 @@ set_type AlgebraStructures::generateTasks(int countOfTasks, SetOptions option)
     set_type data;
     if (option == SetOptions::Check) {
         for(int i = 0; i < countOfTasks;) {
-            size_t index = static_cast<size_t>(gen->bounded(0, baseData.size()));
+            int index = static_cast<int>(gen->bounded(0, baseData.size()));
             int answer = QString(std::get<2>(baseData[index])).toInt() / 1000;
             if (answer) {
 
@@ -48,7 +48,7 @@ set_type AlgebraStructures::generateTasks(int countOfTasks, SetOptions option)
         }
     } else {
         for(int i = 0; i < countOfTasks;) {
-            size_t index = static_cast<size_t>(gen->bounded(0, baseData.size()));
+            int index = static_cast<int>(gen->bounded(0, baseData.size()));
             if (option == SetOptions::Oper || QString(std::get<2>(baseData[index])).toInt() / 1000) {
                 QString curSet = std::get<0>(baseData[index]);
                 QString curOper = std::get<1>(baseData[index]);
