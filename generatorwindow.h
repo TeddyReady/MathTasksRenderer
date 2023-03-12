@@ -57,6 +57,7 @@ private:
     void runRingResidue(int, int, int, RingResidueOptions);
 
     int totalTestTasks, totalTaskCount, TFWpastSize;
+    std::size_t countOfGeneratedAnswers;
     bool mode;
     QVector<QString> generatedData;
     tasks_type tasksForTest;

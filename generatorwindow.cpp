@@ -3,7 +3,7 @@
 
 GeneratorWindow::GeneratorWindow(QWidget *parent)
     : QMainWindow(parent), totalTestTasks(0), totalTaskCount(0),
-                    TFWpastSize(0), mode(false),
+         countOfGeneratedAnswers(0), TFWpastSize(0), mode(false),
       random(QRandomGenerator::global()), ui(new Ui::GeneratorWindow)
 {
     uploadSettings();
@@ -77,18 +77,16 @@ void GeneratorWindow::isReadyRender(){
     engine->TeX2SVG("\\begin{aligned}\\Large{\\color{sienna}{" + taskBuffer + "}}\\end{aligned}");
     totalTaskCount = 0;
     QApplication::restoreOverrideCursor();
-    ui->TB->setSource(QUrl("qrc:/main.html"));
 }
 
 void GeneratorWindow::checkAnswers(){
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    std::size_t count = 0;
     for (int i = 0; i < taskBuffer.size(); ++i)
     {
         if (taskBuffer[i] == "?")
         {
             taskBuffer.remove(i, 1);
-            taskBuffer.insert(i - 1, solvedWorkTasks[count++]);
+            taskBuffer.insert(i - 1, solvedWorkTasks[countOfGeneratedAnswers++]);
         }
     }
     engine->TeX2SVG("\\begin{aligned}\\Large{\\color{sienna}{" + taskBuffer.replace("@", "").replace("#", "") + "}}\\end{aligned}", true);
@@ -102,6 +100,7 @@ void GeneratorWindow::clearTasks()
     solvedWorkTasks.clear();
     taskBuffer.clear();
     TFWpastSize = 0;
+    countOfGeneratedAnswers = 0;
     engine->TeX2SVG("\\begin{aligned}\\Large{\\color{sienna}{\\Large{\\textbf{В ожидании генерации задач...}}}}\\end{aligned}", true);
     ui->toolBar->actions().at(0)->setDisabled(true);
     ui->toolBar->actions().at(1)->setDisabled(true);
