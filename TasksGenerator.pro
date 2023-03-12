@@ -6,49 +6,49 @@ TEMPLATE = app
 CONFIG += c++17
 DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
-    dialogmanual.cpp \
+    sources/dialogmanual.cpp \
     libs/mathlib/basemath.cpp \
-    dialogbase.cpp \
-    dialoglatexprinter.cpp \
-    dialogtesttimer.cpp \
-    dialogresults.cpp \
+    sources/dialogbase.cpp \
+    sources/dialoglatexprinter.cpp \
+    sources/dialogtesttimer.cpp \
+    sources/dialogresults.cpp \
     libs/mathlib/eulerfunction.cpp \
     libs/mathlib/groupproperties.cpp \
-    main.cpp \
-    generatorwindow.cpp \
+    sources/main.cpp \
+    sources/generatorwindow.cpp \
     libs/mathlib/mebiusfunction.cpp \
     libs/mathlib/symbollegandre.cpp \
     libs/mathlib/ringresidue.cpp \
-    testmode.cpp \
+    sources/testmode.cpp \
     libs/mathlib/transpositiongroup.cpp \
     libs/mathlib/algebrastructures.cpp
 
 HEADERS += \
-    dialogmanual.h \
+    sources/dialogmanual.h \
     libs/mathlib/basemath.h \
-    dialogbase.h \
-    dialoglatexprinter.h \
-    dialogtesttimer.h\
-    dialogresults.h \
+    sources/dialogbase.h \
+    sources/dialoglatexprinter.h \
+    sources/dialogtesttimer.h\
+    sources/dialogresults.h \
     libs/mathlib/eulerfunction.h \
-    generatorwindow.h \
+    sources/generatorwindow.h \
     libs/mathlib/groupproperties.h \
     libs/mathlib/matrix.tpp \
     libs/mathlib/mebiusfunction.h \
     libs/mathlib/symbollegandre.h \
     libs/mathlib/ringresidue.h \
-    testmode.h \
+    sources/testmode.h \
     libs/mathlib/transpositiongroup.h \
     libs/mathlib/algebrastructures.h
 
 FORMS += \
-    dialogbase.ui \
-    dialoglatexprinter.ui \
-    dialogmanual.ui \
-    dialogtesttimer.ui \
-    dialogresults.ui \
-    generatorwindow.ui \
-    testmode.ui
+    sources/dialogbase.ui \
+    sources/dialoglatexprinter.ui \
+    sources/dialogmanual.ui \
+    sources/dialogtesttimer.ui \
+    sources/dialogresults.ui \
+    sources/generatorwindow.ui \
+    sources/testmode.ui
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
