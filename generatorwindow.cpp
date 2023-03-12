@@ -29,7 +29,7 @@ void GeneratorWindow::uploadUI()
     ui->genButton->setEnabled(true);
     ui->genButton->setCursor(Qt::PointingHandCursor);
     ui->pushButton->setCursor(Qt::PointingHandCursor);
-    ui->webView->load(QUrl("qrc:/general/web/theory.html"));
+    ui->webView->setSource(QUrl("qrc:/general/web/theory.html"));
     ui->webView->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->tabWidget->tabBar()->setCursor(Qt::PointingHandCursor);
     ui->taskView->setCursor(Qt::BlankCursor);
@@ -77,6 +77,7 @@ void GeneratorWindow::isReadyRender(){
     engine->TeX2SVG("\\begin{aligned}\\Large{\\color{sienna}{" + taskBuffer + "}}\\end{aligned}");
     totalTaskCount = 0;
     QApplication::restoreOverrideCursor();
+    ui->TB->setSource(QUrl("qrc:/main.html"));
 }
 
 void GeneratorWindow::checkAnswers(){
