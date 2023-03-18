@@ -3,9 +3,9 @@
 
 #include <QRandomGenerator>
 #include <QString>
-
 #include <vector>
-#include <cmath>
+
+#include "libs/mathlib/basemath.h"
 
 enum class MatrixOptions {
     Sum, Diff, Multy,
@@ -69,6 +69,7 @@ public:
         }
         return *this;
     }
+    // Return Matrix whithout 1/det
     Matrix<T> operator ~() const
     {
         if(isSquare() && det() != 0) {
@@ -76,7 +77,7 @@ public:
             for (std::size_t i = 0; i < rows; ++i)
             {
                 for (std::size_t j = 0; j < cols; ++j)
-                    tmp.data[i][j] = minor(i, j).det() * ((1 / det()) * pow(-1, i + j));
+                    tmp.data[i][j] = minor(i, j).det() * fastPower(-1, i + j);
 
             }
             return tmp.trans();
@@ -108,7 +109,7 @@ public:
                         }
                         ++k1;
                     }
-                    det += pow(-1, i + 2) * data[0][i] * tmp.det();
+                    det += fastPower(-1, i + 2) * data[0][i] * tmp.det();
                 }
                 return det;
             }
@@ -127,24 +128,22 @@ public:
     }
     Matrix<T> minor(std::size_t x, std::size_t y) const
     {
-        if(isSquare()){
-            Matrix<T> tmp(rows - 1, rows - 1, 0);
-            size_t k1 = 0;
-            for (std::size_t i = 0; i < rows; ++i)
+        if (!isSquare()) return *this;
+        Matrix<T> tmp(rows - 1, rows - 1, 0);
+        tmp.data.clear();
+        tmp.data.resize(data.size() - 1);
+        size_t countIndex = -1;
+        for (std::size_t i = 0; i < rows; ++i)
+        {
+            if (i == x) continue;
+            else ++countIndex;
+            for (std::size_t j = 0; j < rows; ++j)
             {
-                int k2 = 0;
-                for (std::size_t j = 0; j < rows; ++j)
-                {
-                    if ((i != x) && (j != y)) {
-                        tmp.data[k1][j] = data[i][j];
-                        ++k2;
-                        if (k2 % (rows - 1) == 0) ++k1;
-                    }
-                }
+                if (j == y) continue;
+                tmp.data[countIndex].emplace_back(data[i][j]);
             }
-            return tmp;
         }
-        return *this;
+        return tmp;
     }
     QString getMatrix() const
     {

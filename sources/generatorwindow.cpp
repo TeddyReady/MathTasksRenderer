@@ -1099,11 +1099,11 @@ void GeneratorWindow::runMatrix(int countOfTasks, std::pair<int, int> rangeSize,
             Matrix<double> matrix; matrix.setTask(rows, rows, rangeK.first, rangeK.second);
             if (!mode) {
                 tasksForWork += "  " + QString::number(localCount)  + ")~{" + matrix.getMatrix() + "}^{-1}=~?\\\\";
-                solvedWorkTasks.emplace_back((~matrix).getMatrix());
+                solvedWorkTasks.emplace_back("\\frac{1}{" + QString::number(matrix.det()) + "}" + (~matrix).getMatrix());
                 ++localCount;
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Найдите~матрицу,~обратную~данной:\\\\{" + matrix.getMatrix() + "}^{-1}=~?}\\end{align}";
-                tasksForTest.push_back(std::make_tuple(taskText, (~matrix).getMatrix(), SupCommands::Name, 0));
+                tasksForTest.push_back(std::make_tuple(taskText, "\\frac{1}{" + QString::number(matrix.det()) + "}" + (~matrix).getMatrix(), SupCommands::Name, 0));
             }
         } break;
     case MatrixOptions::Det:

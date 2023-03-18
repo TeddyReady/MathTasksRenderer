@@ -1,6 +1,3 @@
 #include "groupproperties.h"
 
-GroupProperties::GroupProperties()
-{
-
-}
+//GroupProperties::GroupProperties(){}
