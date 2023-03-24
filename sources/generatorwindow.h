@@ -52,7 +52,7 @@ private:
     void runSymbolJacobi(int, std::pair<int, int>, std::pair<int, int>, SymbolJacobiOptions);
     void runTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode);
     void runSet(int, SetOptions);
-    void runGroupProperties(int, GroupPropertiesOptions);
+    void runGroupProperties(int, int, int, GroupPropertiesOptions);
     void runMatrix(int, std::pair<int, int>, std::pair<int, int>, MatrixOptions);
     void runRingResidue(int, int, int, RingResidueOptions);
 

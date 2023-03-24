@@ -107,6 +107,12 @@ void GenWidget::loadSettings(AllTasks task, const QString &optionName)
         sbMin->setValue(3);
         sbMax->setValue(10);
         return;
+    case AllTasks::GroupProperties:
+        sbMin->setMinimum(3);
+        sbMax->setMaximum(20);
+        sbMin->setValue(4);
+        sbMax->setValue(12);
+        return;
     case AllTasks::Matrix:
         if (optionName == "Размер") {
             sbMin->setMinimum(2);
@@ -191,10 +197,12 @@ void DialogBase::uploadUI()
         addItem(Base, "Существование нейтрального");
         break;
     case AllTasks::GroupProperties:
+        addItem(Gen, "n");
         addItem(Base, "Перечислить подгруппы");
         addItem(Base, "Перечислить нормальные подгруппы");
         addItem(Base, "Нахождение центра группы");
         addItem(Base, "Вычислить порядок группы");
+        addItem(Base, "Вычислить экспоненту группы");
         break;
     case AllTasks::Matrix:
         addItem(Gen, "Размер");

@@ -64,7 +64,7 @@ void GeneratorWindow::saveSettings()
 
 void GeneratorWindow::uploadSettings()
 {
-    settings = new QSettings("../ProjectTasksGenerator/general/settings.ini",
+    settings = new QSettings(":/general/settings.ini",
                              QSettings::IniFormat, this);
 
     setGeometry(settings->value("windowSize").toRect());
@@ -264,7 +264,7 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
         runSet(data[0], static_cast<SetOptions>(subTask));
         break;
     case AllTasks::GroupProperties:
-        runSet(data[0], static_cast<SetOptions>(subTask));
+        runGroupProperties(data[0], data[1], data[2], static_cast<GroupPropertiesOptions>(subTask));
         break;
     case AllTasks::Matrix:
         runMatrix(data[0], std::make_pair(data[1], data[2]),
@@ -1024,8 +1024,33 @@ void GeneratorWindow::runSet(int countOfTasks, SetOptions option)
     if (!mode) isReadyRender();
 }
 
-void GeneratorWindow::runGroupProperties(int countOfTasks, GroupPropertiesOptions option)
-{}
+void GeneratorWindow::runGroupProperties(int countOfTasks, int minN, int maxN, GroupPropertiesOptions option)
+{
+    int localCount = 1;
+    totalTaskCount = countOfTasks;
+    ui->toolBar->actions().at(0)->setEnabled(true);
+    ui->toolBar->actions().at(1)->setEnabled(true);
+    ui->toolBar->actions().at(3)->setEnabled(true);
+    GroupProperties GP;
+    switch (option) {
+    case GroupPropertiesOptions::Exponent:
+        if (!this->mode)
+            tasksForWork += "\\textbf{Вычислите экспоненту группы:}\\\\";
+
+        for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
+            GP.setGroup(static_cast<Groups>(random->bounded(0, GP.getGroups())), random->bounded(minN, maxN));
+            if (!mode) {
+                tasksForWork += "  " + QString::number(localCount)  + ")~Exp\\left(" + GP.getCode() + "\\right)" + "=~?\\\\";
+                solvedWorkTasks.emplace_back(QString::number(GP.Exp()));
+                ++localCount;
+            } else {
+                QString taskText = "\\begin{align}\\color{sienna}{Вычислите~экспоненту~группы:\\\\Exp\\left(" + GP.getCode() + "\\right)" + "=~?}\\end{align}";
+                tasksForTest.push_back(std::make_tuple(taskText, QString::number(GP.Exp()), SupCommands::Number, 0));
+            }
+        } break;
+    }
+    if (!mode) isReadyRender();
+}
 
 void GeneratorWindow::runMatrix(int countOfTasks, std::pair<int, int> rangeSize, std::pair<int, int> rangeK, MatrixOptions option)
 {

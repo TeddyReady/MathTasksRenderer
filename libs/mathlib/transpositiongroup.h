@@ -10,8 +10,8 @@
 
 enum class TranspositionGroupOptions {
        Write, Multiply,
-    Inverse,  Order, Mod2,
-        Cycle, Count,
+    Inverse,  Cycle, Mod2,
+        Count, Order,
         Decomposition,
           Neighbor
 };

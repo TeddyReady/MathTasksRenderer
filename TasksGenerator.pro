@@ -39,7 +39,8 @@ HEADERS += \
     libs/mathlib/ringresidue.h \
     sources/testmode.h \
     libs/mathlib/transpositiongroup.h \
-    libs/mathlib/algebrastructures.h
+    libs/mathlib/algebrastructures.h \
+    sources/errors.h
 
 FORMS += \
     sources/dialogbase.ui \

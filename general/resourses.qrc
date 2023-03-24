@@ -18,6 +18,6 @@
         <file>img/checkAnswers.png</file>
         <file>img/appIcon.png</file>
         <file>data/set.csv</file>
-        <file>data/groupProperties.csv</file>
+        <file>data/groups.csv</file>
     </qresource>
 </RCC>
