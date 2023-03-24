@@ -4,6 +4,7 @@
 GeneratorWindow::GeneratorWindow(QWidget *parent)
     : QMainWindow(parent), totalTestTasks(0), totalTaskCount(0),
          countOfGeneratedAnswers(0), TFWpastSize(0), mode(false),
+                taskFontSize("\\huge"),      mathFontSize("\\Large"),
       random(QRandomGenerator::global()), ui(new Ui::GeneratorWindow)
 {
     uploadSettings();
@@ -74,7 +75,7 @@ void GeneratorWindow::isReadyRender(){
     QApplication::setOverrideCursor(Qt::WaitCursor);
     taskBuffer += tasksForWork.right(tasksForWork.size() - TFWpastSize);
     TFWpastSize = tasksForWork.size();
-    engine->TeX2SVG("\\begin{aligned}\\Large{\\color{sienna}{" + taskBuffer + "}}\\end{aligned}");
+    engine->TeX2SVG("\\begin{aligned}\\color{sienna}{" + taskBuffer + "}\\end{aligned}");
     totalTaskCount = 0;
     QApplication::restoreOverrideCursor();
 }
@@ -89,7 +90,7 @@ void GeneratorWindow::checkAnswers(){
             taskBuffer.insert(i - 1, solvedWorkTasks[countOfGeneratedAnswers++]);
         }
     }
-    engine->TeX2SVG("\\begin{aligned}\\Large{\\color{sienna}{" + taskBuffer.replace("@", "").replace("#", "") + "}}\\end{aligned}", true);
+    engine->TeX2SVG("\\begin{aligned}\\color{sienna}{" + taskBuffer.replace("@", "").replace("#", "") + "}\\end{aligned}", true);
     ui->toolBar->actions().at(0)->setDisabled(true);
     QApplication::restoreOverrideCursor();
 }
@@ -101,7 +102,7 @@ void GeneratorWindow::clearTasks()
     taskBuffer.clear();
     TFWpastSize = 0;
     countOfGeneratedAnswers = 0;
-    engine->TeX2SVG("\\begin{aligned}\\Large{\\color{sienna}{\\Large{\\textbf{В ожидании генерации задач...}}}}\\end{aligned}", true);
+    engine->TeX2SVG("\\begin{aligned}\\color{sienna}{\\Huge\\textbf{В ожидании генерации задач...}}\\end{aligned}", true);
     ui->toolBar->actions().at(0)->setDisabled(true);
     ui->toolBar->actions().at(1)->setDisabled(true);
     ui->toolBar->actions().at(3)->setDisabled(true);
@@ -230,7 +231,7 @@ void GeneratorWindow::receivedMetaInfo(int countOfTasks, bool isRepeatable, QStr
         ui->lcdNumber->display(totalTestTasks);
     } else if (isRepeatable) {
         totalTaskCount = countOfTasks;
-        tasksForWork += "\\textbf{" + taskText + "}\\\\";
+        tasksForWork += "{\\LARGE\\textbf{" + taskText + "}\\\\}";
         ui->toolBar->actions().at(0)->setEnabled(true);
         ui->toolBar->actions().at(1)->setEnabled(true);
         ui->toolBar->actions().at(3)->setEnabled(true);
@@ -650,18 +651,18 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
     case TranspositionGroupOptions::Write:
         if (!this->mode) {
             if (mode == ViewMode::Standart)
-                tasksForWork += "\\textbf{Запишите подстановку в виде произведения независимых циклов:}\\\\";
+                tasksForWork += "{" + taskFontSize + "\\textbf{Запишите подстановку в виде произведения независимых циклов:}}\\\\";
             else
-                tasksForWork += "\\textbf{Запишите подстановку в табличном виде:}\\\\";
+                tasksForWork += "{" + taskFontSize + "\\textbf{Запишите подстановку в табличном виде:}}\\\\";
         }
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
             task.setTask(random->bounded(minN, maxN), mode);
             if (!this->mode) {
                 if (task.getViewMode() == ViewMode::Standart) {
-                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?\\\\";
+                    tasksForWork += "{" + mathFontSize + "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Standart) + "=~?}\\\\";
                     solvedWorkTasks.emplace_back(task.writeToMode(ViewMode::Cycle));
                 } else {
-                    tasksForWork += "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?\\\\";
+                    tasksForWork += "{" + mathFontSize + "  " + QString::number(localCount) + ")~S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(ViewMode::Cycle) + "=~?}\\\\";
                     solvedWorkTasks.emplace_back(task.writeToMode(ViewMode::Standart));
                 } ++localCount;
             } else {

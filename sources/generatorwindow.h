@@ -61,7 +61,7 @@ private:
     bool mode;
     QVector<QString> generatedData;
     tasks_type tasksForTest;
-    QString tasksForWork, taskBuffer;
+    QString tasksForWork, taskBuffer, taskFontSize, mathFontSize;
     std::vector<QString> solvedWorkTasks;
     QRandomGenerator *random;
     QSettings *settings;
