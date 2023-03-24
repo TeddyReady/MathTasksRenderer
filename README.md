@@ -1,5 +1,5 @@
 # О проекте
-[Ссылка на актуальную версию программы;](https://drive.google.com/file/d/1fhR5ykrKrtfUZr5nwNgSXIp7QBbNhR6e/view)
+[Ссылка на актуальные версии программы под ОС Windows;](https://drive.google.com/drive/folders/1ZljdK5I1yh3rMvvRP4rtfFE1fB51Hb61?usp=share_link)
 ### Руководство по эксплуатации:
 1. Скачать и распаковать zip-папку;
 2. Запустить TasksGenerator.exe;
