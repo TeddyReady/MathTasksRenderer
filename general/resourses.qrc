@@ -19,5 +19,6 @@
         <file>img/appIcon.png</file>
         <file>data/set.csv</file>
         <file>data/groups.csv</file>
+        <file>img/font-size.png</file>
     </qresource>
 </RCC>

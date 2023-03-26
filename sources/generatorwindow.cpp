@@ -4,7 +4,7 @@
 GeneratorWindow::GeneratorWindow(QWidget *parent)
     : QMainWindow(parent), totalTestTasks(0), totalTaskCount(0),
          countOfGeneratedAnswers(0), TFWpastSize(0), mode(false),
-                taskFontSize("\\huge"),      mathFontSize("\\Large"),
+                taskFontSize("\\normalsize"),  mathFontSize("\\normalsize"),
       random(QRandomGenerator::global()), ui(new Ui::GeneratorWindow)
 {
     uploadSettings();
@@ -14,7 +14,10 @@ GeneratorWindow::GeneratorWindow(QWidget *parent)
     connect(ui->toolBar->actions().at(1), SIGNAL(triggered()), this, SLOT(clearTasks()));
     connect(ui->toolBar->actions().at(3), SIGNAL(triggered()), this, SLOT(printTasks()));
     connect(ui->toolBar->actions().at(5), SIGNAL(triggered()), this, SLOT(openManual()));
-    connect(ui->toolBar->actions().at(6), &QAction::triggered, [](){qApp->exit();});
+    connect(ui->toolBar->actions().at(6), SIGNAL(triggered()), this, SLOT(openManual()));
+    connect(ui->toolBar->actions().at(7), &QAction::triggered, [](){qApp->exit();});
+
+    tasksForWork.append("\\tiny{2\\equiv2}\\\\\\Tiny{2\\equiv2}\\\\\\scriptsize{2\\equiv2}\\\\\\small{2\\equiv2}\\\\\\normalsize{2\\equiv2}\\\\\\large{2\\equiv2}\\\\\\Large{2\\equiv2}\\\\\\LARGE{2\\equiv2}\\\\\\huge{2\\equiv2}\\\\\\Huge{2\\equiv2}\\\\");
 }
 
 GeneratorWindow::~GeneratorWindow()
@@ -44,6 +47,7 @@ void GeneratorWindow::uploadUI()
     ui->toolBar->addAction(new QAction(QPixmap("://general/img/printer.png"), "Подготовить печатный вариант...", ui->toolBar));
     ui->toolBar->addSeparator();
     ui->toolBar->addAction(new QAction(QPixmap("://general/img/manual.png"), "Справочник", ui->toolBar));
+    ui->toolBar->addAction(new QAction(QPixmap("://general/img/font-size.png"), "Настройки шрифта", ui->toolBar));
     ui->toolBar->addAction(new QAction(QPixmap("://general/img/quit.png"), "Выход...", ui->toolBar));
     ui->toolBar->actions().at(0)->setDisabled(true);
     ui->toolBar->actions().at(1)->setDisabled(true);
@@ -102,7 +106,7 @@ void GeneratorWindow::clearTasks()
     taskBuffer.clear();
     TFWpastSize = 0;
     countOfGeneratedAnswers = 0;
-    engine->TeX2SVG("\\begin{aligned}\\color{sienna}{\\Huge\\textbf{В ожидании генерации задач...}}\\end{aligned}", true);
+    engine->TeX2SVG("\\begin{aligned}" + taskFontSize + "{\\color{sienna}{\\textbf{В ожидании генерации задач...}}}\\end{aligned}", true);
     ui->toolBar->actions().at(0)->setDisabled(true);
     ui->toolBar->actions().at(1)->setDisabled(true);
     ui->toolBar->actions().at(3)->setDisabled(true);
@@ -231,7 +235,7 @@ void GeneratorWindow::receivedMetaInfo(int countOfTasks, bool isRepeatable, QStr
         ui->lcdNumber->display(totalTestTasks);
     } else if (isRepeatable) {
         totalTaskCount = countOfTasks;
-        tasksForWork += "{\\LARGE\\textbf{" + taskText + "}\\\\}";
+        tasksForWork += "\\textbf{" + taskText + "}\\\\";
         ui->toolBar->actions().at(0)->setEnabled(true);
         ui->toolBar->actions().at(1)->setEnabled(true);
         ui->toolBar->actions().at(3)->setEnabled(true);
