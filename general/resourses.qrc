@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/general">
-        <file>settings.ini</file>
         <file>style.css</file>
         <file>web/index.html</file>
         <file>web/theory.html</file>
