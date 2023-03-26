@@ -4,27 +4,33 @@
 GeneratorWindow::GeneratorWindow(QWidget *parent)
     : QMainWindow(parent), totalTestTasks(0), totalTaskCount(0),
          countOfGeneratedAnswers(0), TFWpastSize(0), mode(false),
-                taskFontSize("\\normalsize"),  mathFontSize("\\normalsize"),
       random(QRandomGenerator::global()), ui(new Ui::GeneratorWindow)
 {
     uploadSettings();
     uploadUI();
 
-    connect(ui->toolBar->actions().at(0), SIGNAL(triggered()), this, SLOT(checkAnswers()));
-    connect(ui->toolBar->actions().at(1), SIGNAL(triggered()), this, SLOT(clearTasks()));
-    connect(ui->toolBar->actions().at(3), SIGNAL(triggered()), this, SLOT(printTasks()));
-    connect(ui->toolBar->actions().at(5), SIGNAL(triggered()), this, SLOT(openManual()));
-    connect(ui->toolBar->actions().at(6), SIGNAL(triggered()), this, SLOT(openManual()));
-    connect(ui->toolBar->actions().at(7), &QAction::triggered, [](){qApp->exit();});
+    connect(ui->toolBar->actions().at(0), &QAction::triggered, this, &GeneratorWindow::checkAnswers);
+    connect(ui->toolBar->actions().at(1), &QAction::triggered, this, &GeneratorWindow::clearTasks);
+    connect(ui->toolBar->actions().at(3), &QAction::triggered, this, &GeneratorWindow::printTasks);
+    connect(ui->toolBar->actions().at(5), &QAction::triggered, this, &GeneratorWindow::openManual);
+    connect(ui->toolBar->actions().at(6), &QAction::triggered, this, &GeneratorWindow::changeFontSize);
+    connect(ui->toolBar->actions().at(7), &QAction::triggered, [&](){
+        qApp->closeAllWindows();
+    });
 
-    tasksForWork.append("\\tiny{2\\equiv2}\\\\\\Tiny{2\\equiv2}\\\\\\scriptsize{2\\equiv2}\\\\\\small{2\\equiv2}\\\\\\normalsize{2\\equiv2}\\\\\\large{2\\equiv2}\\\\\\Large{2\\equiv2}\\\\\\LARGE{2\\equiv2}\\\\\\huge{2\\equiv2}\\\\\\Huge{2\\equiv2}\\\\");
+    showMaximized();
 }
 
 GeneratorWindow::~GeneratorWindow()
 {
-    saveSettings();
     delete engine;
     delete ui;
+}
+
+void GeneratorWindow::closeEvent(QCloseEvent *event)
+{
+    saveSettings();
+    event->accept();
 }
 
 void GeneratorWindow::uploadUI()
@@ -60,19 +66,36 @@ void GeneratorWindow::uploadUI()
 
     setCursor(Qt::ArrowCursor);
     setAttribute(Qt::WA_DeleteOnClose);
+    setWindowTitle("Algebra Madness");
+    setWindowIcon(QIcon(":/general/img/appIcon.png"));
 }
 
 void GeneratorWindow::saveSettings()
 {
-    settings->setValue("windowSize", geometry());
+    QSettings settings("Teddy's Corp", "Algebra Madness");
+
+    settings.beginGroup("General");
+    settings.setValue("windowSize", geometry());
+    settings.endGroup();
+
+    settings.beginGroup("Style");
+    settings.setValue("taskFontSize", taskFontSize);
+    settings.setValue("mathFontSize", mathFontSize);
+    settings.endGroup();
 }
 
 void GeneratorWindow::uploadSettings()
 {
-    settings = new QSettings(":/general/settings.ini",
-                             QSettings::IniFormat, this);
+    QSettings settings("Teddy's Corp", "Algebra Madness");
 
-    setGeometry(settings->value("windowSize").toRect());
+    settings.beginGroup("General");
+    setGeometry(settings.value("windowSize").toRect());
+    settings.endGroup();
+
+    settings.beginGroup("Style");
+    taskFontSize = settings.value("taskFontSize", "\\normalsize").toString();
+    mathFontSize = settings.value("mathFontSize", "\\normalsize").toString();
+    settings.endGroup();
 }
 
 void GeneratorWindow::isReadyRender(){
@@ -120,6 +143,27 @@ void GeneratorWindow::printTasks()
 void GeneratorWindow::openManual()
 {
     new DialogManual(this);
+}
+
+void GeneratorWindow::changeFontSize()
+{
+    DialogFontSize *fontDialog = new DialogFontSize(taskFontSize, mathFontSize, this);
+    connect(fontDialog, &DialogFontSize::changeTaskFontSize,
+            this, &GeneratorWindow::changeTaskFontSize);
+    connect(fontDialog, &DialogFontSize::changeMathFontSize,
+            this, &GeneratorWindow::changeMathFontSize);
+}
+
+void GeneratorWindow::changeMathFontSize(QString newFont)
+{
+    mathFontSize = newFont;
+    qDebug() << mathFontSize;
+}
+
+void GeneratorWindow::changeTaskFontSize(QString newFont)
+{
+    taskFontSize = newFont;
+    qDebug() << taskFontSize;
 }
 
 void GeneratorWindow::on_tabWidget_currentChanged(int index)

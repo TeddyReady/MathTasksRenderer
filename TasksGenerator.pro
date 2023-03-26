@@ -21,7 +21,8 @@ SOURCES += \
     libs/mathlib/ringresidue.cpp \
     sources/testmode.cpp \
     libs/mathlib/transpositiongroup.cpp \
-    libs/mathlib/algebrastructures.cpp
+    libs/mathlib/algebrastructures.cpp \
+    sources/dialogfontsize.cpp
 
 HEADERS += \
     sources/dialogmanual.h \
@@ -40,7 +41,8 @@ HEADERS += \
     sources/testmode.h \
     libs/mathlib/transpositiongroup.h \
     libs/mathlib/algebrastructures.h \
-    sources/errors.h
+    sources/errors.h \
+    sources/dialogfontsize.h
 
 FORMS += \
     sources/dialogbase.ui \
@@ -49,7 +51,8 @@ FORMS += \
     sources/dialogtesttimer.ui \
     sources/dialogresults.ui \
     sources/generatorwindow.ui \
-    sources/testmode.ui
+    sources/testmode.ui \
+    sources/dialogfontsize.ui
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

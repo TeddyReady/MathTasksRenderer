@@ -7,6 +7,9 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    QApplication::setOrganizationName("Teddy's Corp");
+    QApplication::setApplicationName("Algebra Madness");
+
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
     QSplashScreen *splash = new QSplashScreen;
@@ -22,10 +25,7 @@ int main(int argc, char *argv[])
     //QThread::msleep(1500);
     splash->showMessage("Загружаем приложение...", location, Qt::black);
     GeneratorWindow *mainWindow = new GeneratorWindow;
-    mainWindow->setWindowTitle("Algebra Madness");
-    mainWindow->setWindowIcon(QIcon(":/general/img/appIcon.png"));
     //QThread::msleep(500);
-    mainWindow->showMaximized();
     splash->finish(mainWindow);
     delete splash;
 

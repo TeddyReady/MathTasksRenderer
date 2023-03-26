@@ -1,6 +1,7 @@
 #ifndef GENERATORWINDOW_H
 #define GENERATORWINDOW_H
 #include <QMouseEvent>
+#include <QCloseEvent>
 #include <QTextStream>
 #include <QFileDialog>
 #include <QSettings>
@@ -10,6 +11,7 @@
 #include <QUrl>
 
 #include "dialoglatexprinter.h"
+#include "dialogfontsize.h"
 #include "dialogmanual.h"
 #include "dialogbase.h"
 #include "testmode.h"
@@ -28,16 +30,21 @@ private:
 public:
     explicit GeneratorWindow(QWidget *parent = nullptr);
     ~GeneratorWindow();
+protected:
+    void closeEvent(QCloseEvent *event);
 public slots:
     //Universal Dialog
     void receivedMetaInfo(int countOfTasks, bool isRepeatable, QString taskText);
     void receivedData(std::vector<int> data, AllTasks task, int subTask, ViewMode optional);
+    void changeMathFontSize(QString newFont);
+    void changeTaskFontSize(QString newFont);
 private slots:
     void checkAnswers();
     void clearTasks();
     void printTasks();
     void openManual();
     void startTest(QTime time);
+    void changeFontSize();
     void on_genButton_clicked();
     void on_comboBox_currentTextChanged(const QString &task);
     void on_tabWidget_currentChanged(int index);
@@ -64,7 +71,6 @@ private:
     QString tasksForWork, taskBuffer, taskFontSize, mathFontSize;
     std::vector<QString> solvedWorkTasks;
     QRandomGenerator *random;
-    QSettings *settings;
     TeXEngine *engine;
     Ui::GeneratorWindow *ui;
 };
