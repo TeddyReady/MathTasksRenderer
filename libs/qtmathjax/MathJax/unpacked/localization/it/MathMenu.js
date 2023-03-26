@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/it/MathMenu.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +17,8 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("it","MathMenu",{
-        version: "2.3",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           Show: "Mostra formula come",
@@ -64,6 +60,12 @@ MathJax.Localization.addTranslation("it","MathMenu",{
           TeXWeb: "TeX (web)",
           TeXImage: "TeX (immagini)",
           STIXLocal: "STIX (locale)",
+          STIXWeb: "STIX (web)",
+          AsanaMathWeb: "Asana Math (web)",
+          GyrePagellaWeb: "Gyre Pagella (web)",
+          GyreTermesWeb: "Gyre Termes (web)",
+          LatinModernWeb: "Latin Modern (web)",
+          NeoEulerWeb: "Neo Euler (web)",
           ContextMenu: "Menu contestuale",
           Browser: "Browser",
           Scale: "Scala tutte le formule...",
