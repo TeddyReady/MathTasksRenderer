@@ -98,9 +98,9 @@ void GeneratorWindow::uploadSettings()
 
 void GeneratorWindow::isReadyRender(){
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    taskBuffer += tasksForWork.right(tasksForWork.size() - TFWpastSize);
+    taskBuffer += tasksForWork.right(tasksForWork.size() - TFWpastSize).replace("MATH_FONT", mathFontSize);
     TFWpastSize = tasksForWork.size();
-    engine->TeX2SVG("\\begin{aligned}\\color{sienna}{" + taskBuffer + "}\\end{aligned}");
+    engine->TeX2SVG("\\begin{aligned}\\color{sienna}{" + taskFontSize + taskBuffer + "}\\end{aligned}");
     totalTaskCount = 0;
     QApplication::restoreOverrideCursor();
 }
@@ -115,7 +115,7 @@ void GeneratorWindow::checkAnswers(){
             taskBuffer.insert(i - 1, solvedWorkTasks[countOfGeneratedAnswers++]);
         }
     }
-    engine->TeX2SVG("\\begin{aligned}\\color{sienna}{" + taskBuffer.replace("@", "").replace("#", "") + "}\\end{aligned}", true);
+    engine->TeX2SVG("\\begin{aligned}\\color{sienna}{" + taskFontSize +  taskBuffer.replace("@", "").replace("#", "") + "}\\end{aligned}", true);
     ui->toolBar->actions().at(0)->setDisabled(true);
     QApplication::restoreOverrideCursor();
 }
@@ -128,19 +128,20 @@ void GeneratorWindow::clearTasks()
     TFWpastSize = 0;
     countOfGeneratedAnswers = 0;
     engine->TeX2SVG("\\begin{aligned}" + taskFontSize + "{\\color{sienna}{\\textbf{В ожидании генерации задач...}}}\\end{aligned}", true);
-    ui->toolBar->actions().at(0)->setDisabled(true);
-    ui->toolBar->actions().at(1)->setDisabled(true);
-    ui->toolBar->actions().at(3)->setDisabled(true);
+    ui->toolBar->actions().at(Check)->setDisabled(true);
+    ui->toolBar->actions().at(Clear)->setDisabled(true);
+    ui->toolBar->actions().at(LaTeX)->setDisabled(true);
 }
 
 void GeneratorWindow::printTasks()
 {
-    new DialogLatexPrinter(tasksForWork.mid(35, tasksForWork.size()), solvedWorkTasks, this);
+    DialogLatexPrinter *latexDialog = new DialogLatexPrinter(tasksForWork.mid(35, tasksForWork.size()), solvedWorkTasks, this);
+    latexDialog->exec();
 }
 
 void GeneratorWindow::openManual()
 {
-    DialogManual *manDialog =new DialogManual(this);
+    DialogManual *manDialog = new DialogManual(taskFontSize, mathFontSize, this);
     manDialog->show();
 }
 
@@ -163,27 +164,27 @@ void GeneratorWindow::on_tabWidget_currentChanged(int index)
     switch (index) {
     case 2:
         mode = 1;
-        ui->toolBar->actions().at(0)->setVisible(false);
-        ui->toolBar->actions().at(1)->setVisible(false);
-        ui->toolBar->actions().at(2)->setVisible(false);
-        ui->toolBar->actions().at(3)->setVisible(false);
-        ui->toolBar->actions().at(4)->setVisible(false);
+        ui->toolBar->actions().at(Check)->setVisible(false);
+        ui->toolBar->actions().at(Clear)->setVisible(false);
+        ui->toolBar->actions().at(Sep_1)->setVisible(false);
+        ui->toolBar->actions().at(LaTeX)->setVisible(false);
+        ui->toolBar->actions().at(Sep_2)->setVisible(false);
         break;
     default:
         mode = 0;
         if (index == 0) {
-            ui->toolBar->actions().at(0)->setVisible(true);
-            ui->toolBar->actions().at(1)->setVisible(true);
-            ui->toolBar->actions().at(2)->setVisible(true);
-            ui->toolBar->actions().at(3)->setVisible(true);
-            ui->toolBar->actions().at(4)->setVisible(true);
+            ui->toolBar->actions().at(Check)->setVisible(true);
+            ui->toolBar->actions().at(Clear)->setVisible(true);
+            ui->toolBar->actions().at(Sep_1)->setVisible(true);
+            ui->toolBar->actions().at(LaTeX)->setVisible(true);
+            ui->toolBar->actions().at(Sep_2)->setVisible(true);
         }
         else {
-            ui->toolBar->actions().at(0)->setVisible(false);
-            ui->toolBar->actions().at(1)->setVisible(false);
-            ui->toolBar->actions().at(2)->setVisible(false);
-            ui->toolBar->actions().at(3)->setVisible(false);
-            ui->toolBar->actions().at(4)->setVisible(false);
+            ui->toolBar->actions().at(Check)->setVisible(false);
+            ui->toolBar->actions().at(Clear)->setVisible(false);
+            ui->toolBar->actions().at(Sep_1)->setVisible(false);
+            ui->toolBar->actions().at(LaTeX)->setVisible(false);
+            ui->toolBar->actions().at(Sep_2)->setVisible(false);
         }
         break;
     }
@@ -325,10 +326,10 @@ void GeneratorWindow::runEulerFunction(int countOfTasks, int minNum, int maxNum,
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             task.setTask(random->bounded(minNum, maxNum));
             if (!mode) {
-                tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=~?\\\\";
+                tasksForWork += "{  MATH_FONT" + QString::number(curTaskCount)  + ")~\\varphi(" + QString::number(task.getTask()) + ")=~?}\\\\";
                 solvedWorkTasks.emplace_back(QString::number(task.solve()));
             } else {
-                QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\phi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
+                QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\varphi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
             } ++curTaskCount;
         } break;
@@ -337,10 +338,10 @@ void GeneratorWindow::runEulerFunction(int countOfTasks, int minNum, int maxNum,
             task.setTask(random->bounded(minNum, maxNum));
             if (isPrime(task.getTask())) {
                 if (!mode) {
-                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=~?\\\\";
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\varphi(" + QString::number(task.getTask()) + ")=~?\\\\";
                     solvedWorkTasks.emplace_back(QString::number(task.solve()));
                 } else {
-                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\phi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
+                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\varphi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                     tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
                 } ++i; ++curTaskCount;
             }
@@ -351,9 +352,9 @@ void GeneratorWindow::runEulerFunction(int countOfTasks, int minNum, int maxNum,
             auto data = decompositionToSimple(task.getTask());
             if (data.size() == 1 && data[0].second > 1) {
                 if (!mode) {
-                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=~?\\\\";
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\varphi(" + QString::number(task.getTask()) + ")=~?\\\\";
                     solvedWorkTasks.emplace_back(QString::number(task.solve()));                } else {
-                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\phi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
+                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\varphi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                     tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
                 } ++i; ++curTaskCount;
             }
@@ -371,10 +372,10 @@ void GeneratorWindow::runEulerFunction(int countOfTasks, int minNum, int maxNum,
                 }
             } if (accessFlag) {
                 if (!mode) {
-                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=~?\\\\";
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\varphi(" + QString::number(task.getTask()) + ")=~?\\\\";
                     solvedWorkTasks.emplace_back(QString::number(task.solve()));
                 } else {
-                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\phi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
+                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\varphi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                     tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
                 } ++i; ++curTaskCount;
             }
@@ -392,10 +393,10 @@ void GeneratorWindow::runEulerFunction(int countOfTasks, int minNum, int maxNum,
                 }
             } if (accessFlag) {
                 if (!mode) {
-                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\phi(" + QString::number(task.getTask()) + ")=~?\\\\";
+                    tasksForWork += "  " + QString::number(curTaskCount)  + ")~\\varphi(" + QString::number(task.getTask()) + ")=~?\\\\";
                     solvedWorkTasks.emplace_back(QString::number(task.solve()));
                 } else {
-                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\phi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
+                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\varphi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                     tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
                 } ++i; ++curTaskCount;
             }

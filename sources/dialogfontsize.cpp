@@ -6,10 +6,12 @@ DialogFontSize::DialogFontSize(QString curTaskFont, QString curMathFont, QWidget
 {
     uploadSettings();
     ui->setupUi(this);
-    mainPage = "\\color{sienna}{"
+    mainPage = "\\begin{align}\\color{sienna}{"
                "{TASK_FONT\\textbf{Сколько же будет...}}\\\\"
                "{MATH_FONT2 \\cdot 2 = ?}"
-               "}";
+               "}"
+               "\\end{align}";
+
     this->curMathFont = curMathFont;
     this->curTaskFont = curTaskFont;
     QString pageBuffer = mainPage;

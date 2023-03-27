@@ -11,7 +11,7 @@ class DialogManual;
 class DialogManual : public QDialog {
     Q_OBJECT
 public:
-    explicit DialogManual(QWidget *parent = nullptr);
+    explicit DialogManual(QString taskFontSize, QString mathFontSize, QWidget *parent = nullptr);
     ~DialogManual();
 private:
     TeXEngine *engine;

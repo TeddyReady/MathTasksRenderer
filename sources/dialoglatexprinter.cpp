@@ -11,11 +11,6 @@ DialogLatexPrinter::DialogLatexPrinter(const QString &data, const std::vector<QS
     ui->lineDate->setDate(QDate::currentDate());
     engine = new TeXEngine(ui->pdfView);
     engineAnswers = new TeXEngine(ui->pdfViewAnswers);
-    setMinimumWidth(1200);
-    setMinimumHeight(800);
-    setWindowTitle("Создание LaTeX & PDF файлов");
-    setModal(true);
-
     answers = QString("\\begin{array}{|r|l|}\\hline");
 
     for (std::size_t i = 0; i < answersData.size(); ++i)
@@ -24,7 +19,11 @@ DialogLatexPrinter::DialogLatexPrinter(const QString &data, const std::vector<QS
     }
 
     answers.append("\\hline\\end{array}");
-    exec();
+
+    setMinimumWidth(1200);
+    setMinimumHeight(800);
+    setWindowTitle("Создание LaTeX & PDF файлов");
+    setModal(true);
 }
 
 DialogLatexPrinter::~DialogLatexPrinter()
@@ -106,7 +105,7 @@ void DialogLatexPrinter::printData()
 
 void DialogLatexPrinter::on_btnShow_clicked()
 {
-    QString tmp = data; //answers = this->answers;
+    QString tmp = data;//answers = this->answers;
     if (ui->btnDate->isChecked()) {
         tmp = "\\large{\\text{" + ui->lineDate->text() + "}}\\\\" + tmp;
         answers = "\\large{\\text{" + ui->lineDate->text() + "}}\\\\" + answers;

@@ -8,7 +8,7 @@
 #include "testmode.h"
 
 enum ToolBarOptions {
-    Check, Clear, LaTeX = 3, Manual = 5, Font, Exit
+    Check, Clear, Sep_1, LaTeX, Sep_2, Manual, Font, Exit
 };
 
 QT_BEGIN_NAMESPACE

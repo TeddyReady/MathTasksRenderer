@@ -14,8 +14,11 @@
     <script>
       MathJax.Hub.Config({
         jax: ["input/TeX", "output/HTML-CSS"],
-        displayAlign: "center",
-        SVG: {scale: 240}
+        displayAlign: "left",
+        SVG: {scale: 240},
+        showMathMenu: false,
+        showProcessingMessages: false,
+        messageStyle: "none"
       });
       MathJax.Hub.signal.Interest( function ( message ) {
         if ( message[0] == 'End Update' )

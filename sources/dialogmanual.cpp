@@ -1,7 +1,7 @@
 #include "dialogmanual.h"
 #include "ui_dialogmanual.h"
 
-DialogManual::DialogManual(QWidget *parent) :
+DialogManual::DialogManual(QString taskFontSize, QString mathFontSize, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DialogManual)
 {
@@ -13,14 +13,14 @@ DialogManual::DialogManual(QWidget *parent) :
     QString result;
     for (int i = 0; i < AS.getSetsCount(); ++i)
     {
-        result.append(AS.getCode(static_cast<Set>(i)) + "\\Rightarrow" +
-                      AS.getSetName(static_cast<Set>(i)) + "\\\\");
+        result.append("{" + mathFontSize + AS.getCode(static_cast<Set>(i)) + "}\\Rightarrow{" +
+                      taskFontSize + AS.getSetName(static_cast<Set>(i)) + "}\\\\");
     }
-    engine->TeX2SVG("\\begin{aligned}\\large{\\color{sienna}{" + result + "}}\\end{aligned}", true);
+    engine->TeX2SVG("\\begin{aligned}\\color{sienna}{" + result + "}\\end{aligned}", true);
 
     connect(ui->btnExit, &QPushButton::clicked, [&](){ deleteLater(); });
     connect(ui->btnReload, &QPushButton::clicked, [=](){
-        engine->TeX2SVG("\\begin{align}\\large{\\color{sienna}{" + result + "}}\\end{align}", true);
+        engine->TeX2SVG("\\begin{aligned}\\color{sienna}{" + result + "}\\end{aligned}", true);
     });
 
     setMinimumWidth(1280);
