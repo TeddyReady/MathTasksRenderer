@@ -29,14 +29,14 @@ DialogFontSize::DialogFontSize(QString curTaskFont, QString curMathFont, QWidget
         else if (fontName == "Очень большой") tmp = "\\LARGE";
         else if (fontName == "Огромный") tmp = "\\huge";
         else tmp = "\\Huge";
-        if (ui->cbType->currentText() == "Размер описания задач")
+        if (ui->cbType->currentText() == "Текст")
             taskFont = tmp;
         else mathFont = tmp;
         QString pageBuffer = mainPage;
         engine->TeX2SVG(pageBuffer.replace("TASK_FONT", taskFont).replace("MATH_FONT", mathFont), true);
     });
     connect(ui->cbType, &QComboBox::currentTextChanged, [&](){
-        if (ui->cbType->currentText() == "Размер описания задач")
+        if (ui->cbType->currentText() == "Текст")
             selectFontSize(taskFont);
         else selectFontSize(mathFont);
     });
@@ -46,7 +46,6 @@ DialogFontSize::DialogFontSize(QString curTaskFont, QString curMathFont, QWidget
     setMinimumHeight(800);
     setWindowTitle("Изменения размера шрифта");
     setModal(true);
-    exec();
 }
 
 DialogFontSize::~DialogFontSize()
@@ -57,11 +56,11 @@ DialogFontSize::~DialogFontSize()
 
 void DialogFontSize::accept()
 {
-    qDebug() << taskFont << curTaskFont;
     if (mathFont != curMathFont)
         emit changeMathFontSize(mathFont);
     if (taskFont != curTaskFont)
         emit changeTaskFontSize(taskFont);
+    deleteLater();
 }
 
 void DialogFontSize::selectFontSize(QString font_size)

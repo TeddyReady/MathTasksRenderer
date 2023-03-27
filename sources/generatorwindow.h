@@ -36,8 +36,6 @@ public slots:
     //Universal Dialog
     void receivedMetaInfo(int countOfTasks, bool isRepeatable, QString taskText);
     void receivedData(std::vector<int> data, AllTasks task, int subTask, ViewMode optional);
-    void changeMathFontSize(QString newFont);
-    void changeTaskFontSize(QString newFont);
 private slots:
     void checkAnswers();
     void clearTasks();

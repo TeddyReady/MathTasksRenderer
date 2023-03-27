@@ -84,6 +84,10 @@ QToolButton:checked {
 background-color: SaddleBrown;
 color: Beige;
 }
+QComboBox#cbType{
+min-width: 280px;
+max-width: 280px;
+}
 QListWidget {
 border: 2px solid Tan;
 border-radius: 8px;

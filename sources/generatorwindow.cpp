@@ -142,28 +142,22 @@ void GeneratorWindow::printTasks()
 
 void GeneratorWindow::openManual()
 {
-    new DialogManual(this);
+    DialogManual *manDialog =new DialogManual(this);
+    manDialog->show();
 }
 
 void GeneratorWindow::changeFontSize()
 {
     DialogFontSize *fontDialog = new DialogFontSize(taskFontSize, mathFontSize, this);
-    connect(fontDialog, &DialogFontSize::changeTaskFontSize,
-            this, &GeneratorWindow::changeTaskFontSize);
-    connect(fontDialog, &DialogFontSize::changeMathFontSize,
-            this, &GeneratorWindow::changeMathFontSize);
-}
 
-void GeneratorWindow::changeMathFontSize(QString newFont)
-{
-    mathFontSize = newFont;
-    qDebug() << mathFontSize;
-}
+    connect(fontDialog, &DialogFontSize::changeTaskFontSize, [&](QString newFont){
+        taskFontSize = newFont;
+    });
+    connect(fontDialog, &DialogFontSize::changeMathFontSize, [&](QString newFont){
+        mathFontSize = newFont;
+    });
 
-void GeneratorWindow::changeTaskFontSize(QString newFont)
-{
-    taskFontSize = newFont;
-    qDebug() << taskFontSize;
+    fontDialog->exec();
 }
 
 void GeneratorWindow::on_tabWidget_currentChanged(int index)

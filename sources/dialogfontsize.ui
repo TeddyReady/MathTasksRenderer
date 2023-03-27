@@ -98,12 +98,12 @@
        </property>
        <item>
         <property name="text">
-         <string>Размер описания задач</string>
+         <string>Текст</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Размер математических выражений</string>
+         <string>Математика</string>
         </property>
        </item>
       </widget>
