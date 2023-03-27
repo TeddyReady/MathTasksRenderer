@@ -1,20 +1,6 @@
 #ifndef DIALOGBASE_H
 #define DIALOGBASE_H
 
-#include <QPushButton>
-#include <QGridLayout>
-#include <QSpacerItem>
-#include <QCloseEvent>
-#include <QCheckBox>
-#include <QSpinBox>
-#include <QString>
-#include <QDialog>
-#include <QWidget>
-#include <QLabel>
-#include <QMenu>
-
-#include <vector>
-
 #include "libs/mathlib/transpositiongroup.h"
 #include "libs/mathlib/algebrastructures.h"
 #include "libs/mathlib/groupproperties.h"

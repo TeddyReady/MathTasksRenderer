@@ -1,20 +1,15 @@
 #ifndef GENERATORWINDOW_H
 #define GENERATORWINDOW_H
-#include <QMouseEvent>
-#include <QCloseEvent>
-#include <QTextStream>
-#include <QFileDialog>
-#include <QSettings>
-#include <QDateTime>
-#include <QCursor>
-#include <QPixmap>
-#include <QUrl>
 
 #include "dialoglatexprinter.h"
 #include "dialogfontsize.h"
 #include "dialogmanual.h"
 #include "dialogbase.h"
 #include "testmode.h"
+
+enum ToolBarOptions {
+    Check, Clear, LaTeX = 3, Manual = 5, Font, Exit
+};
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GeneratorWindow; }
@@ -33,7 +28,6 @@ public:
 protected:
     void closeEvent(QCloseEvent *event);
 public slots:
-    //Universal Dialog
     void receivedMetaInfo(int countOfTasks, bool isRepeatable, QString taskText);
     void receivedData(std::vector<int> data, AllTasks task, int subTask, ViewMode optional);
 private slots:

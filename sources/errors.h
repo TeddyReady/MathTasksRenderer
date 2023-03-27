@@ -1,7 +1,6 @@
 #ifndef ERRORS_H
 #define ERRORS_H
-
-#include <QString>
+#include "libs/mathlib/common.h"
 
 enum class ErrorType {
     CANNOT_OPEN_FILE, FILE_NOT_EXISTED

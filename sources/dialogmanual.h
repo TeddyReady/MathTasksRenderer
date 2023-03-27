@@ -1,8 +1,6 @@
 #ifndef DIALOGMANUAL_H
 #define DIALOGMANUAL_H
 
-#include <QDialog>
-
 #include "libs/mathlib/algebrastructures.h"
 #include "texengine.h"
 

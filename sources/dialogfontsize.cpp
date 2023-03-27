@@ -4,6 +4,7 @@
 DialogFontSize::DialogFontSize(QString curTaskFont, QString curMathFont, QWidget *parent) :
     QDialog(parent), taskFont(curTaskFont), mathFont(curMathFont), ui(new Ui::DialogFontSize)
 {
+    uploadSettings();
     ui->setupUi(this);
     mainPage = "\\color{sienna}{"
                "{TASK_FONT\\textbf{Сколько же будет...}}\\\\"
@@ -60,7 +61,7 @@ void DialogFontSize::accept()
         emit changeMathFontSize(mathFont);
     if (taskFont != curTaskFont)
         emit changeTaskFontSize(taskFont);
-    deleteLater();
+    close();
 }
 
 void DialogFontSize::selectFontSize(QString font_size)
@@ -85,4 +86,28 @@ void DialogFontSize::selectFontSize(QString font_size)
             break;
         }
     }
+}
+
+void DialogFontSize::closeEvent(QCloseEvent *event)
+{
+    saveSettings();
+    event->accept();
+}
+
+void DialogFontSize::saveSettings()
+{
+    QSettings settings("Teddy's Corp", "Algebra Madness");
+
+    settings.beginGroup("DialogFontSize");
+    settings.setValue("windowSize", geometry());
+    settings.endGroup();
+}
+
+void DialogFontSize::uploadSettings()
+{
+    QSettings settings("Teddy's Corp", "Algebra Madness");
+
+    settings.beginGroup("DialogFontSize");
+    setGeometry(settings.value("windowSize").toRect());
+    settings.endGroup();
 }

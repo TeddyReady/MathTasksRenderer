@@ -1,11 +1,5 @@
 #ifndef DIALOGRESULTS_H
 #define DIALOGRESULTS_H
-
-#include <QStandardItemModel>
-#include <QHeaderView>
-#include <QDialog>
-#include <QDebug>
-
 #include "libs/mathlib/transpositiongroup.h"
 
 enum class SupCommands {

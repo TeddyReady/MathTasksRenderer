@@ -1,11 +1,5 @@
 #ifndef TRANSPOSITIONGROUP_H
 #define TRANSPOSITIONGROUP_H
-
-#include <QRandomGenerator>
-#include <QString>
-#include <QVector>
-#include <QMap>
-
 #include "basemath.h"
 
 enum class TranspositionGroupOptions {

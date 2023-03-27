@@ -1,8 +1,8 @@
 #ifndef DIALOGFONTSIZE_H
 #define DIALOGFONTSIZE_H
 
+#include "libs/mathlib/common.h"
 #include "texengine.h"
-#include <QDialog>
 
 namespace Ui {
 class DialogFontSize;
@@ -13,13 +13,15 @@ class DialogFontSize : public QDialog {
 public:
     explicit DialogFontSize(QString curTaskFont, QString curMathFont, QWidget *parent = nullptr);
     ~DialogFontSize();
-
 signals:
     void changeTaskFontSize(QString font_size);
     void changeMathFontSize(QString font_size);
 protected:
+    void closeEvent(QCloseEvent *event);
     void accept();
 private:
+    void saveSettings();
+    void uploadSettings();
     void selectFontSize(QString font_size);
 
     bool isIgnoring;

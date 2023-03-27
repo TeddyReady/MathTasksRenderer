@@ -1,16 +1,6 @@
 #ifndef ALGEBRASTRUCTURES_H
 #define ALGEBRASTRUCTURES_H
-
-#include <QRandomGenerator>
-#include <QPushButton>
-#include <QTextStream>
-#include <QMessageBox>
-#include <QString>
-#include <QDialog>
-#include <QDebug>
-#include <QFile>
-
-#include <vector>
+#include "common.h"
 
 enum class Set {
     N,  No, Z,  Z0,

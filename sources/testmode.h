@@ -1,18 +1,5 @@
 #ifndef TEST_MODE_H
 #define TEST_MODE_H
-#include <QListWidgetItem>
-#include <QTextBrowser>
-#include <QMainWindow>
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QCloseEvent>
-#include <QMessageBox>
-#include <QGroupBox>
-#include <QLineEdit>
-#include <QToolBar>
-#include <QWebView>
-#include <QRegExp>
-#include <QTimer>
 
 #include "dialogtesttimer.h"
 #include "dialogresults.h"

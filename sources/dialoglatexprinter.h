@@ -1,13 +1,7 @@
 #ifndef DIALOGLATEXPRINTER_H
 #define DIALOGLATEXPRINTER_H
 
-#include <QTextDocument>
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QPrinter>
-#include <QString>
-#include <QDialog>
-#include <vector>
+#include "libs/mathlib/common.h"
 #include "texengine.h"
 
 namespace Ui {

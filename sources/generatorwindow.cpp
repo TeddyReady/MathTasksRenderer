@@ -9,14 +9,12 @@ GeneratorWindow::GeneratorWindow(QWidget *parent)
     uploadSettings();
     uploadUI();
 
-    connect(ui->toolBar->actions().at(0), &QAction::triggered, this, &GeneratorWindow::checkAnswers);
-    connect(ui->toolBar->actions().at(1), &QAction::triggered, this, &GeneratorWindow::clearTasks);
-    connect(ui->toolBar->actions().at(3), &QAction::triggered, this, &GeneratorWindow::printTasks);
-    connect(ui->toolBar->actions().at(5), &QAction::triggered, this, &GeneratorWindow::openManual);
-    connect(ui->toolBar->actions().at(6), &QAction::triggered, this, &GeneratorWindow::changeFontSize);
-    connect(ui->toolBar->actions().at(7), &QAction::triggered, [&](){
-        qApp->closeAllWindows();
-    });
+    connect(ui->toolBar->actions().at(Check), &QAction::triggered, this, &GeneratorWindow::checkAnswers);
+    connect(ui->toolBar->actions().at(Clear), &QAction::triggered, this, &GeneratorWindow::clearTasks);
+    connect(ui->toolBar->actions().at(LaTeX), &QAction::triggered, this, &GeneratorWindow::printTasks);
+    connect(ui->toolBar->actions().at(Manual), &QAction::triggered, this, &GeneratorWindow::openManual);
+    connect(ui->toolBar->actions().at(Font), &QAction::triggered, this, &GeneratorWindow::changeFontSize);
+    connect(ui->toolBar->actions().at(Exit), &QAction::triggered, [&](){qApp->closeAllWindows();});
 
     showMaximized();
 }

@@ -1,8 +1,6 @@
 #ifndef DIALOGTESTTIMER_H
 #define DIALOGTESTTIMER_H
-
-#include <QDialog>
-#include <QTime>
+#include "libs/mathlib/common.h"
 
 namespace Ui {
 class DialogTestTimer;

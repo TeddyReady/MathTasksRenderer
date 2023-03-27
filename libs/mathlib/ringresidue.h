@@ -1,8 +1,9 @@
 #ifndef RINGRESIDUE_H
 #define RINGRESIDUE_H
 
-#include "libs/mathlib/symbollegandre.h"
-#include "libs/mathlib/eulerfunction.h"
+#include "symbollegandre.h"
+#include "eulerfunction.h"
+#include "basemath.h"
 
 enum class RingResidueOptions {
           GenCount, A_in_M,

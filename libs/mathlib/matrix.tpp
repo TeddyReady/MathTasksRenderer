@@ -1,11 +1,6 @@
 #ifndef MATRIX_TPP
 #define MATRIX_TPP
-
-#include <QRandomGenerator>
-#include <QString>
-#include <vector>
-
-#include "libs/mathlib/basemath.h"
+#include "basemath.h"
 
 enum class MatrixOptions {
     Sum, Diff, Multy,

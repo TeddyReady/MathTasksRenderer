@@ -1,27 +1,23 @@
 #ifndef BASEMATH_H
 #define BASEMATH_H
-#include <QRandomGenerator>
-#include <QString>
-#include <algorithm>
-#include <vector>
-#include <cmath>
+#include "common.h"
 
-//Разложение целого числа на простые множители
+//Number decomposition to simple
 std::vector<std::pair<int, int>> decompositionToSimple(int num);
 
-//Проверка на простоту
+//Prime check
 bool isPrime(int num);
 
-//НОД
+//Great Common Divisor
 int GCD(int a, int b);
 
-//НОК
+//Little Common Multiply
 int LCM(int a, int b);
 
-//Быстрое (бинарное) возведение в степень
+//Faster binary power
 long fastPower(long num, long deg);
 
-//Быстрое (бинарное) возведение в степень по модулю
+//Faster binary module power
 long modulePower(long num, long deg, int module);
 
 #endif // BASEMATH_H

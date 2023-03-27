@@ -1,14 +1,5 @@
 #ifndef GROUPPROPERTIES_H
 #define GROUPPROPERTIES_H
-#include <QRandomGenerator>
-#include <QPushButton>
-#include <QTextStream>
-#include <QMessageBox>
-#include <QString>
-#include <QDialog>
-#include <QDebug>
-#include <QFile>
-#include <vector>
 #include "basemath.h"
 
 #define GROUPS_COUNT 6

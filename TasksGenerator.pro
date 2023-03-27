@@ -25,6 +25,7 @@ SOURCES += \
     sources/dialogfontsize.cpp
 
 HEADERS += \
+    libs/mathlib/common.h \
     sources/dialogmanual.h \
     libs/mathlib/basemath.h \
     sources/dialogbase.h \
