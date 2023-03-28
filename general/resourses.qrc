@@ -1,10 +1,6 @@
 <RCC>
     <qresource prefix="/general">
         <file>style.css</file>
-        <file>web/index.html</file>
-        <file>web/theory.html</file>
-        <file>web/styles/style.css</file>
-        <file>web/scripts/main.js</file>
         <file>img/unchecked_hover.png</file>
         <file>img/splash.png</file>
         <file>img/reload.png</file>
@@ -19,5 +15,8 @@
         <file>data/set.csv</file>
         <file>data/groups.csv</file>
         <file>img/font-size.png</file>
+    </qresource>
+    <qresource prefix="/theory">
+        <file>theory/theory.pdf</file>
     </qresource>
 </RCC>
