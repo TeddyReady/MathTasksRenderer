@@ -1,7 +1,7 @@
 #ifndef DIALOGFONTSIZE_H
 #define DIALOGFONTSIZE_H
 
-#include "libs/mathlib/common.h"
+#include "libs/mathlib/defines.h"
 #include "texengine.h"
 
 namespace Ui {

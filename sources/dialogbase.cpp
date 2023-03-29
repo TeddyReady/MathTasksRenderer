@@ -226,38 +226,6 @@ void DialogBase::uploadUI()
     if (ui->genWidgetLayout->isEmpty()) ui->lblGen->hide();
 }
 
-bool DialogBase::isRepeatable() const
-{
-    switch (task) {
-    case AllTasks::TranspositionGroup:
-    case AllTasks::Set:
-    case AllTasks::GroupProperties:
-    case AllTasks::Matrix:
-    case AllTasks::RingResidue:
-        return false;
-
-    default:
-        return true;
-    }
-}
-
-QString DialogBase::getTaskText() const
-{
-    switch (task) {
-    case AllTasks::EulerFunction:
-        return QString("Вычислите функцию Эйлера:");
-    case AllTasks::MebiusFunction:
-        return QString("Вычислите функцию Мёбиуса:");
-    case AllTasks::SymbolLegandre:
-        return QString("Вычислите символ Лежандра:");
-    case AllTasks::SymbolJacobi:
-        return QString("Вычислите символ Якоби:");
-
-    default:
-        return QString("");
-    }
-}
-
 void DialogBase::addItem(WidgetRole role, const QString &name, bool option)
 {
     switch (role) {
@@ -295,7 +263,7 @@ void DialogBase::accept()
     {
         if (widgets[i]->isChecked()) countOfTasks += widgets[i]->getCount();
     } if (!countOfTasks) deleteLater();
-    emit sendingMetaInfo(countOfTasks, isRepeatable(), getTaskText());
+    emit sendingMetaInfo(countOfTasks);
 
     //Upload Ranges
     for (int i = 0; i < ui->genWidgetLayout->count(); ++i)

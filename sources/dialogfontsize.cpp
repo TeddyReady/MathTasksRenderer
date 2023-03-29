@@ -98,7 +98,7 @@ void DialogFontSize::closeEvent(QCloseEvent *event)
 
 void DialogFontSize::saveSettings()
 {
-    QSettings settings("Teddy's Corp", "Algebra Madness");
+    QSettings settings(App::OrgName, App::AppName);
 
     settings.beginGroup("DialogFontSize");
     settings.setValue("windowSize", geometry());
@@ -107,7 +107,7 @@ void DialogFontSize::saveSettings()
 
 void DialogFontSize::uploadSettings()
 {
-    QSettings settings("Teddy's Corp", "Algebra Madness");
+    QSettings settings(App::OrgName, App::AppName);
 
     settings.beginGroup("DialogFontSize");
     setGeometry(settings.value("windowSize").toRect());

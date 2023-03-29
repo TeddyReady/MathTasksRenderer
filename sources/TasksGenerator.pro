@@ -6,54 +6,57 @@ TEMPLATE = app
 CONFIG += c++17
 DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
-    sources/dialogmanual.cpp \
+    dialogmanual.cpp \
     libs/mathlib/basemath.cpp \
-    sources/dialogbase.cpp \
-    sources/dialoglatexprinter.cpp \
-    sources/dialogtesttimer.cpp \
-    sources/dialogresults.cpp \
+    dialogbase.cpp \
+    dialoglatexprinter.cpp \
+    dialogtesttimer.cpp \
+    dialogresults.cpp \
     libs/mathlib/eulerfunction.cpp \
     libs/mathlib/groupproperties.cpp \
-    sources/main.cpp \
-    sources/generatorwindow.cpp \
+    main.cpp \
+    generatorwindow.cpp \
     libs/mathlib/mebiusfunction.cpp \
     libs/mathlib/symbollegandre.cpp \
     libs/mathlib/ringresidue.cpp \
-    sources/testmode.cpp \
+    testmode.cpp \
     libs/mathlib/transpositiongroup.cpp \
     libs/mathlib/algebrastructures.cpp \
-    sources/dialogfontsize.cpp
+    dialogfontsize.cpp
 
 HEADERS += \
     libs/mathlib/common.h \
-    sources/dialogmanual.h \
+    libs/mathlib/defines.h \
+    dialogmanual.h \
     libs/mathlib/basemath.h \
-    sources/dialogbase.h \
-    sources/dialoglatexprinter.h \
-    sources/dialogtesttimer.h\
-    sources/dialogresults.h \
+    dialogbase.h \
+    dialoglatexprinter.h \
+    dialogtesttimer.h\
+    dialogresults.h \
     libs/mathlib/eulerfunction.h \
-    sources/generatorwindow.h \
+    generatorwindow.h \
     libs/mathlib/groupproperties.h \
     libs/mathlib/matrix.tpp \
     libs/mathlib/mebiusfunction.h \
     libs/mathlib/symbollegandre.h \
     libs/mathlib/ringresidue.h \
-    sources/testmode.h \
+    testmode.h \
     libs/mathlib/transpositiongroup.h \
     libs/mathlib/algebrastructures.h \
-    sources/errors.h \
-    sources/dialogfontsize.h
+    errors.h \
+    dialogfontsize.h
 
 FORMS += \
-    sources/dialogbase.ui \
-    sources/dialoglatexprinter.ui \
-    sources/dialogmanual.ui \
-    sources/dialogtesttimer.ui \
-    sources/dialogresults.ui \
-    sources/generatorwindow.ui \
-    sources/testmode.ui \
-    sources/dialogfontsize.ui
+    dialogbase.ui \
+    dialoglatexprinter.ui \
+    dialogmanual.ui \
+    dialogtesttimer.ui \
+    dialogresults.ui \
+    generatorwindow.ui \
+    testmode.ui \
+    dialogfontsize.ui
+
+LIBS += -L/usr/local/lib -lpoppler-qt5
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

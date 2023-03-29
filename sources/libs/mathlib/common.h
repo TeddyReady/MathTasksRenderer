@@ -2,6 +2,7 @@
 #define COMMON_H
 /* File with general includes */
 //Qt includes
+#include <QApplication>
 #include <QCheckBox>
 #include <QCloseEvent>
 #include <QCursor>
@@ -10,8 +11,10 @@
 #include <QDialog>
 #include <QFile>
 #include <QFileDialog>
+#include <QGraphicsScene>
 #include <QGridLayout>
 #include <QGroupBox>
+#include <QImage>
 #include <QHeaderView>
 #include <QLabel>
 #include <QLineEdit>
@@ -47,5 +50,8 @@
 #include <algorithm>
 #include <cmath>
 #include <vector>
+
+//other
+#include <poppler/qt5/poppler-qt5.h>
 
 #endif // COMMON_H

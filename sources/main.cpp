@@ -7,8 +7,8 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    QApplication::setOrganizationName("Teddy's Corp");
-    QApplication::setApplicationName("Algebra Madness");
+    QApplication::setOrganizationName(App::OrgName);
+    QApplication::setApplicationName(App::AppName);
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
 

@@ -1,6 +1,7 @@
 #ifndef GENERATORWINDOW_H
 #define GENERATORWINDOW_H
 
+#include "libs/mathlib/defines.h"
 #include "dialoglatexprinter.h"
 #include "dialogfontsize.h"
 #include "dialogmanual.h"
@@ -22,13 +23,14 @@ private:
     void saveSettings();
     void uploadSettings();
     void isReadyRender();
+    void createTheoryImages();
 public:
     explicit GeneratorWindow(QWidget *parent = nullptr);
     ~GeneratorWindow();
 protected:
     void closeEvent(QCloseEvent *event);
 public slots:
-    void receivedMetaInfo(int countOfTasks, bool isRepeatable, QString taskText);
+    void receivedMetaInfo(int countOfTasks);
     void receivedData(std::vector<int> data, AllTasks task, int subTask, ViewMode optional);
 private slots:
     void checkAnswers();
@@ -55,15 +57,17 @@ private:
     void runMatrix(int, std::pair<int, int>, std::pair<int, int>, MatrixOptions);
     void runRingResidue(int, int, int, RingResidueOptions);
 
-    int totalTestTasks, totalTaskCount, TFWpastSize;
-    std::size_t countOfGeneratedAnswers;
+    int totalTestTasks, totalTaskCount, lastSizeCount;
     bool mode;
-    QVector<QString> generatedData;
+    QVector<QString> descriptions;
+    QVector<QVector<QString>> tasks;
     tasks_type tasksForTest;
-    QString tasksForWork, taskBuffer, taskFontSize, mathFontSize;
-    std::vector<QString> solvedWorkTasks;
+    QString tasksForWork, taskForTeX, taskFontSize, mathFontSize;
+    std::vector<QString> answers;
     QRandomGenerator *random;
     TeXEngine *engine;
+    QGraphicsScene *scene;
+    QVector<QImage> images;
     Ui::GeneratorWindow *ui;
 };
 

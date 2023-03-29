@@ -31,7 +31,7 @@ public:
     explicit DialogBase(AllTasks task, bool deleteMode = true, QWidget *parent = nullptr);
     ~DialogBase();
 signals:
-    void sendingMetaInfo(int count, bool isRepeatable, QString taskText);
+    void sendingMetaInfo(int count);
     void sendingData(std::vector<int> data, AllTasks task, int subTask, ViewMode optional);
 protected slots:
     void accept();
@@ -39,9 +39,7 @@ protected slots:
 private:
     void uploadUI();
     void addItem(WidgetRole role, const QString &name = "", bool option = false);
-    bool isRepeatable() const ;
     bool isHaveMoreGens();
-    QString getTaskText() const ;
 
     AllTasks task;
     bool deleteMode;
