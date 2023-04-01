@@ -7,6 +7,7 @@
 #include "libs/mathlib/symbollegandre.h"
 #include "libs/mathlib/mebiusfunction.h"
 #include "libs/mathlib/eulerfunction.h"
+#include "libs/mathlib/ringofmembers.h"
 #include "libs/mathlib/ringresidue.h"
 #include "libs/mathlib/matrix.tpp"
 
@@ -15,7 +16,11 @@ enum class AllTasks {
     SymbolLegandre, SymbolJacobi,
     TranspositionGroup, Set,
     GroupProperties, Matrix,
-    RingResidue
+    RingResidue, RingOfMembers
+};
+
+enum class ExoticWidget {
+    None, Transposition, RingOfMembers
 };
 
 enum WidgetRole { Gen, Base };
@@ -32,13 +37,13 @@ public:
     ~DialogBase();
 signals:
     void sendingMetaInfo(int count);
-    void sendingData(std::vector<int> data, AllTasks task, int subTask, ViewMode optional);
+    void sendingData(std::vector<int> data, AllTasks task, int subTask, int optional);
 protected slots:
     void accept();
     void reject();
 private:
     void uploadUI();
-    void addItem(WidgetRole role, const QString &name = "", bool option = false);
+    void addItem(WidgetRole role, const QString &name = "", ExoticWidget type = ExoticWidget::None);
     bool isHaveMoreGens();
 
     AllTasks task;
@@ -51,12 +56,11 @@ private:
 class BaseWidget : public QWidget {
     Q_OBJECT
 public:
-    explicit BaseWidget(const QString &cbName, bool option, QWidget *parent = nullptr);
+    explicit BaseWidget(const QString &cbName, ExoticWidget type = ExoticWidget::None, QWidget *parent = nullptr);
 
     int getCount() const { return sb->value(); }
-    ViewMode getViewMode() const { return vm; }
+    int getExoticOption() const { return exoticOption; }
     bool isChecked() const { return cb->isChecked(); }
-    bool isTransposition() const { return isTP; }
     QCheckBox* getCheckBox() const { return cb; }
     QSpinBox* getSpinBox() const { return sb; }
     QPushButton* getPushButton() const { return pb; }
@@ -64,8 +68,8 @@ private:
     QCheckBox *cb;
     QSpinBox *sb;
     QPushButton *pb;
-    ViewMode vm;
-    bool isTP;
+    int exoticOption;
+    ExoticWidget type;
 };
 
 class GenWidget : public QWidget {

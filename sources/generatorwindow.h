@@ -9,7 +9,7 @@
 #include "testmode.h"
 
 enum ToolBarOptions {
-    Check, Clear, Sep_1, LaTeX, Sep_2, Manual, Font, Exit
+    Check, Clear, Sep_1, Print, Sep_2, Manual, Font, Exit
 };
 
 QT_BEGIN_NAMESPACE
@@ -31,7 +31,7 @@ protected:
     void closeEvent(QCloseEvent *event);
 public slots:
     void receivedMetaInfo(int countOfTasks);
-    void receivedData(std::vector<int> data, AllTasks task, int subTask, ViewMode optional);
+    void receivedData(std::vector<int> data, AllTasks task, int subTask, int optional);
 private slots:
     void checkAnswers();
     void clearTasks();
@@ -56,14 +56,14 @@ private:
     void runGroupProperties(int, int, int, GroupPropertiesOptions);
     void runMatrix(int, std::pair<int, int>, std::pair<int, int>, MatrixOptions);
     void runRingResidue(int, int, int, RingResidueOptions);
+    void runRingOfMembers(int, std::pair<int, int>, std::pair<int, int>, RingOfMembersOptions, Set);
 
-    int totalTestTasks, totalTaskCount, lastSizeCount;
+    int totalTestTasks, lastSizeCount;
     bool mode;
-    QVector<QString> descriptions;
+    QVector<QString> descriptions, answers;
     QVector<QVector<QString>> tasks;
     tasks_type tasksForTest;
-    QString tasksForWork, taskForTeX, taskFontSize, mathFontSize;
-    std::vector<QString> answers;
+    QString taskForTeX, taskFontSize, mathFontSize;
     QRandomGenerator *random;
     TeXEngine *engine;
     QGraphicsScene *scene;

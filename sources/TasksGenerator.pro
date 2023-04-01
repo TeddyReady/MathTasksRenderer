@@ -1,5 +1,5 @@
 include(libs/qtmathjax/qtmathjax.pri)
-QT       += core gui webkitwidgets printsupport
+QT       += core gui webkitwidgets
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Algebra_Madness
 TEMPLATE = app
@@ -22,7 +22,8 @@ SOURCES += \
     testmode.cpp \
     libs/mathlib/transpositiongroup.cpp \
     libs/mathlib/algebrastructures.cpp \
-    dialogfontsize.cpp
+    dialogfontsize.cpp \
+    libs/mathlib/ringofmembers.cpp \
 
 HEADERS += \
     libs/mathlib/common.h \
@@ -44,7 +45,8 @@ HEADERS += \
     libs/mathlib/transpositiongroup.h \
     libs/mathlib/algebrastructures.h \
     errors.h \
-    dialogfontsize.h
+    dialogfontsize.h \
+    libs/mathlib/ringofmembers.h \
 
 FORMS += \
     dialogbase.ui \

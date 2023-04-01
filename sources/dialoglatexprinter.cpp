@@ -1,9 +1,9 @@
 #include "dialoglatexprinter.h"
 #include "ui_dialoglatexprinter.h"
 
-DialogLatexPrinter::DialogLatexPrinter(const QString &data, const std::vector<QString> &answersData, QWidget *parent) :
-    data(data), QDialog(parent),
-    ui(new Ui::DialogLatexPrinter)
+DialogLatexPrinter::DialogLatexPrinter(const QVector<QString> &descriptions,
+    const QVector<QVector<QString>> &tasks, const QVector<QString> &answers, QWidget *parent)
+    : QDialog(parent), descriptions(descriptions), tasks(tasks), answers(answers), ui(new Ui::DialogLatexPrinter)
 {
     ui->setupUi(this);
     ui->lineTitle->setText("Контрольная Работа №1");
@@ -11,14 +11,22 @@ DialogLatexPrinter::DialogLatexPrinter(const QString &data, const std::vector<QS
     ui->lineDate->setDate(QDate::currentDate());
     engine = new TeXEngine(ui->pdfView);
     engineAnswers = new TeXEngine(ui->pdfViewAnswers);
-    answers = QString("\\begin{array}{|r|l|}\\hline");
 
-    for (std::size_t i = 0; i < answersData.size(); ++i)
+    //Create Tasks
+    for (int i = 0; i < descriptions.size(); ++i)
     {
-        answers.append(QString::number(i + 1) + " & " + answersData[i] + " \\\\");
+        tasksForView.append("{TASK_FONT\\textbf{" + descriptions.at(i) + ":}}\\\\");
+        for (int j = 0; j < tasks.at(i).size(); ++j)
+        {
+            tasksForView.append("{MATH_FONT" + QString::number(j + 1) + ")~" + tasks.at(i).at(j) + "}\\\\");
+        }
     }
 
-    answers.append("\\hline\\end{array}");
+    QSettings settings(App::OrgName, App::AppName);
+    settings.beginGroup("Style");
+    taskFontSize = settings.value("taskFontSize", "\\normalsize").toString();
+    mathFontSize = settings.value("mathFontSize", "\\normalsize").toString();
+    settings.endGroup();
 
     setMinimumWidth(1200);
     setMinimumHeight(800);
@@ -36,13 +44,6 @@ DialogLatexPrinter::~DialogLatexPrinter()
 void DialogLatexPrinter::printData()
 {
     QString fileName = QFileDialog::getSaveFileName(this, "Сохраните файл с заданиями", QDir::homePath(), "LaTeX & PDF файлы (*.tex, *.pdf)");
-    //Pdf TASKS File
-    QPrinter printer(QPrinter::HighResolution);
-    printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setPaperSize(QPrinter::A4);
-    printer.setPageMargins(QMarginsF(15, 15, 15, 15));
-    printer.setOutputFileName("auto_" + fileName + ".pdf");
-    //ui->pdfView->print(&printer);
 
     QString title = "", theme = "", date = "";
     if (ui->btnDate->isChecked())
@@ -70,7 +71,7 @@ void DialogLatexPrinter::printData()
                             "\\begin{document}\n"
                             "\\maketitle\n"
                             "\\large{\n"
-                            + data.replace("\\\\", "\\\\\n").replace("  ", "$").replace("?", "?$") +
+                            + tasksForView.replace("\\\\", "\\\\\n").replace("  ", "$").replace("?", "?$") +
                             "}\n"
                             "\\end{document}\n";
         QTextStream out(&texFile);
@@ -97,36 +98,46 @@ void DialogLatexPrinter::printData()
                             "\\begin{document}\n"
                             "\\maketitle\n"
                             "\\large{\n";
-        out << texString + answers + "}\n"
+        out << texString + "}\n"
                                      "\\end{document}\n";
         texFile.close();
-    } close();
+    }
+}
+
+void DialogLatexPrinter::showTasks()
+{
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+
+    QString TeXBuffer = tasksForView;
+    TeXBuffer.replace("TASK_FONT", taskFontSize).replace("MATH_FONT", mathFontSize);
+
+    if (ui->btnDate->isChecked())
+        TeXBuffer += "{\\large\\text{" + ui->lineDate->text() + "}}\\\\" + TeXBuffer;
+
+    if (ui->btnTheme->isChecked())
+        TeXBuffer += "{\\LARGE\\textit{" + ui->lineTheme->text() + "}}\\\\" + TeXBuffer;
+
+    if (ui->btnTitle->isChecked())
+        TeXBuffer += "{\\huge\\textbf{" + ui->lineTitle->text() + "}}\\\\" + TeXBuffer;
+
+    engine->TeX2SVG(MathJax::startConf + TeXBuffer + MathJax::endConf, true);
+    QApplication::restoreOverrideCursor();
+}
+
+void DialogLatexPrinter::showAnswers()
+{
 }
 
 void DialogLatexPrinter::on_btnShow_clicked()
 {
-    QString tmp = data;//answers = this->answers;
-    if (ui->btnDate->isChecked()) {
-        tmp = "\\large{\\text{" + ui->lineDate->text() + "}}\\\\" + tmp;
-        answers = "\\large{\\text{" + ui->lineDate->text() + "}}\\\\" + answers;
-    }
-    if (ui->btnTheme->isChecked()) {
-        tmp = "\\LARGE{\\textit{" + ui->lineTheme->text() + "}}\\\\" + tmp;
-        answers = "\\LARGE{\\textit{" + ui->lineTheme->text() + "}}\\\\" + answers;
-    }
-    if (ui->btnTitle->isChecked()) {
-        tmp = "\\huge{\\textbf{" + ui->lineTitle->text() + "}}\\\\" + tmp;
-        answers = "\\huge{\\textbf{" + ui->lineTitle->text() + "}}\\\\" + answers;
-    }
-    engine->TeX2SVG(tmp, true);
-    engineAnswers->TeX2SVG("\\Huge{\\textbf{Ответы}}\\\\" + answers, true);
+    showTasks();
+    showAnswers();
 }
-
 
 void DialogLatexPrinter::on_buttonBox_accepted()
 {
-    on_btnShow_clicked();
     printData();
+    close();
 }
 
 

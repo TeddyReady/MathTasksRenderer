@@ -2,8 +2,7 @@
 #include "ui_generatorwindow.h"
 
 GeneratorWindow::GeneratorWindow(QWidget *parent)
-    : QMainWindow(parent), totalTestTasks(0), totalTaskCount(0),
-         mode(false),                   lastSizeCount(0),
+    : QMainWindow(parent), totalTestTasks(0), mode(false), lastSizeCount(0),
       random(QRandomGenerator::global()), ui(new Ui::GeneratorWindow)
 {
     uploadSettings();
@@ -12,7 +11,7 @@ GeneratorWindow::GeneratorWindow(QWidget *parent)
 
     connect(ui->toolBar->actions().at(Check), &QAction::triggered, this, &GeneratorWindow::checkAnswers);
     connect(ui->toolBar->actions().at(Clear), &QAction::triggered, this, &GeneratorWindow::clearTasks);
-    connect(ui->toolBar->actions().at(LaTeX), &QAction::triggered, this, &GeneratorWindow::printTasks);
+    connect(ui->toolBar->actions().at(Print), &QAction::triggered, this, &GeneratorWindow::printTasks);
     connect(ui->toolBar->actions().at(Manual), &QAction::triggered, this, &GeneratorWindow::openManual);
     connect(ui->toolBar->actions().at(Font), &QAction::triggered, this, &GeneratorWindow::changeFontSize);
     connect(ui->toolBar->actions().at(Exit), &QAction::triggered, [&](){qApp->closeAllWindows();});
@@ -136,7 +135,6 @@ void GeneratorWindow::isReadyRender(){
     QString TeXBuffer = taskForTeX;
     TeXBuffer.replace("TASK_FONT", taskFontSize).replace("MATH_FONT", mathFontSize);
     engine->TeX2SVG(MathJax::startConf + TeXBuffer + MathJax::endConf, true);
-    totalTaskCount = 0;
     QApplication::restoreOverrideCursor();
 }
 
@@ -162,12 +160,12 @@ void GeneratorWindow::clearTasks()
     engine->TeX2SVG(MathJax::startConf + taskFontSize + "{\\textbf{В ожидании генерации задач...}}" + MathJax::endConf, true);
     ui->toolBar->actions().at(Check)->setDisabled(true);
     ui->toolBar->actions().at(Clear)->setDisabled(true);
-    ui->toolBar->actions().at(LaTeX)->setDisabled(true);
+    ui->toolBar->actions().at(Print)->setDisabled(true);
 }
 
 void GeneratorWindow::printTasks()
 {
-    DialogLatexPrinter *latexDialog = new DialogLatexPrinter(tasksForWork.mid(35, tasksForWork.size()), answers, this);
+    DialogLatexPrinter *latexDialog = new DialogLatexPrinter(descriptions, tasks, answers, this);
     latexDialog->exec();
 }
 
@@ -199,7 +197,7 @@ void GeneratorWindow::on_tabWidget_currentChanged(int index)
         ui->toolBar->actions().at(Check)->setVisible(false);
         ui->toolBar->actions().at(Clear)->setVisible(false);
         ui->toolBar->actions().at(Sep_1)->setVisible(false);
-        ui->toolBar->actions().at(LaTeX)->setVisible(false);
+        ui->toolBar->actions().at(Print)->setVisible(false);
         ui->toolBar->actions().at(Sep_2)->setVisible(false);
         break;
     default:
@@ -208,14 +206,14 @@ void GeneratorWindow::on_tabWidget_currentChanged(int index)
             ui->toolBar->actions().at(Check)->setVisible(true);
             ui->toolBar->actions().at(Clear)->setVisible(true);
             ui->toolBar->actions().at(Sep_1)->setVisible(true);
-            ui->toolBar->actions().at(LaTeX)->setVisible(true);
+            ui->toolBar->actions().at(Print)->setVisible(true);
             ui->toolBar->actions().at(Sep_2)->setVisible(true);
         }
         else {
             ui->toolBar->actions().at(Check)->setVisible(false);
             ui->toolBar->actions().at(Clear)->setVisible(false);
             ui->toolBar->actions().at(Sep_1)->setVisible(false);
-            ui->toolBar->actions().at(LaTeX)->setVisible(false);
+            ui->toolBar->actions().at(Print)->setVisible(false);
             ui->toolBar->actions().at(Sep_2)->setVisible(false);
         }
         break;
@@ -288,6 +286,8 @@ void GeneratorWindow::runTaskManager(const QString &task, bool closeMode)
         window = new DialogBase(AllTasks::GroupProperties, closeMode, this);
     else if (task == "Кольцо Вычетов")
         window = new DialogBase(AllTasks::RingResidue, closeMode, this);
+    else if (task == "Кольцо Многочленов")
+        window = new DialogBase(AllTasks::RingOfMembers, closeMode, this);
 
     connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
     connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
@@ -303,14 +303,13 @@ void GeneratorWindow::receivedMetaInfo(int countOfTasks)
         statusBar()->showMessage("Задания сгенерированы!", 1500);
         ui->lcdNumber->display(totalTestTasks);
     } else {
-        totalTaskCount = countOfTasks;
         ui->toolBar->actions().at(Check)->setEnabled(true);
         ui->toolBar->actions().at(Clear)->setEnabled(true);
-        ui->toolBar->actions().at(LaTeX)->setEnabled(true);
+        ui->toolBar->actions().at(Print)->setEnabled(true);
     }
 }
 
-void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int subTask, ViewMode optional)
+void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int subTask, int optional)
 {
     //If tasksCount is null
     if (data[0] == 0) return;
@@ -345,6 +344,9 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
         break;
     case AllTasks::RingResidue:
         runRingResidue(data[0], data[1], data[2], static_cast<RingResidueOptions>(subTask));
+    case AllTasks::RingOfMembers:
+        runRingOfMembers(data[0], std::make_pair(data[1], data[2]), std::make_pair(data[3], data[4]),
+                static_cast<RingOfMembersOptions>(subTask), static_cast<Set>(optional));
     }
 }
 
@@ -359,7 +361,7 @@ void GeneratorWindow::runEulerFunction(int countOfTasks, int minNum, int maxNum,
             if (!mode) {
                 buffer = "\\varphi(" + QString::number(task.getTask()) + ")=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(QString::number(task.solve()));
+                answers.push_back(QString::number(task.solve()));
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\varphi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
@@ -372,7 +374,7 @@ void GeneratorWindow::runEulerFunction(int countOfTasks, int minNum, int maxNum,
                 if (!mode) {
                     buffer = "\\varphi(" + QString::number(task.getTask()) + ")=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\varphi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                     tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
@@ -387,7 +389,7 @@ void GeneratorWindow::runEulerFunction(int countOfTasks, int minNum, int maxNum,
                 if (!mode) {
                     buffer = "\\varphi(" + QString::number(task.getTask()) + ")=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\varphi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                     tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
@@ -409,7 +411,7 @@ void GeneratorWindow::runEulerFunction(int countOfTasks, int minNum, int maxNum,
                 if (!mode) {
                     buffer = "\\varphi(" + QString::number(task.getTask()) + ")=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\varphi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                     tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
@@ -431,7 +433,7 @@ void GeneratorWindow::runEulerFunction(int countOfTasks, int minNum, int maxNum,
                 if (!mode) {
                     buffer = "\\varphi(" + QString::number(task.getTask()) + ")=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\varphi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                     tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
@@ -458,7 +460,7 @@ void GeneratorWindow::runMebiusFunction(int countOfTasks, int minNum, int maxNum
             if (!mode) {
                 buffer = "\\mu(" + QString::number(task.getTask()) + ")=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(QString::number(task.solve()));
+                answers.push_back(QString::number(task.solve()));
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Мёбиуса:\\\\\\mu(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
@@ -471,7 +473,7 @@ void GeneratorWindow::runMebiusFunction(int countOfTasks, int minNum, int maxNum
                 if (!mode) {
                     buffer = "\\mu(" + QString::number(task.getTask()) + ")=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Мёбиуса:\\\\\\mu(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                     tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
@@ -495,7 +497,7 @@ void GeneratorWindow::runMebiusFunction(int countOfTasks, int minNum, int maxNum
                 if (!mode) {
                     buffer = "\\mu(" + QString::number(task.getTask()) + ")=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Мёбиуса:\\\\\\mu(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                     tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
@@ -519,7 +521,7 @@ void GeneratorWindow::runMebiusFunction(int countOfTasks, int minNum, int maxNum
                 if (!mode) {
                     buffer = "\\mu(" + QString::number(task.getTask()) + ")=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Мёбиуса:\\\\\\mu(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                     tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
@@ -541,7 +543,7 @@ void GeneratorWindow::runMebiusFunction(int countOfTasks, int minNum, int maxNum
                 if (!mode) {
                     buffer = "\\mu(" + QString::number(task.getTask()) + ")=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Мёбиуса:\\\\\\mu(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
                     tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
@@ -570,7 +572,7 @@ void GeneratorWindow::runSymbolLegandre(int countOfTasks, std::pair<int, int> a,
                     buffer = "\\left(\\frac{" + QString::number(task.getTask().first) + "}{" +
                             QString::number(task.getTask().second) + "}\\right)=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~символ~Лежандра:\\\\\\left(\\frac{" +
                             QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}\\end{align}";
@@ -586,7 +588,7 @@ void GeneratorWindow::runSymbolLegandre(int countOfTasks, std::pair<int, int> a,
                     buffer = "\\left(\\frac{" + QString::number(task.getTask().first) + "}{" +
                             QString::number(task.getTask().second) + "}\\right)=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~символ~Лежандра:\\\\\\left(\\frac{" +
                             QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}\\end{align}";
@@ -602,7 +604,7 @@ void GeneratorWindow::runSymbolLegandre(int countOfTasks, std::pair<int, int> a,
                     buffer = "\\left(\\frac{" + QString::number(task.getTask().first) + "}{" +
                             QString::number(task.getTask().second) + "}\\right)=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~символ~Лежандра:\\\\\\left(\\frac{" +
                             QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}\\end{align}";
@@ -618,7 +620,7 @@ void GeneratorWindow::runSymbolLegandre(int countOfTasks, std::pair<int, int> a,
                     buffer = "\\left(\\frac{" + QString::number(task.getTask().first) + "}{" +
                             QString::number(task.getTask().second) + "}\\right)=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~символ~Лежандра:\\\\\\left(\\frac{" +
                             QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}\\end{align}";
@@ -634,7 +636,7 @@ void GeneratorWindow::runSymbolLegandre(int countOfTasks, std::pair<int, int> a,
                     buffer = "\\left(\\frac{" + QString::number(task.getTask().first) + "}{" +
                             QString::number(task.getTask().second) + "}\\right)=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~символ~Лежандра:\\\\\\left(\\frac{" +
                             QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}\\end{align}";
@@ -663,7 +665,7 @@ void GeneratorWindow::runSymbolJacobi(int countOfTasks, std::pair<int, int> a, s
                     buffer = "\\left(\\frac{" + QString::number(task.getTask().first) + "}{" +
                             QString::number(task.getTask().second) + "}\\right)=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~символ~Якоби:\\\\\\left(\\frac{" +
                             QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}\\end{align}";
@@ -679,7 +681,7 @@ void GeneratorWindow::runSymbolJacobi(int countOfTasks, std::pair<int, int> a, s
                     buffer = "\\left(\\frac{" + QString::number(task.getTask().first) + "}{" +
                             QString::number(task.getTask().second) + "}\\right)=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~символ~Якоби:\\\\\\left(\\frac{" +
                             QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}\\end{align}";
@@ -695,7 +697,7 @@ void GeneratorWindow::runSymbolJacobi(int countOfTasks, std::pair<int, int> a, s
                     buffer = "\\left(\\frac{" + QString::number(task.getTask().first) + "}{" +
                             QString::number(task.getTask().second) + "}\\right)=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~символ~Якоби:\\\\\\left(\\frac{" +
                             QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}\\end{align}";
@@ -711,7 +713,7 @@ void GeneratorWindow::runSymbolJacobi(int countOfTasks, std::pair<int, int> a, s
                     buffer = "\\left(\\frac{" + QString::number(task.getTask().first) + "}{" +
                             QString::number(task.getTask().second) + "}\\right)=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~символ~Якоби:\\\\\\left(\\frac{" +
                             QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}\\end{align}";
@@ -727,7 +729,7 @@ void GeneratorWindow::runSymbolJacobi(int countOfTasks, std::pair<int, int> a, s
                     buffer = "\\left(\\frac{" + QString::number(task.getTask().first) + "}{" +
                             QString::number(task.getTask().second) + "}\\right)=~?";
                     tasks.push_back(std::move(buffer));
-                    answers.emplace_back(QString::number(task.solve()));
+                    answers.push_back(QString::number(task.solve()));
                 } else {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~символ~Якоби:\\\\\\left(\\frac{" +
                             QString::number(task.getTask().first) + "}{" + QString::number(task.getTask().second) + "}\\right)=~?}\\end{align}";
@@ -760,7 +762,7 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
             if (!this->mode) {
                 buffer = "S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(mode) + "=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(task.writeToMode(static_cast<ViewMode>((static_cast<int>(mode) + 1) % 2)));
+                answers.push_back(task.writeToMode(static_cast<ViewMode>((static_cast<int>(mode) + 1) % 2)));
             } else {
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\begin{align}\\color{sienna}{Запишите~подстановку~в~виде~произведения~независимых~циклов.\\\\Неподвижные~элементы~указывать~не~требуется.\\\\S_{" +
@@ -790,7 +792,7 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
                 buffer = "S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(mode) +
                         "\\cdot" + task2.writeToMode(mode) + "=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(task.writeToMode(mode));
+                answers.push_back(task.writeToMode(mode));
             } else {
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\begin{align}\\color{sienna}{Найдите~произведение~подстановок,~записанных~в~табличном~виде.\\\\В~ответе~укажите~нижнюю~строку~получившейся~подстановки.\\\\S_{" +
@@ -817,7 +819,7 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
             if (!this->mode) {
                 buffer = "S_{" + QString::number(task.getTask()) + "}:{" + task.writeToMode(mode) + "}^{-1}=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(task.writeToMode(mode));
+                answers.push_back(task.writeToMode(mode));
             } else {
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\begin{align}\\color{sienna}{Найдите~подстановку,~обратную~данной,~записанной~в~табличном~виде.\\\\В~ответе~укажите~нижнюю~строку~получившейся~подстановки.\\\\S_{" +
@@ -843,7 +845,7 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
             if (!this->mode) {
                 buffer = "S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(mode) + "=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(task.cycleType());
+                answers.push_back(task.cycleType());
             } else {
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\begin{align}\\color{sienna}{Найдите~цикловой~тип~подстановки,~записанной~в~табличном~виде.\\\\Ответ~дайте~в~формате~[1^i,2^j,...,n^k],~где~i,j,k\\neq0.\\\\S_{" +
@@ -869,7 +871,7 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
             if (!this->mode) {
                 buffer = "S_{" + QString::number(task.getTask()) + "}:\\Delta" + task.writeToMode(mode) + "=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(task.getHaos());
+                answers.push_back(QString::number(task.getHaos()));
             } else {
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\begin{align}\\color{sienna}{Вычислите~количество~беспорядков~подстановки,~записанной~в~табличном~виде.\\\\S_{" +
@@ -895,7 +897,7 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
             if (!this->mode) {
                 buffer = "S_{" + QString::number(task.getTask()) + "}:\\delta" + task.writeToMode(mode) + "\\Rightarrow~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(task.getEven());
+                answers.push_back(task.getEven());
             } else {
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\begin{align}\\color{sienna}{Определите~четность~подстановки,~записанной~в~табличном~виде.\\\\В~ответе~укажите~Ч,~если~подстановка~четная,~и~Н,~в~противном~случае.\\\\S_{" +
@@ -921,7 +923,7 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
             if (!this->mode) {
                 buffer = "S_{" + QString::number(task.getTask()) + "}:~ord" + task.writeToMode(mode) + "=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(task.getOrder());
+                answers.push_back(QString::number(task.getOrder()));
             } else {
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\begin{align}\\color{sienna}{Определите~порядок~подстановки,~записанной~в~табличном~виде.\\\\S_{" +
@@ -944,7 +946,7 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
             if (!this->mode) {
                 buffer = "S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(mode) + "=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(task.writeToMode(ViewMode::Decomposition));
+                answers.push_back(task.writeToMode(ViewMode::Decomposition));
             } else {
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\begin{align}\\color{sienna}{Запишите~подстановку~в~виде~произведения~транспозиций.\\\\S_{" +
@@ -967,7 +969,7 @@ void GeneratorWindow::runTranspositionGroup(int countOfTasks, int minN, int maxN
             if (!this->mode) {
                 buffer = "S_{" + QString::number(task.getTask()) + "}:" + task.writeToMode(mode) + "=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(task.writeToMode(ViewMode::Neighbors));
+                answers.push_back(task.writeToMode(ViewMode::Neighbors));
             } else {
                 if (task.getViewMode() == ViewMode::Standart) {
                     QString taskText = "\\begin{align}\\color{sienna}{Запишите~подстановку~в~виде~произведения~транспозиций~соседних~элементов.\\\\S_{" +
@@ -1001,7 +1003,7 @@ void GeneratorWindow::runSet(int countOfTasks, SetOptions option)
             if (!mode) {
                 buffer = "\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(std::get<2>(data[i]));
+                answers.push_back(std::get<2>(data[i]));
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Чем~является~данная~Алгебраическая~Структура:\\\\\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, std::get<2>(data[i]), SupCommands::Name, 0));
@@ -1020,7 +1022,7 @@ void GeneratorWindow::runSet(int countOfTasks, SetOptions option)
             if (!mode) {
                 buffer = "\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(answer);
+                answers.push_back(answer);
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Чем~является~данная~Алгебраическая~Структура:\\\\\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, answer, SupCommands::Name, 0));
@@ -1039,7 +1041,7 @@ void GeneratorWindow::runSet(int countOfTasks, SetOptions option)
             if (!mode) {
                 buffer = "\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(answer);
+                answers.push_back(answer);
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Чем~является~данная~Алгебраическая~Структура:\\\\\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, answer, SupCommands::Name, 0));
@@ -1058,7 +1060,7 @@ void GeneratorWindow::runSet(int countOfTasks, SetOptions option)
             if (!mode) {
                 buffer = "\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(answer);
+                answers.push_back(answer);
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Чем~является~данная~Алгебраическая~Структура:\\\\\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, answer, SupCommands::Name, 0));
@@ -1077,7 +1079,7 @@ void GeneratorWindow::runSet(int countOfTasks, SetOptions option)
             if (!mode) {
                 buffer = "\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(answer);
+                answers.push_back(answer);
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Чем~является~данная~Алгебраическая~Структура:\\\\\\left(" + std::get<0>(data[i]) + "," + std::get<1>(data[i]) + "\\right)\\Rightarrow~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, answer, SupCommands::Name, 0));
@@ -1104,7 +1106,7 @@ void GeneratorWindow::runGroupProperties(int countOfTasks, int minN, int maxN, G
             if (!mode) {
                 buffer = "Exp\\left(" + GP.getCode() + "\\right)" + "=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(QString::number(GP.Exp()));
+                answers.push_back(QString::number(GP.Exp()));
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Вычислите~экспоненту~группы:\\\\Exp\\left(" + GP.getCode() + "\\right)" + "=~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, QString::number(GP.Exp()), SupCommands::Number, 0));
@@ -1134,7 +1136,7 @@ void GeneratorWindow::runMatrix(int countOfTasks, std::pair<int, int> rangeSize,
             if (!mode) {
                 buffer = matrix.getMatrix() + "+" + subMat.getMatrix() + "=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back((matrix + subMat).getMatrix());
+                answers.push_back((matrix + subMat).getMatrix());
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Вычислите~сумму~матриц:\\\\" + matrix.getMatrix() + "+" + subMat.getMatrix() + "=~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, (matrix + subMat).getMatrix(), SupCommands::Name, 0));
@@ -1152,7 +1154,7 @@ void GeneratorWindow::runMatrix(int countOfTasks, std::pair<int, int> rangeSize,
             if (!mode) {
                 buffer = matrix.getMatrix() + "-" + subMat.getMatrix() + "=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back((matrix - subMat).getMatrix());
+                answers.push_back((matrix - subMat).getMatrix());
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Найдите~разность~матриц:\\\\" + matrix.getMatrix() + "-" + subMat.getMatrix() + "=~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, (matrix - subMat).getMatrix(), SupCommands::Name, 0));
@@ -1170,7 +1172,7 @@ void GeneratorWindow::runMatrix(int countOfTasks, std::pair<int, int> rangeSize,
             if (!mode) {
                 buffer = matrix.getMatrix() + "\\cdot" + subMat.getMatrix() + "=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back((matrix * subMat).getMatrix());
+                answers.push_back((matrix * subMat).getMatrix());
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Найдите~произведение~матриц:\\\\" + matrix.getMatrix() + "\\cdot" + subMat.getMatrix() + "=~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, (matrix * subMat).getMatrix(), SupCommands::Name, 0));
@@ -1186,7 +1188,7 @@ void GeneratorWindow::runMatrix(int countOfTasks, std::pair<int, int> rangeSize,
             if (!mode) {
                 buffer = "{" + matrix.getMatrix() + "}^{-1}=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back("\\frac{1}{" + QString::number(matrix.det()) + "}" + (~matrix).getMatrix());
+                answers.push_back("\\frac{1}{" + QString::number(matrix.det()) + "}" + (~matrix).getMatrix());
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Найдите~матрицу,~обратную~данной:\\\\{" + matrix.getMatrix() + "}^{-1}=~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, "\\frac{1}{" + QString::number(matrix.det()) + "}" + (~matrix).getMatrix(), SupCommands::Name, 0));
@@ -1202,7 +1204,7 @@ void GeneratorWindow::runMatrix(int countOfTasks, std::pair<int, int> rangeSize,
             if (!mode) {
                 buffer = matrix.getMatrix().replace("pmatrix", "vmatrix") + "=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(QString::number(matrix.det()));
+                answers.push_back(QString::number(matrix.det()));
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Вычислить~детерминант~матрицы:\\\\" + matrix.getMatrix().replace("pmatrix", "vmatrix") + "=~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, QString::number(matrix.det()), SupCommands::Number, 0));
@@ -1230,7 +1232,7 @@ void GeneratorWindow::runRingResidue(int countOfTasks, int minNum, int maxNum, R
             if (!mode) {
                 buffer = task.getCode() + "=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(QString::number(task.countOfGenerators()));
+                answers.push_back(QString::number(task.countOfGenerators()));
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Вычислите~количество~образующих~элементов~группы~Вычетов:\\\\\\left(\\mathbb{Z}_{" + QString::number(task.getOrder()) + "}, +\\right)=~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.countOfGenerators()), SupCommands::Number, 0));
@@ -1248,7 +1250,7 @@ void GeneratorWindow::runRingResidue(int countOfTasks, int minNum, int maxNum, R
             if (!mode) {
                 buffer = task.getCode() + ":~" + QString::number(a) + "^{" + QString::number(m) + "}=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(QString::number(task.solve(a, m)));
+                answers.push_back(QString::number(task.solve(a, m)));
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{Найдите~значение~выражения:\\\\" + task.getCode() + ":~" +
                         QString::number(a) + "^{" + QString::number(m) + "}=~?}\\end{align}";
@@ -1266,7 +1268,7 @@ void GeneratorWindow::runRingResidue(int countOfTasks, int minNum, int maxNum, R
             if (!mode) {
                 buffer = task.getCode() + ":~ord(" + QString::number(element) + ")=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back(QString::number(task.getOrd(element)));
+                answers.push_back(QString::number(task.getOrd(element)));
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{\\textbf{Вычислите порядок элемента:}\\\\" +
                         task.getCode() + ":~" +"ord(" + QString::number(element) + ")=~?}\\end{align}";
@@ -1288,7 +1290,7 @@ void GeneratorWindow::runRingResidue(int countOfTasks, int minNum, int maxNum, R
             if (!mode) {
                 buffer = task.getCode() + ":~" + QString::number(a) + "\\cdot x\\equiv" + QString::number(b) + ",~x=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back("\\{" + task.solveLinear(a, b, task.getOrder()) + "\\}");
+                answers.push_back("\\{" + task.solveLinear(a, b, task.getOrder()) + "\\}");
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{\\textbf{Решите линейное сравнение:}\\\\" +
                         task.getCode() + ":~" + QString::number(a) + "\\cdot x\\equiv" + QString::number(b) + ",~x=~?}\\end{align}";
@@ -1309,13 +1311,111 @@ void GeneratorWindow::runRingResidue(int countOfTasks, int minNum, int maxNum, R
             if (!mode) {
                 buffer = task.getCode() + ":~x^2\\equiv" + QString::number(a) + ",~x=~?";
                 tasks.push_back(std::move(buffer));
-                answers.emplace_back("\\{" + task.solveSimpleQuadro(a, task.getOrder()) + "\\}");
+                answers.push_back("\\{" + task.solveSimpleQuadro(a, task.getOrder()) + "\\}");
             } else {
                 QString taskText = "\\begin{align}\\color{sienna}{\\textbf{Решите квадратичное сравнение по простому модулю:}\\\\" +
                         task.getCode() + ":~" + "x^2\\equiv" + QString::number(a) + ",~x=~?}\\end{align}";
                 tasksForTest.push_back(std::make_tuple(taskText, "\\{" + task.solveSimpleQuadro(a, task.getOrder()) + "\\}", SupCommands::Name, 0));
             }
         } break;
+    }
+    if (!mode) {
+        this->tasks.push_back(std::move(tasks));
+        isReadyRender();
+    }
+}
+
+void GeneratorWindow::runRingOfMembers(int countOfTasks, std::pair<int, int> rangeDeg, std::pair<int, int> rangeK, RingOfMembersOptions option, Set ring)
+{
+    RingOfMembers task, task_2;
+    QVector<QString> tasks; QString buffer;
+    switch (option) {
+    case RingOfMembersOptions::Summary:
+        if (!this->mode)
+            descriptions.push_back(std::move(QString("Вычислите сумму двух многочленов")));
+
+        for (int i = 0; i < countOfTasks; ++i) {
+
+            //Create members
+            if (ring == Set::Zn) {
+                task.setModule(random->bounded(2, 40));
+                task_2.setModule(task.getModule());
+            }
+            int deg = static_cast<int>(random->bounded(rangeDeg.first, rangeDeg.second));
+            for (int j = 0; j < deg; ++j)
+                task.addElement(static_cast<int>(random->bounded(rangeK.first, rangeK.second)));
+            deg = static_cast<int>(random->bounded(rangeDeg.first, rangeDeg.second));
+            for (int j = 0; j < deg; ++j)
+                task_2.addElement(static_cast<int>(random->bounded(rangeK.first, rangeK.second)));
+
+            if (!mode) {
+                buffer = task.getBaseSet() + ":\\left(" + task.getMembers() + "\\right)+\\left(" + task_2.getMembers() + "\\right)=~?";
+                tasks.push_back(std::move(buffer));
+                answers.push_back((task + task_2).getMembers());
+            } else {
+                //QString taskText = "\\begin{align}\\color{sienna}{Вычислите~количество~образующих~элементов~группы~Вычетов:\\\\\\left(\\mathbb{Z}_{" + QString::number(task.getOrder()) + "}, +\\right)=~?}\\end{align}";
+                //tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.countOfGenerators()), SupCommands::Number, 0));
+            } task.clear(); task_2.clear();
+        } break;
+//    case RingOfMembersOptions::Multiply:
+//        if (!this->mode)
+//            descriptions.push_back(std::move(QString("Вычислите произведение двух многочленов")));
+
+//        for (int i = 0; i < countOfTasks; ++i) {
+//            task.setOrder(random->bounded(minNum, maxNum));
+//            task.setType(static_cast<RingResidueType>(random->bounded(0, 2)));
+//            int a = static_cast<int>(random->bounded(1, task.getOrder()));
+//            int m = static_cast<int>(random->bounded(2, 20));
+//            if (!mode) {
+//                buffer = task.getCode() + ":~" + QString::number(a) + "^{" + QString::number(m) + "}=~?";
+//                tasks.push_back(std::move(buffer));
+//                answers.push_back(QString::number(task.solve(a, m)));
+//            } else {
+//                QString taskText = "\\begin{align}\\color{sienna}{Найдите~значение~выражения:\\\\" + task.getCode() + ":~" +
+//                        QString::number(a) + "^{" + QString::number(m) + "}=~?}\\end{align}";
+//                tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve(a, m)), SupCommands::Number, 0));
+//            }
+//        } break;
+//    case RingOfMembersOptions::Divide:
+//        if (!this->mode)
+//            descriptions.push_back(std::move(QString("Выполните деление многочлена с отстатком")));
+
+//        for (int i = 0; i < countOfTasks; ++i) {
+//            task.setOrder(random->bounded(minNum, maxNum));
+//            task.setType(static_cast<RingResidueType>(random->bounded(0, 2)));
+//            int element = static_cast<int>(random->bounded(1, task.getOrder()));
+//            if (!mode) {
+//                buffer = task.getCode() + ":~ord(" + QString::number(element) + ")=~?";
+//                tasks.push_back(std::move(buffer));
+//                answers.push_back(QString::number(task.getOrd(element)));
+//            } else {
+//                QString taskText = "\\begin{align}\\color{sienna}{\\textbf{Вычислите порядок элемента:}\\\\" +
+//                        task.getCode() + ":~" +"ord(" + QString::number(element) + ")=~?}\\end{align}";
+//                tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.getOrd(element)), SupCommands::Number, 0));
+//            }
+//        } break;
+//    case RingOfMembersOptions::GCD:
+//        if (!this->mode)
+//            descriptions.push_back(std::move(QString("Вычислите НОД двух многочленов")));
+
+//        for (int i = 0; i < countOfTasks; ++i) {
+//            task.setOrder(random->bounded(minNum, maxNum));
+//            int a, b;
+//            do {
+//                task.setOrder(random->bounded(minNum, maxNum));
+//                a = static_cast<int>(random->bounded(1, task.getOrder()));
+//                b = static_cast<int>(random->bounded(1, task.getOrder()));
+//            } while(task.solveLinear(a, b, task.getOrder()) == "Нет корней");
+//            if (!mode) {
+//                buffer = task.getCode() + ":~" + QString::number(a) + "\\cdot x\\equiv" + QString::number(b) + ",~x=~?";
+//                tasks.push_back(std::move(buffer));
+//                answers.push_back("\\{" + task.solveLinear(a, b, task.getOrder()) + "\\}");
+//            } else {
+//                QString taskText = "\\begin{align}\\color{sienna}{\\textbf{Решите линейное сравнение:}\\\\" +
+//                        task.getCode() + ":~" + QString::number(a) + "\\cdot x\\equiv" + QString::number(b) + ",~x=~?}\\end{align}";
+//                tasksForTest.push_back(std::make_tuple(taskText, "\\{" + task.solveLinear(a, b, task.getOrder()) + "\\}", SupCommands::Name, 0));
+//            }
+//        } break;
     }
     if (!mode) {
         this->tasks.push_back(std::move(tasks));

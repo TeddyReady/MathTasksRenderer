@@ -75,8 +75,8 @@
         </attribute>
         <layout class="QGridLayout" name="gridLayout_4">
          <item row="0" column="0">
-          <widget class="QWebView" name="pdfView">
-           <property name="url">
+          <widget class="QWebView" name="pdfView" native="true">
+           <property name="url" stdset="0">
             <url>
              <string>about:blank</string>
             </url>
@@ -91,8 +91,8 @@
         </attribute>
         <layout class="QGridLayout" name="gridLayout_5">
          <item row="0" column="0">
-          <widget class="QWebView" name="pdfViewAnswers">
-           <property name="url">
+          <widget class="QWebView" name="pdfViewAnswers" native="true">
+           <property name="url" stdset="0">
             <url>
              <string>about:blank</string>
             </url>

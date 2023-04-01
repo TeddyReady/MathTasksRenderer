@@ -73,6 +73,11 @@
           </item>
           <item>
            <property name="text">
+            <string>Кольцо Многочленов</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>Матрицы</string>
            </property>
           </item>

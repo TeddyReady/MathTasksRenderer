@@ -18,39 +18,79 @@ DialogBase::~DialogBase()
     delete ui;
 }
 
-BaseWidget::BaseWidget(const QString &cbName, bool isTP, QWidget *parent) :
-    QWidget(parent), vm(ViewMode::None), isTP(isTP)
+BaseWidget::BaseWidget(const QString &cbName, ExoticWidget type, QWidget *parent) :
+    QWidget(parent), exoticOption(0), type(type)
 {
     setLayout(new QGridLayout(this));
     cb = new QCheckBox(cbName, this);
     sb = new QSpinBox(this);
     sb->setDisabled(true);
     layout()->addWidget(cb);
-    if (isTP) {
+    switch (type) {
+    case ExoticWidget::Transposition:
+        exoticOption = static_cast<int>(ViewMode::None);
         pb = new QPushButton("Выбрать вид...", this);
         pb->setMenu(new QMenu(pb));
         pb->menu()->addAction(new QAction("Канонический вид", pb->menu()));
         pb->menu()->addAction(new QAction("Циклический вид", pb->menu()));
+        pb->setDisabled(true);
         layout()->addWidget(pb);
         connect(cb, &QCheckBox::clicked, [&](){
             if (cb->isChecked()) pb->setEnabled(true);
             else pb->setDisabled(true);
+            sb->setDisabled(true);
+            sb->setValue(0);
         });
         connect(pb->menu()->actions().at(0), &QAction::triggered, [&](){
             pb->setText("Канонический вид");
-            vm = ViewMode::Standart;
+            exoticOption = static_cast<int>(ViewMode::Standart);
             sb->setEnabled(true);
+            sb->setValue(1);
         });
         connect(pb->menu()->actions().at(1), &QAction::triggered, [&](){
             pb->setText("Циклический вид");
-            vm = ViewMode::Cycle;
+            exoticOption = static_cast<int>(ViewMode::Cycle);
             sb->setEnabled(true);
+            sb->setValue(1);
         });
-    } else {
+        break;
+    case ExoticWidget::RingOfMembers:
+        pb = new QPushButton("Выбрать кольцо...", this);
+        pb->setMenu(new QMenu(pb));
+        pb->menu()->addAction(new QAction("Кольцо Целых чисел", pb->menu()));
+        pb->menu()->addAction(new QAction("Кольцо Вычетов", pb->menu()));
+        pb->setDisabled(true);
+        layout()->addWidget(pb);
         connect(cb, &QCheckBox::clicked, [&](){
-            if (cb->isChecked()) sb->setEnabled(true);
-            else sb->setDisabled(true);
+            if (cb->isChecked()) pb->setEnabled(true);
+            else pb->setDisabled(true);
+            sb->setDisabled(true);
+            sb->setValue(0);
         });
+        connect(pb->menu()->actions().at(0), &QAction::triggered, [&](){
+            pb->setText("Кольцо Целых чисел");
+            exoticOption = static_cast<int>(Set::Z);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        connect(pb->menu()->actions().at(1), &QAction::triggered, [&](){
+            pb->setText("Кольцо Вычетов");
+            exoticOption = static_cast<int>(Set::Zn);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        break;
+    case ExoticWidget::None:
+        connect(cb, &QCheckBox::clicked, [&](){
+            if (cb->isChecked()) {
+                sb->setEnabled(true);
+                sb->setValue(1);
+            } else {
+                sb->setDisabled(true);
+                sb->setValue(0);
+            }
+        });
+        break;
     }
     layout()->addWidget(sb);
 }
@@ -131,6 +171,18 @@ void GenWidget::loadSettings(AllTasks task, const QString &optionName)
         sbMin->setValue(5);
         sbMax->setValue(50);
         return;
+    case AllTasks::RingOfMembers:
+        if (optionName == "Степень") {
+            sbMin->setMinimum(2);
+            sbMax->setMaximum(20);
+            sbMin->setValue(2);
+            sbMax->setValue(6);
+        } else {
+            sbMin->setMinimum(-20);
+            sbMax->setMaximum(20);
+            sbMin->setValue(-10);
+            sbMax->setValue(10);
+        } return;
     default:
         return;
     }
@@ -179,15 +231,15 @@ void DialogBase::uploadUI()
         ui->baseWidgetLayout->addWidget(new QLabel("Количество"), 0, 2);
         dynamic_cast<QLabel *>(ui->baseWidgetLayout->itemAt(1)->widget())->setText("Вид перестановки");
         addItem(Gen);
-        addItem(Base, "Записать подстановку указанным способом", true);
-        addItem(Base, "Произведение подстановок", true);
-        addItem(Base, "Найти обратную", true);
-        addItem(Base, "Вычислить цикловой тип", true);
-        addItem(Base, "Вычислить четность", true);
-        addItem(Base, "Вычислить количество беспорядков", true);
-        addItem(Base, "Вычислить порядок подстановки", true);
-        addItem(Base, "Разложить перестановку в произведение транспозиций", true);
-        addItem(Base, "Разложить в произведение транспозиций соседних элементов", true);
+        addItem(Base, "Записать подстановку указанным способом", ExoticWidget::Transposition);
+        addItem(Base, "Произведение подстановок", ExoticWidget::Transposition);
+        addItem(Base, "Найти обратную", ExoticWidget::Transposition);
+        addItem(Base, "Вычислить цикловой тип", ExoticWidget::Transposition);
+        addItem(Base, "Вычислить четность", ExoticWidget::Transposition);
+        addItem(Base, "Вычислить количество беспорядков", ExoticWidget::Transposition);
+        addItem(Base, "Вычислить порядок подстановки", ExoticWidget::Transposition);
+        addItem(Base, "Разложить перестановку в произведение транспозиций", ExoticWidget::Transposition);
+        addItem(Base, "Разложить в произведение транспозиций соседних элементов", ExoticWidget::Transposition);
         break;
     case AllTasks::Set:
         addItem(Base, "Описание алгебраической структуры");
@@ -222,20 +274,30 @@ void DialogBase::uploadUI()
         addItem(Base, "Квадратичное сравнение по простому модулю");
         addItem(Base, "Квадратичное сравнение по составному модулю");
         break;
+    case AllTasks::RingOfMembers:
+        ui->baseWidgetLayout->addWidget(new QLabel("Количество"), 0, 2);
+        dynamic_cast<QLabel *>(ui->baseWidgetLayout->itemAt(1)->widget())->setText("Вид кольца");
+        addItem(Gen, "Степень", ExoticWidget::RingOfMembers);
+        addItem(Gen, "Коэффициенты", ExoticWidget::RingOfMembers);
+        addItem(Base, "Сложение многочленов", ExoticWidget::RingOfMembers);
+        addItem(Base, "Умножение многочленов", ExoticWidget::RingOfMembers);
+        addItem(Base, "Деление многочленов с остатком", ExoticWidget::RingOfMembers);
+        addItem(Base, "Вычисление НОД многочленов", ExoticWidget::RingOfMembers);
+        break;
     }
     if (ui->genWidgetLayout->isEmpty()) ui->lblGen->hide();
 }
 
-void DialogBase::addItem(WidgetRole role, const QString &name, bool option)
+void DialogBase::addItem(WidgetRole role, const QString &name, ExoticWidget type)
 {
     switch (role) {
     case Gen:
         ui->genWidgetLayout->addWidget(new GenWidget(task, name));
         break;
     case Base:
-        BaseWidget *pWidget = new BaseWidget(name, option, this);
+        BaseWidget *pWidget = new BaseWidget(name, type, this);
         ui->baseWidgetLayout->addWidget(pWidget->getCheckBox());
-        if (option) ui->baseWidgetLayout->addWidget(pWidget->getPushButton());
+        if (type != ExoticWidget::None) ui->baseWidgetLayout->addWidget(pWidget->getPushButton());
         ui->baseWidgetLayout->addWidget(pWidget->getSpinBox());
         widgets.emplace_back(pWidget);
         break;
@@ -248,6 +310,7 @@ bool DialogBase::isHaveMoreGens()
     case AllTasks::SymbolLegandre:
     case AllTasks::SymbolJacobi:
     case AllTasks::Matrix:
+    case AllTasks::RingOfMembers:
         return true;
 
     default:
@@ -287,7 +350,7 @@ void DialogBase::accept()
                 data.emplace_back(ranges[0].first);
                 data.emplace_back(ranges[0].second);
             }
-            emit sendingData(data, task, i, widgets[i]->getViewMode());
+            emit sendingData(data, task, i, widgets[i]->getExoticOption());
         }
     }
     if (deleteMode) QDialog::accept();
