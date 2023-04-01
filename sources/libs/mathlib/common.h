@@ -25,7 +25,6 @@
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QPixmap>
-#include <QPrinter>
 #include <QPushButton>
 #include <QRandomGenerator>
 #include <QRegExp>

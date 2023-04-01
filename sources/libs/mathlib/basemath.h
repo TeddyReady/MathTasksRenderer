@@ -20,4 +20,6 @@ long fastPower(long num, long deg);
 //Faster binary module power
 long modulePower(long num, long deg, int module);
 
+int max(int a, int b);
+
 #endif // BASEMATH_H
