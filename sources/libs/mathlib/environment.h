@@ -1,5 +1,5 @@
-#ifndef DEFINES_H
-#define DEFINES_H
+#ifndef ENVIRONMENT_H
+#define ENVIRONMENT_H
 #include "common.h"
 
 //App
@@ -44,4 +44,4 @@ namespace LaTeX {
     const QString tableEnd =   "\\hline\\end{array}\n";
 }
 
-#endif // DEFINES_H
+#endif // ENVIRONMENT_H

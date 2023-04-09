@@ -2,7 +2,7 @@
 
 GroupProperties::GroupProperties()
 {
-    QFile dataBase(":/general/data/group.csv");
+    QFile dataBase(":/general/data/groups.csv");
     if (!dataBase.open(QFile::ReadOnly)) {
         qDebug() << "Внимание! Файл не существует!";
         return;
@@ -18,27 +18,27 @@ int GroupProperties::Exp() const
 {
 
     switch (group) {
-    case Groups::Sn:
+    case Set::Sn:
     {
         int result = 1;
         for (int i = 2; i <= n; ++i)
             result = LCM(result, i);
         return result;
     }
-    case Groups::Dn:
+    case Set::Dn:
         return 0;
-    case Groups::An:
+    case Set::An:
     {
         int result = 1;
         for (int i = 1; i <= n; i += 2)
             result = LCM(result, i);
         return result;
     }
-    case Groups::V4:
+    case Set::V4:
         return 2;
-    case Groups::Q8:
+    case Set::O8:
         return 6;
-    case Groups::Zn:
+    case Set::Zn:
         return 0;
     }
 }
@@ -46,17 +46,17 @@ int GroupProperties::Exp() const
 QString GroupProperties::getCode() const
 {
     switch (group) {
-    case Groups::Sn:
+    case Set::Sn:
         return "\\mathbb{S}_{" + QString::number(n) + "}";
-    case Groups::Dn:
+    case Set::Dn:
         return "\\mathbb{D}_{" + QString::number(n) + "}";
-    case Groups::An:
+    case Set::An:
         return "\\mathbb{A}_{" + QString::number(n) + "}";
-    case Groups::V4:
+    case Set::V4:
         return "\\mathbb{V}_4";
-    case Groups::Q8:
+    case Set::O8:
         return "\\mathbb{Q}_8";
-    case Groups::Zn:
+    case Set::Zn:
         return "\\mathbb{Z}_{" + QString::number(n) + "}";
     }
 }

@@ -1102,7 +1102,7 @@ void GeneratorWindow::runGroupProperties(int countOfTasks, int minN, int maxN, G
             descriptions.push_back(std::move(QString("Вычислите экспоненту группы")));
 
         for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
-            GP.setGroup(static_cast<Groups>(random->bounded(0, GP.getGroups())), random->bounded(minN, maxN));
+            GP.setGroup(static_cast<Set>(random->bounded(0, GP.getGroups())), random->bounded(minN, maxN));
             if (!mode) {
                 buffer = "Exp\\left(" + GP.getCode() + "\\right)" + "=~?";
                 tasks.push_back(std::move(buffer));
@@ -1327,97 +1327,25 @@ void GeneratorWindow::runRingResidue(int countOfTasks, int minNum, int maxNum, R
 
 void GeneratorWindow::runRingOfMembers(int countOfTasks, std::pair<int, int> rangeDeg, std::pair<int, int> rangeK, RingOfMembersOptions option, Set ring)
 {
-    RingOfMembers task, task_2;
+    RingOfMembers task(option), task_2(option);
     QVector<QString> tasks; QString buffer;
-    switch (option) {
-    case RingOfMembersOptions::Summary:
-        if (!this->mode)
-            descriptions.push_back(std::move(QString("Вычислите сумму двух многочленов")));
 
-        for (int i = 0; i < countOfTasks; ++i) {
+    QVector<QVariant> options;
+    options.push_back(QVariant::fromValue(ring));
+    options.push_back(QVariant::fromValue(qMakePair(rangeDeg.first, rangeDeg.second)));
+    options.push_back(QVariant::fromValue(qMakePair(rangeK.first, rangeK.second)));
 
-            //Create members
-            if (ring == Set::Zn) {
-                task.setModule(random->bounded(2, 40));
-                task_2.setModule(task.getModule());
-            }
-            int deg = static_cast<int>(random->bounded(rangeDeg.first, rangeDeg.second));
-            for (int j = 0; j < deg; ++j)
-                task.addElement(static_cast<int>(random->bounded(rangeK.first, rangeK.second)));
-            deg = static_cast<int>(random->bounded(rangeDeg.first, rangeDeg.second));
-            for (int j = 0; j < deg; ++j)
-                task_2.addElement(static_cast<int>(random->bounded(rangeK.first, rangeK.second)));
-
-            if (!mode) {
-                buffer = task.getBaseSet() + ":\\left(" + task.getMembers() + "\\right)+\\left(" + task_2.getMembers() + "\\right)=~?";
-                tasks.push_back(std::move(buffer));
-                answers.push_back((task + task_2).getMembers());
-            } else {
-                //QString taskText = "\\begin{align}\\color{sienna}{Вычислите~количество~образующих~элементов~группы~Вычетов:\\\\\\left(\\mathbb{Z}_{" + QString::number(task.getOrder()) + "}, +\\right)=~?}\\end{align}";
-                //tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.countOfGenerators()), SupCommands::Number, 0));
-            } task.clear(); task_2.clear();
-        } break;
-//    case RingOfMembersOptions::Multiply:
-//        if (!this->mode)
-//            descriptions.push_back(std::move(QString("Вычислите произведение двух многочленов")));
-
-//        for (int i = 0; i < countOfTasks; ++i) {
-//            task.setOrder(random->bounded(minNum, maxNum));
-//            task.setType(static_cast<RingResidueType>(random->bounded(0, 2)));
-//            int a = static_cast<int>(random->bounded(1, task.getOrder()));
-//            int m = static_cast<int>(random->bounded(2, 20));
-//            if (!mode) {
-//                buffer = task.getCode() + ":~" + QString::number(a) + "^{" + QString::number(m) + "}=~?";
-//                tasks.push_back(std::move(buffer));
-//                answers.push_back(QString::number(task.solve(a, m)));
-//            } else {
-//                QString taskText = "\\begin{align}\\color{sienna}{Найдите~значение~выражения:\\\\" + task.getCode() + ":~" +
-//                        QString::number(a) + "^{" + QString::number(m) + "}=~?}\\end{align}";
-//                tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve(a, m)), SupCommands::Number, 0));
-//            }
-//        } break;
-//    case RingOfMembersOptions::Divide:
-//        if (!this->mode)
-//            descriptions.push_back(std::move(QString("Выполните деление многочлена с отстатком")));
-
-//        for (int i = 0; i < countOfTasks; ++i) {
-//            task.setOrder(random->bounded(minNum, maxNum));
-//            task.setType(static_cast<RingResidueType>(random->bounded(0, 2)));
-//            int element = static_cast<int>(random->bounded(1, task.getOrder()));
-//            if (!mode) {
-//                buffer = task.getCode() + ":~ord(" + QString::number(element) + ")=~?";
-//                tasks.push_back(std::move(buffer));
-//                answers.push_back(QString::number(task.getOrd(element)));
-//            } else {
-//                QString taskText = "\\begin{align}\\color{sienna}{\\textbf{Вычислите порядок элемента:}\\\\" +
-//                        task.getCode() + ":~" +"ord(" + QString::number(element) + ")=~?}\\end{align}";
-//                tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.getOrd(element)), SupCommands::Number, 0));
-//            }
-//        } break;
-//    case RingOfMembersOptions::GCD:
-//        if (!this->mode)
-//            descriptions.push_back(std::move(QString("Вычислите НОД двух многочленов")));
-
-//        for (int i = 0; i < countOfTasks; ++i) {
-//            task.setOrder(random->bounded(minNum, maxNum));
-//            int a, b;
-//            do {
-//                task.setOrder(random->bounded(minNum, maxNum));
-//                a = static_cast<int>(random->bounded(1, task.getOrder()));
-//                b = static_cast<int>(random->bounded(1, task.getOrder()));
-//            } while(task.solveLinear(a, b, task.getOrder()) == "Нет корней");
-//            if (!mode) {
-//                buffer = task.getCode() + ":~" + QString::number(a) + "\\cdot x\\equiv" + QString::number(b) + ",~x=~?";
-//                tasks.push_back(std::move(buffer));
-//                answers.push_back("\\{" + task.solveLinear(a, b, task.getOrder()) + "\\}");
-//            } else {
-//                QString taskText = "\\begin{align}\\color{sienna}{\\textbf{Решите линейное сравнение:}\\\\" +
-//                        task.getCode() + ":~" + QString::number(a) + "\\cdot x\\equiv" + QString::number(b) + ",~x=~?}\\end{align}";
-//                tasksForTest.push_back(std::make_tuple(taskText, "\\{" + task.solveLinear(a, b, task.getOrder()) + "\\}", SupCommands::Name, 0));
-//            }
-//        } break;
+    for (int i = 0; i < countOfTasks; ++i) {
+        task.create(options);
+        task_2.create(options);
+        if (!mode) {
+            tasks.push_back(task.task(task_2.getMembers()));
+            answers.push_back(task.answer(QVariant::fromValue(task_2)));
+        } else { /* тест */}
+        task.clear(); task_2.clear();
     }
     if (!mode) {
+        descriptions.push_back(std::move(task.description()));
         this->tasks.push_back(std::move(tasks));
         isReadyRender();
     }

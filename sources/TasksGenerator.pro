@@ -27,18 +27,20 @@ SOURCES += \
 
 HEADERS += \
     libs/mathlib/common.h \
-    libs/mathlib/defines.h \
     dialogmanual.h \
     libs/mathlib/basemath.h \
     dialogbase.h \
     dialoglatexprinter.h \
     dialogtesttimer.h\
     dialogresults.h \
+    libs/mathlib/enum.h \
+    libs/mathlib/environment.h \
     libs/mathlib/eulerfunction.h \
     generatorwindow.h \
     libs/mathlib/groupproperties.h \
     libs/mathlib/matrix.tpp \
     libs/mathlib/mebiusfunction.h \
+    libs/mathlib/metatype.h \
     libs/mathlib/symbollegandre.h \
     libs/mathlib/ringresidue.h \
     testmode.h \

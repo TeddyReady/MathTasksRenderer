@@ -1,17 +1,6 @@
 #ifndef ALGEBRASTRUCTURES_H
 #define ALGEBRASTRUCTURES_H
-#include "common.h"
-
-enum class Set {
-    N,  No, Z,  Z0,
-    Q,  Q0, R,  R0,
-    C,  Sn, Dn, An,
-    V4, O8, Zn, Mm_Z,
-    Mm_R, Mn_Z, Mn_R,
-    _2A, Func_C, Func_D,
-    Pn_X, ABS_C_, V_2D,
-    V_nD
-};
+#include "basemath.h"
 
 enum class SetType {
     Set, Groupoid, Semigroup,

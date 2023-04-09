@@ -1,6 +1,14 @@
 #ifndef BASEMATH_H
 #define BASEMATH_H
-#include "common.h"
+#include "metatype.h"
+
+class BaseMath {
+protected:
+    virtual void create(const QVector<QVariant> &options) = 0;
+    virtual QString description() = 0;
+    virtual QString task(const QString &optional = "") = 0;
+    virtual QString answer(const QVariant &other) = 0;
+};
 
 //Number decomposition to simple
 std::vector<std::pair<int, int>> decompositionToSimple(int num);

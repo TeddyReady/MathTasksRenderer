@@ -1,7 +1,7 @@
 #ifndef GENERATORWINDOW_H
 #define GENERATORWINDOW_H
 
-#include "libs/mathlib/defines.h"
+#include "libs/mathlib/environment.h"
 #include "dialoglatexprinter.h"
 #include "dialogfontsize.h"
 #include "dialogmanual.h"

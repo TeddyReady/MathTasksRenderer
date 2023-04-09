@@ -9,20 +9,16 @@ enum class GroupPropertiesOptions {
     Center, Order, Exponent
 };
 
-enum class Groups {
-    Sn, Dn, An, V4, Q8, Zn
-};
-
 class GroupProperties {
 public:
     explicit GroupProperties();
 
-    void setGroup(Groups gp, int n) {group = gp; this->n = n;}
+    void setGroup(Set gp, int n) {group = gp; this->n = n;}
     int Exp() const;
     QString getCode() const;
     int getGroups() const { return GROUPS_COUNT;}
 private:
-    Groups group;
+    Set group;
     int n;
 };
 
