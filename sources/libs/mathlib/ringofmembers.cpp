@@ -45,7 +45,7 @@ QString RingOfMembers::description()
     case RingOfMembersOptions::Multiply:
         return QString("Вычислите произведение двух многочленов");
     case RingOfMembersOptions::Divide:
-        return QString("Выполните деление многочлена с отстатком");
+        return QString("Выполните деление многочлена с остатком");
     case RingOfMembersOptions::GCD:
         return QString("Вычислите НОД двух многочленов");
     default:
@@ -162,6 +162,19 @@ void RingOfMembers::clear()
     isModule = false;
 }
 
+int RingOfMembers::last()
+{
+    return members.last();
+}
+
+int RingOfMembers::inverseElementInZn(int num) const
+{
+    for (int i = 0; i < module; ++i)
+        if ((num * i) % module == (i * num) % module == 1)
+            return i;
+    return -1;
+}
+
 RingOfMembers RingOfMembers::operator +(const RingOfMembers& member) const
 {
     RingOfMembers mini(taskType), maxi(taskType);
@@ -181,6 +194,19 @@ RingOfMembers RingOfMembers::operator +(const RingOfMembers& member) const
         result.addElement(mini.members[i] + maxi.members[i]);
 
     return result;
+}
+
+RingOfMembers RingOfMembers::operator -() const
+{
+    RingOfMembers result = *this;
+    for (int i = 0; i <= result.getDeg(); ++i)
+        result.members[i] = -result.members[i];
+    return result;
+}
+
+RingOfMembers RingOfMembers::operator -(const RingOfMembers& member) const
+{
+    return *this + (-member);
 }
 
 RingOfMembers RingOfMembers::operator *(const RingOfMembers& member) const
@@ -210,7 +236,28 @@ RingOfMembers RingOfMembers::operator *(const RingOfMembers& member) const
     return result;
 }
 
-RingOfMembers RingOfMembers::operator %(const RingOfMembers& member) const{}
+RingOfMembers RingOfMembers::operator %(const RingOfMembers& member) const
+{
+    if (member.getDeg() >= this->getDeg()) {
+        RingOfMembers error;
+        qDebug() << "ERROR DEGRATES!";
+        return error;
+    } else {
+        RingOfMembers result = *this, quot = member;
+        while (result.getDeg() >= quot.getDeg())
+        {
+            for (int i = 0; i < result.getDeg() - quot.getDeg(); ++i)
+                quot.members.push_front(0);
+
+            for (int i = 0; i <= quot.getDeg(); ++i)
+                quot.members[i] *= (result.last() * inverseElementInZn(quot.last()));
+
+            result = result - quot;
+            result.members.pop_back();
+            quot = member;
+        } return result;
+    }
+}
 
 RingOfMembers GCD(const RingOfMembers& member_1, const RingOfMembers& member_2)
 {

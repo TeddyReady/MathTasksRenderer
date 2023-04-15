@@ -1,6 +1,12 @@
 #ifndef ENUM_H
 #define ENUM_H
 
+enum ToolBarOptions {
+    Check, Clear, Sep_1,
+    Print, Sep_2, Manual,
+        Font, Exit
+};
+
 enum class Set {
     N,  No, Z,  Z0,
     Q,  Q0, R,  R0,

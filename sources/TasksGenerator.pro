@@ -24,6 +24,7 @@ SOURCES += \
     libs/mathlib/algebrastructures.cpp \
     dialogfontsize.cpp \
     libs/mathlib/ringofmembers.cpp \
+    libs/mathlib/rational.cpp \
 
 HEADERS += \
     libs/mathlib/common.h \
@@ -49,6 +50,7 @@ HEADERS += \
     errors.h \
     dialogfontsize.h \
     libs/mathlib/ringofmembers.h \
+    libs/mathlib/rational.h \
 
 FORMS += \
     dialogbase.ui \

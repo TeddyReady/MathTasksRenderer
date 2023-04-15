@@ -8,10 +8,6 @@
 #include "dialogbase.h"
 #include "testmode.h"
 
-enum ToolBarOptions {
-    Check, Clear, Sep_1, Print, Sep_2, Manual, Font, Exit
-};
-
 QT_BEGIN_NAMESPACE
 namespace Ui { class GeneratorWindow; }
 QT_END_NAMESPACE

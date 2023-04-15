@@ -22,8 +22,12 @@ public:
     QString getMembers() const;
     QString getBaseSet() const;
     void clear();
+    int last();
+    int inverseElementInZn(int num) const;
+    RingOfMembers operator -() const;
     RingOfMembers operator *(const RingOfMembers& member) const;
     RingOfMembers operator +(const RingOfMembers& member) const;
+    RingOfMembers operator -(const RingOfMembers& member) const;
     RingOfMembers operator %(const RingOfMembers& member) const;
     friend RingOfMembers GCD(const RingOfMembers& member_1, const RingOfMembers& member_2);
 private:

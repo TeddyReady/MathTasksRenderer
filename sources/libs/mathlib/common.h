@@ -47,8 +47,9 @@
 
 //C and C++ includes
 #include <algorithm>
-#include <cmath>
+#include <iostream>
 #include <vector>
+#include <cmath>
 
 //other
 #include <poppler/qt5/poppler-qt5.h>

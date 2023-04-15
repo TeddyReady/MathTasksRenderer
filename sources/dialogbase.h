@@ -58,6 +58,7 @@ class BaseWidget : public QWidget {
 public:
     explicit BaseWidget(const QString &cbName, ExoticWidget type = ExoticWidget::None, QWidget *parent = nullptr);
 
+    void setExoticOptions(const ExoticWidget &type);
     int getCount() const { return sb->value(); }
     int getExoticOption() const { return exoticOption; }
     bool isChecked() const { return cb->isChecked(); }

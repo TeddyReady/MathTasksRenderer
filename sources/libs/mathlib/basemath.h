@@ -2,6 +2,7 @@
 #define BASEMATH_H
 #include "metatype.h"
 
+//Iterface for math classes
 class BaseMath {
 protected:
     virtual void create(const QVector<QVariant> &options) = 0;
@@ -28,6 +29,7 @@ long fastPower(long num, long deg);
 //Faster binary module power
 long modulePower(long num, long deg, int module);
 
+//Maximum of two numbers
 int max(int a, int b);
 
 #endif // BASEMATH_H

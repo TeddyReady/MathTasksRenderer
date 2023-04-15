@@ -26,6 +26,32 @@ BaseWidget::BaseWidget(const QString &cbName, ExoticWidget type, QWidget *parent
     sb = new QSpinBox(this);
     sb->setDisabled(true);
     layout()->addWidget(cb);
+    setExoticOptions(type);
+    layout()->addWidget(sb);
+}
+
+GenWidget::GenWidget(AllTasks task, const QString &optionName, QWidget *parent) : QWidget(parent)
+{
+    sbMin = new QSpinBox(this);
+    sbMax = new QSpinBox(this);
+    loadSettings(task, optionName);
+
+    setLayout(new QHBoxLayout(this));
+    layout()->setContentsMargins(0, 0, 0, 0);
+    layout()->addWidget(new QLabel("От", this));
+    layout()->addWidget(sbMin);
+    layout()->addItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
+    layout()->addWidget(new QLabel("До", this));
+    layout()->addWidget(sbMax);
+    if (optionName != "")
+        layout()->addWidget(new QLabel(optionName, this));
+
+    connect(sbMin, &QSpinBox::editingFinished, [&](){ sbMax->setMinimum(sbMin->value()); });
+    connect(sbMax, &QSpinBox::editingFinished, [&](){ sbMin->setMaximum(sbMax->value()); });
+}
+
+void BaseWidget::setExoticOptions(const ExoticWidget &type)
+{
     switch (type) {
     case ExoticWidget::Transposition:
         exoticOption = static_cast<int>(ViewMode::None);
@@ -57,7 +83,6 @@ BaseWidget::BaseWidget(const QString &cbName, ExoticWidget type, QWidget *parent
     case ExoticWidget::RingOfMembers:
         pb = new QPushButton("Выбрать кольцо...", this);
         pb->setMenu(new QMenu(pb));
-        pb->menu()->addAction(new QAction("Кольцо Целых чисел", pb->menu()));
         pb->menu()->addAction(new QAction("Кольцо Вычетов", pb->menu()));
         pb->setDisabled(true);
         layout()->addWidget(pb);
@@ -68,17 +93,20 @@ BaseWidget::BaseWidget(const QString &cbName, ExoticWidget type, QWidget *parent
             sb->setValue(0);
         });
         connect(pb->menu()->actions().at(0), &QAction::triggered, [&](){
-            pb->setText("Кольцо Целых чисел");
-            exoticOption = static_cast<int>(Set::Z);
-            sb->setEnabled(true);
-            sb->setValue(1);
-        });
-        connect(pb->menu()->actions().at(1), &QAction::triggered, [&](){
             pb->setText("Кольцо Вычетов");
             exoticOption = static_cast<int>(Set::Zn);
             sb->setEnabled(true);
             sb->setValue(1);
         });
+        if (cb->text() != "Деление многочленов с остатком") {
+            pb->menu()->addAction(new QAction("Кольцо Целых чисел", pb->menu()));
+            connect(pb->menu()->actions().at(1), &QAction::triggered, [&](){
+                pb->setText("Кольцо Целых чисел");
+                exoticOption = static_cast<int>(Set::Z);
+                sb->setEnabled(true);
+                sb->setValue(1);
+            });
+        }
         break;
     case ExoticWidget::None:
         connect(cb, &QCheckBox::clicked, [&](){
@@ -92,27 +120,6 @@ BaseWidget::BaseWidget(const QString &cbName, ExoticWidget type, QWidget *parent
         });
         break;
     }
-    layout()->addWidget(sb);
-}
-
-GenWidget::GenWidget(AllTasks task, const QString &optionName, QWidget *parent) : QWidget(parent)
-{
-    sbMin = new QSpinBox(this);
-    sbMax = new QSpinBox(this);
-    loadSettings(task, optionName);
-
-    setLayout(new QHBoxLayout(this));
-    layout()->setContentsMargins(0, 0, 0, 0);
-    layout()->addWidget(new QLabel("От", this));
-    layout()->addWidget(sbMin);
-    layout()->addItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
-    layout()->addWidget(new QLabel("До", this));
-    layout()->addWidget(sbMax);
-    if (optionName != "")
-        layout()->addWidget(new QLabel(optionName, this));
-
-    connect(sbMin, &QSpinBox::editingFinished, [&](){ sbMax->setMinimum(sbMin->value()); });
-    connect(sbMax, &QSpinBox::editingFinished, [&](){ sbMin->setMaximum(sbMax->value()); });
 }
 
 void GenWidget::loadSettings(AllTasks task, const QString &optionName)
