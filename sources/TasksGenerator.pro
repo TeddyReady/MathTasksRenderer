@@ -47,7 +47,7 @@ HEADERS += \
     testmode.h \
     libs/mathlib/transpositiongroup.h \
     libs/mathlib/algebrastructures.h \
-    errors.h \
+    libs/mathlib/errors.h \
     dialogfontsize.h \
     libs/mathlib/ringofmembers.h \
     libs/mathlib/rational.h \

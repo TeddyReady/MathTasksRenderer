@@ -70,3 +70,18 @@ int max(int a, int b)
 {
     return a > b ? a : b;
 }
+
+int toMod(int num, int module)
+{
+    if (module <= 1) {
+        qDebug() << INCORRECT_MODULE_ERROR_MSG;
+        return INCORRECT_MODULE_ERROR_CODE;
+    }
+    if (num < 0) {
+        while (num < 0) num += module;
+        return num;
+    } else {
+        while (num >= module) num -= module;
+        return num;
+    }
+}

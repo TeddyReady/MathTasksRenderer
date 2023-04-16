@@ -1,6 +1,7 @@
 #ifndef BASEMATH_H
 #define BASEMATH_H
 #include "metatype.h"
+#include "errors.h"
 
 //Iterface for math classes
 class BaseMath {
@@ -31,5 +32,8 @@ long modulePower(long num, long deg, int module);
 
 //Maximum of two numbers
 int max(int a, int b);
+
+// Num on module
+int toMod(int num, int module);
 
 #endif // BASEMATH_H

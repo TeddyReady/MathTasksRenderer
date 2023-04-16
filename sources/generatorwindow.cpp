@@ -1328,7 +1328,7 @@ void GeneratorWindow::runRingResidue(int countOfTasks, int minNum, int maxNum, R
 void GeneratorWindow::runRingOfMembers(int countOfTasks, std::pair<int, int> rangeDeg, std::pair<int, int> rangeK, RingOfMembersOptions option, Set ring)
 {
     RingOfMembers task(option), task_2(option);
-    QVector<QString> tasks; QString buffer;
+    QVector<QString> tasks;
 
     QVector<QVariant> options;
     options.push_back(QVariant::fromValue(ring));
@@ -1337,7 +1337,10 @@ void GeneratorWindow::runRingOfMembers(int countOfTasks, std::pair<int, int> ran
 
     for (int i = 0; i < countOfTasks; ++i) {
         task.create(options);
-        task_2.create(options);
+
+        QVector<QVariant> options_2 = options;
+        options_2[1] = QVariant::fromValue(qMakePair(rangeDeg.first, task.getDeg() + 1));
+        task_2.create(options_2);
         if (!mode) {
             tasks.push_back(task.task(task_2.getMembers()));
             answers.push_back(task.answer(QVariant::fromValue(task_2)));

@@ -33,7 +33,7 @@ void RingOfMembers::create(const QVector<QVariant> &options)
         if (value == 0 && i - 1 == deg) addElement(1);
         else addElement(value);
     }
-
+    if (members.last() == 0) members[members.size() - 1] = 1;
     random = nullptr;
 }
 
@@ -77,9 +77,12 @@ QString RingOfMembers::answer(const QVariant &other)
         return (*this + other.value<RingOfMembers>()).getMembers();
     case RingOfMembersOptions::Multiply:
         return (*this * other.value<RingOfMembers>()).getMembers();
-    case RingOfMembersOptions::Divide:
-        return (*this % other.value<RingOfMembers>()).getMembers();
-    case RingOfMembersOptions::GCD:
+    case RingOfMembersOptions::Divide: {
+        RingOfMembers second = other.value<RingOfMembers>();
+        second.setModule(this->getModule());
+        while (second.members.last() == 0) second.members.pop_back();
+        return (*this % second).getMembers();
+    } case RingOfMembersOptions::GCD:
         return GCD(*this, other.value<RingOfMembers>()).getMembers();
     default:
         break;
@@ -89,7 +92,7 @@ QString RingOfMembers::answer(const QVariant &other)
 void RingOfMembers::addElement(int number)
 {
     if (isModule)
-        number %= module;
+        number = toMod(number, module);
     members.push_back(number);
 }
 
@@ -97,6 +100,8 @@ void RingOfMembers::setModule(int module)
 {
     isModule = true;
     this->module = module;
+    for (int i = 0; i < members.size(); ++i)
+        members[i] = toMod(members[i], module);
 }
 
 int RingOfMembers::getDeg() const { return members.size() - 1; }
