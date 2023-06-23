@@ -2,7 +2,7 @@
 #include "ui_generatorwindow.h"
 
 GeneratorWindow::GeneratorWindow(QWidget *parent)
-    : QMainWindow(parent), totalTestTasks(0), mode(false), lastSizeCount(0),
+    : QMainWindow(parent), totalTestTasks(0), lastSizeCount(0), pageNumber(0), mode(false),
       random(QRandomGenerator::global()), ui(new Ui::GeneratorWindow)
 {
     uploadSettings();
@@ -15,6 +15,8 @@ GeneratorWindow::GeneratorWindow(QWidget *parent)
     connect(ui->toolBar->actions().at(Manual), &QAction::triggered, this, &GeneratorWindow::openManual);
     connect(ui->toolBar->actions().at(Font), &QAction::triggered, this, &GeneratorWindow::changeFontSize);
     connect(ui->toolBar->actions().at(Exit), &QAction::triggered, [&](){qApp->closeAllWindows();});
+    connect(ui->prevPage, &QPushButton::clicked, this, &GeneratorWindow::prevTheoryPage);
+    connect(ui->nextPage, &QPushButton::clicked, this, &GeneratorWindow::nextTheoryPage);
 
     showMaximized();
 }
@@ -80,6 +82,10 @@ void GeneratorWindow::saveSettings()
     settings.setValue("taskFontSize", taskFontSize);
     settings.setValue("mathFontSize", mathFontSize);
     settings.endGroup();
+
+    settings.beginGroup("Theory");
+    settings.setValue("numberOfPage", pageNumber);
+    settings.endGroup();
 }
 
 void GeneratorWindow::uploadSettings()
@@ -93,6 +99,10 @@ void GeneratorWindow::uploadSettings()
     settings.beginGroup("Style");
     taskFontSize = settings.value("taskFontSize", "\\normalsize").toString();
     mathFontSize = settings.value("mathFontSize", "\\normalsize").toString();
+    settings.endGroup();
+
+    settings.beginGroup("Theory");
+    pageNumber = settings.value("numberOfPage").toInt();
     settings.endGroup();
 }
 
@@ -116,9 +126,35 @@ void GeneratorWindow::createTheoryImages()
         images.push_back(image);
         delete pdfPage;
     }
-    scene->addPixmap(QPixmap::fromImage(images.first()));
-    scene->setSceneRect(images.first().rect());
+
+    if (pageNumber == 0) ui->prevPage->setDisabled(true);
+    else if (pageNumber == images.size() - 1) ui->nextPage->setDisabled(true);
+
+    scene->addPixmap(QPixmap::fromImage(images[pageNumber]));
+    scene->setSceneRect(images[pageNumber].rect());
     delete document;
+}
+
+void GeneratorWindow::prevTheoryPage()
+{
+    if (!ui->nextPage->isEnabled()) ui->nextPage->setEnabled(true);
+
+    if (pageNumber > 0) {
+        scene->addPixmap(QPixmap::fromImage(images[--pageNumber]));
+        if (pageNumber == 0)
+            ui->prevPage->setDisabled(true);
+    }
+}
+
+void GeneratorWindow::nextTheoryPage()
+{
+    if (!ui->prevPage->isEnabled()) ui->prevPage->setEnabled(true);
+
+    if (pageNumber < images.size() - 1) {
+        scene->addPixmap(QPixmap::fromImage(images[++pageNumber]));
+        if (pageNumber == images.size() - 1)
+            ui->nextPage->setDisabled(true);
+    }
 }
 
 void GeneratorWindow::isReadyRender(){

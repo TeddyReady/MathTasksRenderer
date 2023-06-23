@@ -38,7 +38,10 @@ private slots:
     void on_genButton_clicked();
     void on_comboBox_currentTextChanged(const QString &task);
     void on_tabWidget_currentChanged(int index);
-    void on_pushButton_clicked();   
+    void on_pushButton_clicked();
+
+    void prevTheoryPage();
+    void nextTheoryPage();
 private:
     //Main parser
     void runTaskManager(const QString &task, bool closeMode);
@@ -54,7 +57,7 @@ private:
     void runRingResidue(int, int, int, RingResidueOptions);
     void runRingOfMembers(int, std::pair<int, int>, std::pair<int, int>, RingOfMembersOptions, Set);
 
-    int totalTestTasks, lastSizeCount;
+    int totalTestTasks, lastSizeCount, pageNumber;
     bool mode;
     QVector<QString> descriptions, answers;
     QVector<QVector<QString>> tasks;
