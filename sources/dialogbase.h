@@ -20,7 +20,7 @@ enum class AllTasks {
 };
 
 enum class ExoticWidget {
-    None, Transposition, RingOfMembers
+    None, Transposition
 };
 
 enum WidgetRole { Gen, Base };

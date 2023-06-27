@@ -134,7 +134,7 @@ QDialog > .QPushButton:hover, QMainWindow > .QPushButton:hover {
 background-color: Beige;
 color: Tan;
 }
-QPushButton#genButton,  QPushButton#pushButton{
+QPushButton#genButton,  QPushButton#testButton{
 background-color: Beige;
 color: SaddleBrown;
 font-size: 25px;

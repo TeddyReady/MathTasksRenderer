@@ -6,7 +6,7 @@
 class RingOfMembers : protected BaseMath {
 public:
     explicit RingOfMembers();
-    explicit RingOfMembers(RingOfMembersOptions taskType, bool isModule = false, int module = 0);
+    explicit RingOfMembers(RingOfMembersOptions taskType, int module = 2);
     RingOfMembers(const RingOfMembers& other);
     ~RingOfMembers();
 
@@ -34,7 +34,6 @@ private:
     RingOfMembersOptions taskType;
 
     QVector<int> members;
-    bool isModule;
     int module;
 };
 Q_DECLARE_METATYPE(RingOfMembers)

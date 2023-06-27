@@ -30,7 +30,7 @@ void GeneratorWindow::uploadUI()
     ui->setupUi(this);
     ui->genButton->setEnabled(true);
     ui->genButton->setCursor(Qt::PointingHandCursor);
-    ui->pushButton->setCursor(Qt::PointingHandCursor);
+    ui->testButton->setCursor(Qt::PointingHandCursor);
     ui->tabWidget->tabBar()->setCursor(Qt::PointingHandCursor);
     ui->taskView->setCursor(Qt::BlankCursor);
     ui->taskView->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -53,7 +53,7 @@ void GeneratorWindow::uploadUI()
 
     for (int i = 0; i < ui->tasksList->count(); ++i)
     {
-        ui->comboBox->addItem(ui->tasksList->item(i)->text());
+        ui->taskBox->addItem(ui->tasksList->item(i)->text());
     }
 
     setCursor(Qt::ArrowCursor);
@@ -106,62 +106,21 @@ void GeneratorWindow::getConnection()
     connect(ui->toolBar->actions().at(Manual), &QAction::triggered, this, &GeneratorWindow::openManual);
     connect(ui->toolBar->actions().at(Font), &QAction::triggered, this, &GeneratorWindow::changeFontSize);
     connect(ui->toolBar->actions().at(Exit), &QAction::triggered, [&](){qApp->closeAllWindows();});
+
+    connect(ui->genButton, &QPushButton::clicked, this, &GeneratorWindow::generateTask);
+    connect(ui->tabWidget, &QTabWidget::currentChanged, this, &GeneratorWindow::switchTab);
+
+    connect(ui->taskBox, &QComboBox::currentTextChanged, this, &GeneratorWindow::switchTask);
+    connect(ui->testButton, &QPushButton::clicked, this, &GeneratorWindow::runTest);
+
     connect(ui->prevPage, &QPushButton::clicked, this, &GeneratorWindow::prevTheoryPage);
     connect(ui->nextPage, &QPushButton::clicked, this, &GeneratorWindow::nextTheoryPage);
 }
 
-void GeneratorWindow::createTheoryImages()
+///////////////////////////////////
+
+void GeneratorWindow::isReadyRender()
 {
-    QFile pdfSource(RSC::theoryPath);
-    if (!pdfSource.open(QFile::ReadOnly)) return;
-    Poppler::Document *document = Poppler::Document::loadFromData(pdfSource.readAll());
-    pdfSource.close();
-    if (!document || document->isLocked()) {
-      qDebug() << "ERROR WITH POPPLER";
-      delete document;
-      return;
-    }
-    document->setRenderHint(Poppler::Document::TextAntialiasing);
-    Poppler::Page* pdfPage; QImage image;
-    for (int i = 0; i < document->numPages(); ++i)
-    {
-        pdfPage = document->page(i);
-        image = pdfPage->renderToImage(135.0, 135.0);
-        images.push_back(image);
-        delete pdfPage;
-    }
-
-    if (pageNumber == 0) ui->prevPage->setDisabled(true);
-    else if (pageNumber == images.size() - 1) ui->nextPage->setDisabled(true);
-
-    scene->addPixmap(QPixmap::fromImage(images[pageNumber]));
-    scene->setSceneRect(images[pageNumber].rect());
-    delete document;
-}
-
-void GeneratorWindow::prevTheoryPage()
-{
-    if (!ui->nextPage->isEnabled()) ui->nextPage->setEnabled(true);
-
-    if (pageNumber > 0) {
-        scene->addPixmap(QPixmap::fromImage(images[--pageNumber]));
-        if (pageNumber == 0)
-            ui->prevPage->setDisabled(true);
-    }
-}
-
-void GeneratorWindow::nextTheoryPage()
-{
-    if (!ui->prevPage->isEnabled()) ui->prevPage->setEnabled(true);
-
-    if (pageNumber < images.size() - 1) {
-        scene->addPixmap(QPixmap::fromImage(images[++pageNumber]));
-        if (pageNumber == images.size() - 1)
-            ui->nextPage->setDisabled(true);
-    }
-}
-
-void GeneratorWindow::isReadyRender(){
     QApplication::setOverrideCursor(Qt::WaitCursor);
     for (int i = lastSizeCount; i < descriptions.size(); ++i)
     {
@@ -178,7 +137,8 @@ void GeneratorWindow::isReadyRender(){
     QApplication::restoreOverrideCursor();
 }
 
-void GeneratorWindow::checkAnswers(){
+void GeneratorWindow::checkAnswers()
+{
     QApplication::setOverrideCursor(Qt::WaitCursor);
     QString TeXBuffer = taskForTeX;
     TeXBuffer.replace("TASK_FONT", taskFontSize).replace("MATH_FONT", mathFontSize);
@@ -229,7 +189,7 @@ void GeneratorWindow::changeFontSize()
     fontDialog->exec();
 }
 
-void GeneratorWindow::on_tabWidget_currentChanged(int index)
+void GeneratorWindow::switchTab(int index)
 {
     switch (index) {
     case 2:
@@ -260,7 +220,7 @@ void GeneratorWindow::on_tabWidget_currentChanged(int index)
     }
 }
 
-void GeneratorWindow::on_pushButton_clicked()
+void GeneratorWindow::runTest()
 {
     if (tasksForTest.isEmpty())
         statusBar()->showMessage("Перед запуском теста, необходимо сгенерировать задания!", 1500);
@@ -286,7 +246,7 @@ void GeneratorWindow::startTest(QTime time)
     ui->lcdNumber->display(totalTestTasks);
 }
 
-void GeneratorWindow::on_genButton_clicked()
+void GeneratorWindow::generateTask()
 {
     if (ui->tasksList->currentItem() == nullptr) {
         statusBar()->showMessage("Перед генерацией выберите типаж задания!");
@@ -295,7 +255,7 @@ void GeneratorWindow::on_genButton_clicked()
     runTaskManager(ui->tasksList->currentItem()->text(), true);
 }
 
-void GeneratorWindow::on_comboBox_currentTextChanged(const QString &task)
+void GeneratorWindow::switchTask(const QString &task)
 {
     runTaskManager(task, false);
 }
@@ -388,7 +348,7 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
         break;
     case AllTasks::RingOfMembers:
         runRingOfMembers(data[0], std::make_pair(data[1], data[2]), std::make_pair(data[3], data[4]),
-                static_cast<RingOfMembersOptions>(subTask), static_cast<Set>(optional));
+                static_cast<RingOfMembersOptions>(subTask));
         break;
     }
 }
@@ -1368,13 +1328,12 @@ void GeneratorWindow::runRingResidue(int countOfTasks, int minNum, int maxNum, R
     }
 }
 
-void GeneratorWindow::runRingOfMembers(int countOfTasks, std::pair<int, int> rangeDeg, std::pair<int, int> rangeK, RingOfMembersOptions option, Set ring)
+void GeneratorWindow::runRingOfMembers(int countOfTasks, std::pair<int, int> rangeDeg, std::pair<int, int> rangeK, RingOfMembersOptions option)
 {
     RingOfMembers task(option), task_2(option);
     QVector<QString> tasks;
 
     QVector<QVariant> options;
-    options.push_back(QVariant::fromValue(ring));
     options.push_back(QVariant::fromValue(qMakePair(rangeDeg.first, rangeDeg.second)));
     options.push_back(QVariant::fromValue(qMakePair(rangeK.first, rangeK.second)));
 

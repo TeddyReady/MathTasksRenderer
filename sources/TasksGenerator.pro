@@ -25,6 +25,7 @@ SOURCES += \
     dialogfontsize.cpp \
     libs/mathlib/ringofmembers.cpp \
     libs/mathlib/rational.cpp \
+    theoryprinter.cpp
 
 HEADERS += \
     libs/mathlib/common.h \

@@ -6,9 +6,9 @@ QString RingResidue::getCode() const
 {
     switch (type) {
     case RingResidueType::Summary:
-        return QString("\\left(\\mathbb{Z}_{" + QString::number(n) + "}, +\\right)");
+        return QString("\\mathbb{Z}_{" + QString::number(n) + "}");
     case RingResidueType::Multiply:
-        return QString("\\left(\\mathbb{Z}_{" + QString::number(n) + "}, \\cdot\\right)");
+        return QString("\\mathbb{Z}_{" + QString::number(n) + "}^*");
     default:
         return QString("\\mathbb{Z}_{" + QString::number(n) + "}");
     }

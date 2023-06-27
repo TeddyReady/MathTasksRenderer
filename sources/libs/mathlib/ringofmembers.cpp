@@ -2,16 +2,11 @@
 
 RingOfMembers::RingOfMembers() {}
 
-RingOfMembers::RingOfMembers(RingOfMembersOptions taskType, bool isModule, int module) : taskType(taskType)
-{
-    this->isModule = isModule;
-    this->module = module;
-}
+RingOfMembers::RingOfMembers(RingOfMembersOptions taskType, int module) : taskType(taskType), module(module) {}
 
 RingOfMembers::RingOfMembers(const RingOfMembers& other)
 {
     members = other.members;
-    isModule = other.isModule;
     module = other.module;
 }
 
@@ -19,13 +14,11 @@ RingOfMembers::~RingOfMembers() {}
 
 void RingOfMembers::create(const QVector<QVariant> &options)
 {
-    Set ring = options.at(0).value<Set>();
-    QPair<int, int> rangeDeg = options.at(1).value<QPair<int, int>>();
-    QPair<int, int> rangeK = options.at(2).value<QPair<int, int>>();
+    QPair<int, int> rangeDeg = options.at(0).value<QPair<int, int>>();
+    QPair<int, int> rangeK = options.at(1).value<QPair<int, int>>();
 
     QRandomGenerator *random = QRandomGenerator::global();
-    if (ring == Set::Zn)
-        setModule(random->bounded(2, 20));
+    setModule(random->bounded(2, 20));
 
     int deg = static_cast<int>(random->bounded(rangeDeg.first, rangeDeg.second));
     for (int i = 0; i <= deg; ++i) {
@@ -91,14 +84,12 @@ QString RingOfMembers::answer(const QVariant &other)
 
 void RingOfMembers::addElement(int number)
 {
-    if (isModule)
-        number = toMod(number, module);
+    number = toMod(number, module);
     members.push_back(number);
 }
 
 void RingOfMembers::setModule(int module)
 {
-    isModule = true;
     this->module = module;
     for (int i = 0; i < members.size(); ++i)
         members[i] = toMod(members[i], module);
@@ -156,15 +147,13 @@ QString RingOfMembers::getMembers() const
 
 QString RingOfMembers::getBaseSet() const
 {
-    if (isModule) return QString("\\mathbb{Z}_{" + QString::number(module) + "}[x]");
-    else return QString("\\mathbb{Z}[x]");
+    return QString("\\mathbb{Z}_{" + QString::number(module) + "}[x]");
 }
 
 void RingOfMembers::clear()
 {
     members.clear();
-    module = -1;
-    isModule = false;
+    module = 2;
 }
 
 int RingOfMembers::last()
@@ -194,7 +183,7 @@ RingOfMembers RingOfMembers::operator +(const RingOfMembers& member) const
     for (int i = mini.getDeg(); i < maxi.getDeg(); ++i)
         mini.addElement(0);
 
-    RingOfMembers result(taskType, isModule, module);
+    RingOfMembers result(taskType, module);
     for (int i = 0; i <= mini.getDeg(); ++i)
         result.addElement(mini.members[i] + maxi.members[i]);
 
@@ -234,7 +223,7 @@ RingOfMembers RingOfMembers::operator *(const RingOfMembers& member) const
             else multi.insert(i+j, mini.members[i] * maxi.members[j]);
         }
 
-    RingOfMembers result(taskType, isModule, module);
+    RingOfMembers result(taskType, module);
     foreach (const auto& key, multi.keys())
         result.addElement(multi.value(key));
 

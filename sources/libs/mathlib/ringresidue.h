@@ -8,7 +8,7 @@
 enum class RingResidueOptions {
           GenCount, A_in_M,
     Order, A_X_equal_B, XX_equal_p,
-    XX_equal_pq
+            XX_equal_pq
 };
 
 enum class RingResidueType {

@@ -33,13 +33,15 @@ private slots:
     void checkAnswers();
     void clearTasks();
     void printTasks();
-    void openManual();
-    void startTest(QTime time);
     void changeFontSize();
-    void on_genButton_clicked();
-    void on_comboBox_currentTextChanged(const QString &task);
-    void on_tabWidget_currentChanged(int index);
-    void on_pushButton_clicked();
+    void openManual();
+
+
+    void startTest(QTime time);
+    void generateTask();
+    void switchTask(const QString &task);
+    void switchTab(int index);
+    void runTest();
 
     void prevTheoryPage();
     void nextTheoryPage();
@@ -56,7 +58,7 @@ private:
     void runGroupProperties(int, int, int, GroupPropertiesOptions);
     void runMatrix(int, std::pair<int, int>, std::pair<int, int>, MatrixOptions);
     void runRingResidue(int, int, int, RingResidueOptions);
-    void runRingOfMembers(int, std::pair<int, int>, std::pair<int, int>, RingOfMembersOptions, Set);
+    void runRingOfMembers(int, std::pair<int, int>, std::pair<int, int>, RingOfMembersOptions);
 
     int totalTestTasks, lastSizeCount, pageNumber;
     bool mode;

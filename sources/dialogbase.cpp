@@ -80,34 +80,6 @@ void BaseWidget::setExoticOptions(const ExoticWidget &type)
             sb->setValue(1);
         });
         break;
-    case ExoticWidget::RingOfMembers:
-        pb = new QPushButton("Выбрать кольцо...", this);
-        pb->setMenu(new QMenu(pb));
-        pb->menu()->addAction(new QAction("Кольцо Вычетов", pb->menu()));
-        pb->setDisabled(true);
-        layout()->addWidget(pb);
-        connect(cb, &QCheckBox::clicked, [&](){
-            if (cb->isChecked()) pb->setEnabled(true);
-            else pb->setDisabled(true);
-            sb->setDisabled(true);
-            sb->setValue(0);
-        });
-        connect(pb->menu()->actions().at(0), &QAction::triggered, [&](){
-            pb->setText("Кольцо Вычетов");
-            exoticOption = static_cast<int>(Set::Zn);
-            sb->setEnabled(true);
-            sb->setValue(1);
-        });
-        if (cb->text() != "Деление многочленов с остатком") {
-            pb->menu()->addAction(new QAction("Кольцо Целых чисел", pb->menu()));
-            connect(pb->menu()->actions().at(1), &QAction::triggered, [&](){
-                pb->setText("Кольцо Целых чисел");
-                exoticOption = static_cast<int>(Set::Z);
-                sb->setEnabled(true);
-                sb->setValue(1);
-            });
-        }
-        break;
     case ExoticWidget::None:
         connect(cb, &QCheckBox::clicked, [&](){
             if (cb->isChecked()) {
@@ -181,14 +153,14 @@ void GenWidget::loadSettings(AllTasks task, const QString &optionName)
     case AllTasks::RingOfMembers:
         if (optionName == "Степень") {
             sbMin->setMinimum(2);
-            sbMax->setMaximum(20);
+            sbMax->setMaximum(8);
             sbMin->setValue(2);
             sbMax->setValue(6);
         } else {
-            sbMin->setMinimum(-20);
-            sbMax->setMaximum(20);
-            sbMin->setValue(-10);
-            sbMax->setValue(10);
+            sbMin->setMinimum(2);
+            sbMax->setMaximum(50);
+            sbMin->setValue(2);
+            sbMax->setValue(20);
         } return;
     default:
         return;
@@ -282,14 +254,12 @@ void DialogBase::uploadUI()
         addItem(Base, "Квадратичное сравнение по составному модулю");
         break;
     case AllTasks::RingOfMembers:
-        ui->baseWidgetLayout->addWidget(new QLabel("Количество"), 0, 2);
-        dynamic_cast<QLabel *>(ui->baseWidgetLayout->itemAt(1)->widget())->setText("Вид кольца");
-        addItem(Gen, "Степень", ExoticWidget::RingOfMembers);
-        addItem(Gen, "Коэффициенты", ExoticWidget::RingOfMembers);
-        addItem(Base, "Сложение многочленов", ExoticWidget::RingOfMembers);
-        addItem(Base, "Умножение многочленов", ExoticWidget::RingOfMembers);
-        addItem(Base, "Деление многочленов с остатком", ExoticWidget::RingOfMembers);
-        addItem(Base, "Вычисление НОД многочленов", ExoticWidget::RingOfMembers);
+        addItem(Gen, "Степень");
+        addItem(Gen, "Мощность кольца");
+        addItem(Base, "Сложение многочленов");
+        addItem(Base, "Умножение многочленов");
+        addItem(Base, "Деление многочленов с остатком");
+        addItem(Base, "Вычисление НОД многочленов");
         break;
     }
     if (ui->genWidgetLayout->isEmpty()) ui->lblGen->hide();
