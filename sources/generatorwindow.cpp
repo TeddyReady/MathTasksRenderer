@@ -8,15 +8,7 @@ GeneratorWindow::GeneratorWindow(QWidget *parent)
     uploadSettings();
     uploadUI();
     createTheoryImages();
-
-    connect(ui->toolBar->actions().at(Check), &QAction::triggered, this, &GeneratorWindow::checkAnswers);
-    connect(ui->toolBar->actions().at(Clear), &QAction::triggered, this, &GeneratorWindow::clearTasks);
-    connect(ui->toolBar->actions().at(Print), &QAction::triggered, this, &GeneratorWindow::printTasks);
-    connect(ui->toolBar->actions().at(Manual), &QAction::triggered, this, &GeneratorWindow::openManual);
-    connect(ui->toolBar->actions().at(Font), &QAction::triggered, this, &GeneratorWindow::changeFontSize);
-    connect(ui->toolBar->actions().at(Exit), &QAction::triggered, [&](){qApp->closeAllWindows();});
-    connect(ui->prevPage, &QPushButton::clicked, this, &GeneratorWindow::prevTheoryPage);
-    connect(ui->nextPage, &QPushButton::clicked, this, &GeneratorWindow::nextTheoryPage);
+    getConnection();
 
     showMaximized();
 }
@@ -104,6 +96,18 @@ void GeneratorWindow::uploadSettings()
     settings.beginGroup("Theory");
     pageNumber = settings.value("numberOfPage").toInt();
     settings.endGroup();
+}
+
+void GeneratorWindow::getConnection()
+{
+    connect(ui->toolBar->actions().at(Check), &QAction::triggered, this, &GeneratorWindow::checkAnswers);
+    connect(ui->toolBar->actions().at(Clear), &QAction::triggered, this, &GeneratorWindow::clearTasks);
+    connect(ui->toolBar->actions().at(Print), &QAction::triggered, this, &GeneratorWindow::printTasks);
+    connect(ui->toolBar->actions().at(Manual), &QAction::triggered, this, &GeneratorWindow::openManual);
+    connect(ui->toolBar->actions().at(Font), &QAction::triggered, this, &GeneratorWindow::changeFontSize);
+    connect(ui->toolBar->actions().at(Exit), &QAction::triggered, [&](){qApp->closeAllWindows();});
+    connect(ui->prevPage, &QPushButton::clicked, this, &GeneratorWindow::prevTheoryPage);
+    connect(ui->nextPage, &QPushButton::clicked, this, &GeneratorWindow::nextTheoryPage);
 }
 
 void GeneratorWindow::createTheoryImages()
@@ -324,6 +328,7 @@ void GeneratorWindow::runTaskManager(const QString &task, bool closeMode)
         window = new DialogBase(AllTasks::RingResidue, closeMode, this);
     else if (task == "Кольцо Многочленов")
         window = new DialogBase(AllTasks::RingOfMembers, closeMode, this);
+    else return;
 
     connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
     connect(window, &DialogBase::sendingData, this, &GeneratorWindow::receivedData);
@@ -380,9 +385,11 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
         break;
     case AllTasks::RingResidue:
         runRingResidue(data[0], data[1], data[2], static_cast<RingResidueOptions>(subTask));
+        break;
     case AllTasks::RingOfMembers:
         runRingOfMembers(data[0], std::make_pair(data[1], data[2]), std::make_pair(data[3], data[4]),
                 static_cast<RingOfMembersOptions>(subTask), static_cast<Set>(optional));
+        break;
     }
 }
 

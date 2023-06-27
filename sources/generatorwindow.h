@@ -18,6 +18,7 @@ private:
     void uploadUI();
     void saveSettings();
     void uploadSettings();
+    void getConnection();
     void isReadyRender();
     void createTheoryImages();
 public:
