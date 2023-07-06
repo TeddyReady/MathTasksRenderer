@@ -356,97 +356,22 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
 void GeneratorWindow::runEulerFunction(int countOfTasks, int minNum, int maxNum, EulerFunctionOptions option)
 {
     EulerFunction task;
-    QVector<QString> tasks; QString buffer;
-    switch (option) {
-    case EulerFunctionOptions::Default:
-        for (size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
-            task.setTask(random->bounded(minNum, maxNum));
-            if (!mode) {
-                buffer = "\\varphi(" + QString::number(task.getTask()) + ")=~?";
-                tasks.push_back(std::move(buffer));
-                answers.push_back(QString::number(task.solve()));
-            } else {
-                QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\varphi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
-                tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
-            }
-        } break;
-    case EulerFunctionOptions::Primes:
-        for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
-            task.setTask(random->bounded(minNum, maxNum));
-            if (isPrime(task.getTask())) {
-                if (!mode) {
-                    buffer = "\\varphi(" + QString::number(task.getTask()) + ")=~?";
-                    tasks.push_back(std::move(buffer));
-                    answers.push_back(QString::number(task.solve()));
-                } else {
-                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\varphi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
-                    tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
-                } ++i;
-            }
-        } break;
-    case EulerFunctionOptions::PrimesDegrees:
-        for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
-            task.setTask(random->bounded(minNum, maxNum));
-            auto data = decompositionToSimple(task.getTask());
-            if (data.size() == 1 && data[0].second > 1) {
-                if (!mode) {
-                    buffer = "\\varphi(" + QString::number(task.getTask()) + ")=~?";
-                    tasks.push_back(std::move(buffer));
-                    answers.push_back(QString::number(task.solve()));
-                } else {
-                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\varphi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
-                    tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
-                } ++i;
-            }
-        } break;
-    case EulerFunctionOptions::MultiplyPrimes:
-        for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
-            task.setTask(random->bounded(minNum, maxNum));
-            auto data = decompositionToSimple(task.getTask());
-            if (data.size() == 1) continue;
-            bool accessFlag = true;
-            for (size_t i = 0; i < data.size(); ++i) {
-                if (data[i].second != 1) {
-                    accessFlag = false;
-                    break;
-                }
-            } if (accessFlag) {
-                if (!mode) {
-                    buffer = "\\varphi(" + QString::number(task.getTask()) + ")=~?";
-                    tasks.push_back(std::move(buffer));
-                    answers.push_back(QString::number(task.solve()));
-                } else {
-                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\varphi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
-                    tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
-                } ++i;
-            }
-        } break;
-    case EulerFunctionOptions::MultiplyPrimesDegrees:
-        for (size_t i = 0; i < static_cast<size_t>(countOfTasks);) {
-            task.setTask(random->bounded(minNum, maxNum));
-            auto data = decompositionToSimple(task.getTask());
-            if (data.size() == 1) continue;
-            bool accessFlag = true;
-            for (size_t i = 0; i < data.size(); ++i){
-                if (data[i].second == 1) {
-                    accessFlag = false;
-                    break;
-                }
-            } if (accessFlag) {
-                if (!mode) {
-                    buffer = "\\varphi(" + QString::number(task.getTask()) + ")=~?";
-                    tasks.push_back(std::move(buffer));
-                    answers.push_back(QString::number(task.solve()));
-                } else {
-                    QString taskText = "\\begin{align}\\color{sienna}{Вычислите~функцию~Эйлера:\\\\\\varphi(" + QString::number(task.getTask()) + ")=~?}\\end{align}";
-                    tasksForTest.push_back(std::make_tuple(taskText, QString::number(task.solve()), SupCommands::Number, 0));
-                } ++i;
-            }
-        } break;
-    }
+    task.setTaskOption(option);
+    QVector<QString> tasks;
 
+    QVector<QVariant> options;
+    options.push_back(QVariant::fromValue(qMakePair(minNum, maxNum)));
+
+    for (int i = 0; i < countOfTasks; ++i) {
+        task.create(options);
+
+        if (!mode) {
+            tasks.push_back(task.task(""));
+            answers.push_back(task.answer(QVariant()));
+        } else { /* тест */}
+    }
     if (!mode) {
-        descriptions.push_back(std::move(QString("Вычислите функцию Эйлера")));
+        descriptions.push_back(task.description());
         this->tasks.push_back(std::move(tasks));
         isReadyRender();
     }
@@ -1231,7 +1156,7 @@ void GeneratorWindow::runRingResidue(int countOfTasks, int minNum, int maxNum, R
 
         for (std::size_t i = 0; i < static_cast<size_t>(countOfTasks); ++i) {
             task.setOrder(random->bounded(minNum, maxNum));
-            task.setType(RingResidueType::Summary);
+            task.setType(static_cast<RingResidueType>(random->bounded(0, 2)));
             if (!mode) {
                 buffer = task.getCode() + "=~?";
                 tasks.push_back(std::move(buffer));
@@ -1350,7 +1275,7 @@ void GeneratorWindow::runRingOfMembers(int countOfTasks, std::pair<int, int> ran
         task.clear(); task_2.clear();
     }
     if (!mode) {
-        descriptions.push_back(std::move(task.description()));
+        descriptions.push_back(task.description());
         this->tasks.push_back(std::move(tasks));
         isReadyRender();
     }

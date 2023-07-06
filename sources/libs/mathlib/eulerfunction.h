@@ -8,15 +8,22 @@ enum class EulerFunctionOptions {
     MultiplyPrimesDegrees
 };
 
-class EulerFunction {
+class EulerFunction : protected BaseMath {
 public:
     explicit EulerFunction();
     explicit EulerFunction(int number);
 
+    void create(const QVector<QVariant> &options);
+    QString description();
+    QString task(const QString &optional);
+    QString answer(const QVariant &other);
+
+    void setTaskOption(EulerFunctionOptions option);
     int solve() const;
     void setTask(int num) { number = num; }
     int getTask() const { return number; }
 private:
+    EulerFunctionOptions taskType;
     int number;
 };
 

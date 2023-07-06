@@ -16,7 +16,11 @@ QString RingResidue::getCode() const
 
 int RingResidue::countOfGenerators() const
 {
-    return EulerFunction(n).solve();
+    if (type == RingResidueType::Summary) {
+        return EulerFunction(n).solve();
+    } else if (type == RingResidueType::Multiply) {
+        return EulerFunction(EulerFunction(n).solve()).solve();
+    } else return -1;
 }
 
 int RingResidue::solve(int base, int degree) const

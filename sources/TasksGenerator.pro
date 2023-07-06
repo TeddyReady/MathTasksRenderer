@@ -12,6 +12,7 @@ SOURCES += \
     dialoglatexprinter.cpp \
     dialogtesttimer.cpp \
     dialogresults.cpp \
+    libs/mathlib/complex.cpp \
     libs/mathlib/eulerfunction.cpp \
     libs/mathlib/groupproperties.cpp \
     main.cpp \
@@ -35,6 +36,7 @@ HEADERS += \
     dialoglatexprinter.h \
     dialogtesttimer.h\
     dialogresults.h \
+    libs/mathlib/complex.h \
     libs/mathlib/enum.h \
     libs/mathlib/environment.h \
     libs/mathlib/eulerfunction.h \
