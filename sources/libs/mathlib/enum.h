@@ -15,7 +15,7 @@ enum class Set {
     Mm_R, Mn_Z, Mn_R,
     _2A, Func_C, Func_D,
     Pn_X, ABS_C_, V_2D,
-    V_nD
+    V_nD, Zp, Z_i
 };
 
 enum class RingOfMembersOptions {

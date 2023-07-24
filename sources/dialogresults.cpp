@@ -15,40 +15,40 @@ DialogResults::DialogResults(const tasks_type &tasks, const QVector<QString> &re
     ui->tableView->setColumnWidth(0, (this->width() / 2));
     ui->tableView->setColumnWidth(1, (this->width() / 2));
 
-    for (int i = 0; i < maxCount; i++) {
-        model->setData(model->index(i, 0), results[i]);
-        model->setData(model->index(i, 1), std::get<1>(tasks[i]));
-        if (std::get<2>(tasks[i]) == SupCommands::Transposition) {
-            if (TranspositionGroup(std::get<1>(tasks[i]), std::get<3>(tasks[i])) ==
-                TranspositionGroup(results[i], std::get<3>(tasks[i]))){
-                userCount++;
-                model->setData(model->index(i, 0), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
-                model->setData(model->index(i, 1), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
-            } else {
-                model->setData(model->index(i, 0), QColor(Qt::darkRed), Qt::BackgroundColorRole);
-                model->setData(model->index(i, 1), QColor(Qt::darkRed), Qt::BackgroundColorRole);
-            }
-        } else if (std::get<2>(tasks[i]) == SupCommands::MultiTransposition) {
-            if (TranspositionGroup(std::get<1>(tasks[i]), std::get<3>(tasks[i])).simplify(std::get<3>(tasks[i])) ==
-                TranspositionGroup(results[i], std::get<3>(tasks[i])).simplify(std::get<3>(tasks[i]))){
-                userCount++;
-                model->setData(model->index(i, 0), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
-                model->setData(model->index(i, 1), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
-            } else {
-                model->setData(model->index(i, 0), QColor(Qt::darkRed), Qt::BackgroundColorRole);
-                model->setData(model->index(i, 1), QColor(Qt::darkRed), Qt::BackgroundColorRole);
-            }
-        } else {
-            if (std::get<1>(tasks[i]) == results[i]) {
-                userCount++;
-                model->setData(model->index(i, 0), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
-                model->setData(model->index(i, 1), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
-            } else {
-                model->setData(model->index(i, 0), QColor(Qt::darkRed), Qt::BackgroundColorRole);
-                model->setData(model->index(i, 1), QColor(Qt::darkRed), Qt::BackgroundColorRole);
-            }
-        }
-    }
+//    for (int i = 0; i < maxCount; i++) {
+//        model->setData(model->index(i, 0), results[i]);
+//        model->setData(model->index(i, 1), std::get<1>(tasks[i]));
+//        if (std::get<2>(tasks[i]) == SupCommands::Transposition) {
+//            if (TranspositionGroup(std::get<1>(tasks[i]), std::get<3>(tasks[i])) ==
+//                TranspositionGroup(results[i], std::get<3>(tasks[i]))){
+//                userCount++;
+//                model->setData(model->index(i, 0), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
+//                model->setData(model->index(i, 1), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
+//            } else {
+//                model->setData(model->index(i, 0), QColor(Qt::darkRed), Qt::BackgroundColorRole);
+//                model->setData(model->index(i, 1), QColor(Qt::darkRed), Qt::BackgroundColorRole);
+//            }
+//        } else if (std::get<2>(tasks[i]) == SupCommands::MultiTransposition) {
+//            if (TranspositionGroup(std::get<1>(tasks[i]), std::get<3>(tasks[i])).simplify(std::get<3>(tasks[i])) ==
+//                TranspositionGroup(results[i], std::get<3>(tasks[i])).simplify(std::get<3>(tasks[i]))){
+//                userCount++;
+//                model->setData(model->index(i, 0), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
+//                model->setData(model->index(i, 1), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
+//            } else {
+//                model->setData(model->index(i, 0), QColor(Qt::darkRed), Qt::BackgroundColorRole);
+//                model->setData(model->index(i, 1), QColor(Qt::darkRed), Qt::BackgroundColorRole);
+//            }
+//        } else {
+//            if (std::get<1>(tasks[i]) == results[i]) {
+//                userCount++;
+//                model->setData(model->index(i, 0), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
+//                model->setData(model->index(i, 1), QColor(Qt::darkGreen), Qt::BackgroundColorRole);
+//            } else {
+//                model->setData(model->index(i, 0), QColor(Qt::darkRed), Qt::BackgroundColorRole);
+//                model->setData(model->index(i, 1), QColor(Qt::darkRed), Qt::BackgroundColorRole);
+//            }
+//        }
+//    }
     ui->userResult->setText(QString::number(userCount));
     ui->maxResult->setText(QString::number(maxCount));
     ui->progressBar->setValue(static_cast<int>((static_cast<double>(userCount) / static_cast<double>(maxCount)) * 100));

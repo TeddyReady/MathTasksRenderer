@@ -1,15 +1,15 @@
 #ifndef DIALOGBASE_H
 #define DIALOGBASE_H
 
-#include "libs/mathlib/transpositiongroup.h"
-#include "libs/mathlib/algebrastructures.h"
-#include "libs/mathlib/groupproperties.h"
-#include "libs/mathlib/symbollegandre.h"
-#include "libs/mathlib/mebiusfunction.h"
-#include "libs/mathlib/eulerfunction.h"
-#include "libs/mathlib/ringofmembers.h"
-#include "libs/mathlib/ringresidue.h"
-#include "libs/mathlib/matrix.tpp"
+//#include "libs/mathlib/transpositiongroup.h"
+//#include "libs/mathlib/algebrastructures.h"
+//#include "libs/mathlib/groupproperties.h"
+#include "libs/mathlib/isymbollegandre.h"
+#include "libs/mathlib/imebiusfunction.h"
+#include "libs/mathlib/ieulerfunction.h"
+//#include "libs/mathlib/ringofmembers.h"
+//#include "libs/mathlib/ringresidue.h"
+#include "libs/mathlib/imatrix.tpp"
 
 enum class AllTasks {
     EulerFunction, MebiusFunction,
@@ -20,7 +20,7 @@ enum class AllTasks {
 };
 
 enum class ExoticWidget {
-    None, Transposition
+    None, Transposition, Matrix
 };
 
 enum WidgetRole { Gen, Base };

@@ -29,13 +29,13 @@ protected:
 public slots:
     void receivedMetaInfo(int countOfTasks);
     void receivedData(std::vector<int> data, AllTasks task, int subTask, int optional);
+
 private slots:
     void checkAnswers();
     void clearTasks();
     void printTasks();
     void changeFontSize();
     void openManual();
-
 
     void startTest(QTime time);
     void generateTask();
@@ -48,17 +48,6 @@ private slots:
 private:
     //Main parser
     void runTaskManager(const QString &task, bool closeMode);
-    //Run Algorithms
-    void runEulerFunction(int, int, int, EulerFunctionOptions);
-    void runMebiusFunction(int, int, int, MebiusFunctionOptions);
-    void runSymbolLegandre(int, std::pair<int, int>, std::pair<int, int>, SymbolLegandreOptions);
-    void runSymbolJacobi(int, std::pair<int, int>, std::pair<int, int>, SymbolJacobiOptions);
-    void runTranspositionGroup(int, int, int, TranspositionGroupOptions, ViewMode);
-    void runSet(int, SetOptions);
-    void runGroupProperties(int, int, int, GroupPropertiesOptions);
-    void runMatrix(int, std::pair<int, int>, std::pair<int, int>, MatrixOptions);
-    void runRingResidue(int, int, int, RingResidueOptions);
-    void runRingOfMembers(int, std::pair<int, int>, std::pair<int, int>, RingOfMembersOptions);
 
     int totalTestTasks, lastSizeCount, pageNumber;
     bool mode;

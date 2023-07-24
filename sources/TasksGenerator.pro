@@ -1,4 +1,6 @@
 include(libs/qtmathjax/qtmathjax.pri)
+include(libs/CppMathLib/sources/cppmathlib.pri)
+
 QT       += core gui webkitwidgets
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Algebra_Madness
@@ -7,53 +9,53 @@ CONFIG += c++17
 DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     dialogmanual.cpp \
-    libs/mathlib/basemath.cpp \
     dialogbase.cpp \
     dialoglatexprinter.cpp \
     dialogtesttimer.cpp \
     dialogresults.cpp \
-    libs/mathlib/complex.cpp \
-    libs/mathlib/eulerfunction.cpp \
-    libs/mathlib/groupproperties.cpp \
+#    libs/mathlib/eulerfunction.cpp \
+#    libs/mathlib/groupproperties.cpp \
+    libs/mathlib/ieulerfunction.cpp \
+    libs/mathlib/imebiusfunction.cpp \
+    libs/mathlib/isymbollegandre.cpp \
     main.cpp \
     generatorwindow.cpp \
-    libs/mathlib/mebiusfunction.cpp \
-    libs/mathlib/symbollegandre.cpp \
-    libs/mathlib/ringresidue.cpp \
+#    libs/mathlib/mebiusfunction.cpp \
+#    libs/mathlib/symbollegandre.cpp \
+#    libs/mathlib/ringresidue.cpp \
     testmode.cpp \
-    libs/mathlib/transpositiongroup.cpp \
-    libs/mathlib/algebrastructures.cpp \
+#    libs/mathlib/transpositiongroup.cpp \
+#    libs/mathlib/algebrastructures.cpp \
     dialogfontsize.cpp \
-    libs/mathlib/ringofmembers.cpp \
-    libs/mathlib/rational.cpp \
-    theoryprinter.cpp
+#    libs/mathlib/ringofmembers.cpp \
+    theoryprinter.cpp \
 
 HEADERS += \
-    libs/mathlib/common.h \
     dialogmanual.h \
-    libs/mathlib/basemath.h \
     dialogbase.h \
     dialoglatexprinter.h \
     dialogtesttimer.h\
     dialogresults.h \
-    libs/mathlib/complex.h \
     libs/mathlib/enum.h \
     libs/mathlib/environment.h \
-    libs/mathlib/eulerfunction.h \
+#    libs/mathlib/eulerfunction.h \
     generatorwindow.h \
-    libs/mathlib/groupproperties.h \
-    libs/mathlib/matrix.tpp \
-    libs/mathlib/mebiusfunction.h \
+#    libs/mathlib/groupproperties.h \
+    libs/mathlib/ieulerfunction.h \
+    libs/mathlib/imatrix.tpp \
+    libs/mathlib/imebiusfunction.h \
+    libs/mathlib/include.h \
+    libs/mathlib/interface.h \
+#    libs/mathlib/mebiusfunction.h \
+    libs/mathlib/isymbollegandre.h \
     libs/mathlib/metatype.h \
-    libs/mathlib/symbollegandre.h \
-    libs/mathlib/ringresidue.h \
+#    libs/mathlib/symbollegandre.h \
+#    libs/mathlib/ringresidue.h \
     testmode.h \
-    libs/mathlib/transpositiongroup.h \
-    libs/mathlib/algebrastructures.h \
-    libs/mathlib/errors.h \
+#    libs/mathlib/transpositiongroup.h \
+#    libs/mathlib/algebrastructures.h \
     dialogfontsize.h \
-    libs/mathlib/ringofmembers.h \
-    libs/mathlib/rational.h \
+#    libs/mathlib/ringofmembers.h \
 
 FORMS += \
     dialogbase.ui \

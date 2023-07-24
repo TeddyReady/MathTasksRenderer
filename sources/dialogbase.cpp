@@ -53,12 +53,43 @@ GenWidget::GenWidget(AllTasks task, const QString &optionName, QWidget *parent) 
 void BaseWidget::setExoticOptions(const ExoticWidget &type)
 {
     switch (type) {
-    case ExoticWidget::Transposition:
-        exoticOption = static_cast<int>(ViewMode::None);
-        pb = new QPushButton("Выбрать вид...", this);
+//    case ExoticWidget::Transposition:
+//        exoticOption = static_cast<int>(ViewMode::None);
+//        pb = new QPushButton("Выбрать вид...", this);
+//        pb->setMenu(new QMenu(pb));
+//        pb->menu()->addAction(new QAction("Канонический вид", pb->menu()));
+//        pb->menu()->addAction(new QAction("Циклический вид", pb->menu()));
+//        pb->setDisabled(true);
+//        layout()->addWidget(pb);
+//        connect(cb, &QCheckBox::clicked, [&](){
+//            if (cb->isChecked()) pb->setEnabled(true);
+//            else pb->setDisabled(true);
+//            sb->setDisabled(true);
+//            sb->setValue(0);
+//        });
+//        connect(pb->menu()->actions().at(0), &QAction::triggered, [&](){
+//            pb->setText("Канонический вид");
+//            exoticOption = static_cast<int>(ViewMode::Standart);
+//            sb->setEnabled(true);
+//            sb->setValue(1);
+//        });
+//        connect(pb->menu()->actions().at(1), &QAction::triggered, [&](){
+//            pb->setText("Циклический вид");
+//            exoticOption = static_cast<int>(ViewMode::Cycle);
+//            sb->setEnabled(true);
+//            sb->setValue(1);
+//        });
+        break;
+    case ExoticWidget::Matrix:
+        exoticOption = static_cast<int>(Set::N);
+        pb = new QPushButton("Выбрать поле чисел...", this);
         pb->setMenu(new QMenu(pb));
-        pb->menu()->addAction(new QAction("Канонический вид", pb->menu()));
-        pb->menu()->addAction(new QAction("Циклический вид", pb->menu()));
+        pb->menu()->addAction(new QAction("Действительные", pb->menu()));
+        pb->menu()->addAction(new QAction("Целые", pb->menu()));
+        pb->menu()->addAction(new QAction("Кольцо вычетов", pb->menu()));
+        pb->menu()->addAction(new QAction("Поле вычетов", pb->menu()));
+        pb->menu()->addAction(new QAction("Комплексные", pb->menu()));
+        pb->menu()->addAction(new QAction("Целые Гауссовы", pb->menu()));
         pb->setDisabled(true);
         layout()->addWidget(pb);
         connect(cb, &QCheckBox::clicked, [&](){
@@ -68,14 +99,38 @@ void BaseWidget::setExoticOptions(const ExoticWidget &type)
             sb->setValue(0);
         });
         connect(pb->menu()->actions().at(0), &QAction::triggered, [&](){
-            pb->setText("Канонический вид");
-            exoticOption = static_cast<int>(ViewMode::Standart);
+            pb->setText("Действительные");
+            exoticOption = static_cast<int>(Set::R);
             sb->setEnabled(true);
             sb->setValue(1);
         });
         connect(pb->menu()->actions().at(1), &QAction::triggered, [&](){
-            pb->setText("Циклический вид");
-            exoticOption = static_cast<int>(ViewMode::Cycle);
+            pb->setText("Целые");
+            exoticOption = static_cast<int>(Set::Z);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        connect(pb->menu()->actions().at(2), &QAction::triggered, [&](){
+            pb->setText("Кольцо вычетов");
+            exoticOption = static_cast<int>(Set::Zn);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        connect(pb->menu()->actions().at(3), &QAction::triggered, [&](){
+            pb->setText("Поле вычетов");
+            exoticOption = static_cast<int>(Set::Zp);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        connect(pb->menu()->actions().at(4), &QAction::triggered, [&](){
+            pb->setText("Комплексные");
+            exoticOption = static_cast<int>(Set::C);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        connect(pb->menu()->actions().at(5), &QAction::triggered, [&](){
+            pb->setText("Целые Гауссовы");
+            exoticOption = static_cast<int>(Set::Z_i);
             sb->setEnabled(true);
             sb->setValue(1);
         });
@@ -133,17 +188,11 @@ void GenWidget::loadSettings(AllTasks task, const QString &optionName)
         sbMax->setValue(12);
         return;
     case AllTasks::Matrix:
-        if (optionName == "Размер") {
-            sbMin->setMinimum(2);
-            sbMax->setMaximum(8);
-            sbMin->setValue(2);
-            sbMax->setValue(4);
-        } else {
-            sbMin->setMinimum(-999);
-            sbMax->setMaximum(999);
-            sbMin->setValue(-10);
-            sbMax->setValue(10);
-        } return;
+        sbMin->setMinimum(2);
+        sbMax->setMaximum(8);
+        sbMin->setValue(2);
+        sbMax->setValue(4);
+        return;
     case AllTasks::RingResidue:
         sbMin->setMinimum(3);
         sbMax->setMaximum(99);
@@ -236,13 +285,14 @@ void DialogBase::uploadUI()
         addItem(Base, "Вычислить экспоненту группы");
         break;
     case AllTasks::Matrix:
-        addItem(Gen, "Размер");
-        addItem(Gen, "Коэффициенты");
-        addItem(Base, "Сумма матриц");
-        addItem(Base, "Разность матриц");
-        addItem(Base, "Умножение матриц");
-        addItem(Base, "Найти обратную к матрице");
-        addItem(Base, "Вычислить детерминант матрицы");
+        ui->baseWidgetLayout->addWidget(new QLabel("Количество"), 0, 2);
+        dynamic_cast<QLabel *>(ui->baseWidgetLayout->itemAt(1)->widget())->setText("Поле");
+        addItem(Gen, "Размер", ExoticWidget::Matrix);
+        addItem(Base, "Сумма матриц", ExoticWidget::Matrix);
+        addItem(Base, "Разность матриц", ExoticWidget::Matrix);
+        addItem(Base, "Умножение матриц", ExoticWidget::Matrix);
+        addItem(Base, "Найти обратную к матрице", ExoticWidget::Matrix);
+        addItem(Base, "Вычислить детерминант матрицы", ExoticWidget::Matrix);
         break;
     case AllTasks::RingResidue:
         addItem(Gen);
@@ -286,7 +336,6 @@ bool DialogBase::isHaveMoreGens()
     switch (task) {
     case AllTasks::SymbolLegandre:
     case AllTasks::SymbolJacobi:
-    case AllTasks::Matrix:
     case AllTasks::RingOfMembers:
         return true;
 

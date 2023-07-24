@@ -1,5 +1,5 @@
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef INCLUDE_H
+#define INCLUDE_H
 /* File with general includes */
 //Qt includes
 #include <QApplication>
@@ -54,4 +54,4 @@
 //other
 #include <poppler/qt5/poppler-qt5.h>
 
-#endif // COMMON_H
+#endif // INCLUDE_H
