@@ -1,6 +1,6 @@
 #ifndef DIALOGTESTTIMER_H
 #define DIALOGTESTTIMER_H
-#include "libs/mathlib/include.h"
+#include "include.h"
 
 namespace Ui {
 class DialogTestTimer;

@@ -31,8 +31,10 @@
 #include <QSettings>
 #include <QSpacerItem>
 #include <QSpinBox>
+#include <QSplashScreen>
 #include <QStandardItemModel>
 #include <QString>
+#include <QThread>
 #include <QTextBrowser>
 #include <QTextDocument>
 #include <QTextStream>
@@ -48,6 +50,7 @@
 //C and C++ includes
 #include <algorithm>
 #include <iostream>
+#include <memory>
 #include <vector>
 #include <cmath>
 

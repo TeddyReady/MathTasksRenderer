@@ -39,14 +39,14 @@ void GeneratorWindow::uploadUI()
     ui->graphicsView->setScene(scene);
 
     ui->toolBar->setContextMenuPolicy(Qt::CustomContextMenu);
-    ui->toolBar->addAction(new QAction(QPixmap("://general/img/checkAnswers.png"), "Показать ответы", ui->toolBar));
-    ui->toolBar->addAction(new QAction(QPixmap("://general/img/clearTasks.png"), "Очистить задачи", ui->toolBar));
+    ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::checkAnswers), "Показать ответы", ui->toolBar));
+    ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::clearTasks), "Очистить задачи", ui->toolBar));
     ui->toolBar->addSeparator();
-    ui->toolBar->addAction(new QAction(QPixmap("://general/img/printer.png"), "Подготовить печатный вариант...", ui->toolBar));
+    ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::printer), "Подготовить печатный вариант...", ui->toolBar));
     ui->toolBar->addSeparator();
-    ui->toolBar->addAction(new QAction(QPixmap("://general/img/manual.png"), "Справочник", ui->toolBar));
-    ui->toolBar->addAction(new QAction(QPixmap("://general/img/font-size.png"), "Настройки шрифта", ui->toolBar));
-    ui->toolBar->addAction(new QAction(QPixmap("://general/img/quit.png"), "Выход...", ui->toolBar));
+    ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::manual), "Справочник", ui->toolBar));
+    ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::font_size), "Настройки шрифта", ui->toolBar));
+    ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::quit), "Выход...", ui->toolBar));
     ui->toolBar->actions().at(0)->setDisabled(true);
     ui->toolBar->actions().at(1)->setDisabled(true);
     ui->toolBar->actions().at(3)->setDisabled(true);
@@ -59,7 +59,7 @@ void GeneratorWindow::uploadUI()
     setCursor(Qt::ArrowCursor);
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowTitle(App::AppName);
-    setWindowIcon(QIcon(":/general/img/appIcon.png"));
+    setWindowIcon(QIcon(RSC::pics::appIcon));
 }
 
 void GeneratorWindow::saveSettings()
@@ -331,9 +331,9 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
         interface = new SymbolJacobiInterface(std::make_pair(data[1], data[2]), std::make_pair(data[3], data[4]),
                                                 static_cast<SymbolLegandreOptions>(subTask));
         break;
-//    case AllTasks::TranspositionGroup:
-//        runTranspositionGroup(data[0], data[1], data[2], static_cast<TranspositionGroupOptions>(subTask), static_cast<ViewMode>(optional));
-//        break;
+    case AllTasks::TranspositionGroup:
+        interface = new TranspositionGroupInterface(data[1], data[2], static_cast<TranspositionGroupOptions>(subTask), static_cast<ViewMode>(optional));
+        break;
 //    case AllTasks::Set:
 //        runSet(data[0], static_cast<SetOptions>(subTask));
 //        break;
@@ -349,18 +349,18 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
         case Set::Z:
             interface = new MatrixInterface<int>(std::make_pair(data[1], data[2]), static_cast<MatrixOptions>(subTask));
             break;
-//        case Set::Zn:
-//            interface = new MatrixInterface<Zn>(std::make_pair(data[1], data[2]), static_cast<MatrixOptions>(subTask));
-//            break;
-//        case Set::Zp:
-//            interface = new MatrixInterface<Zp>(std::make_pair(data[1], data[2]), static_cast<MatrixOptions>(subTask));
-//            break;
-//        case Set::C:
-//            interface = new MatrixInterface<Complex<double>>(std::make_pair(data[1], data[2]), static_cast<MatrixOptions>(subTask));
-//            break;
-//        case Set::Z_i:
-//            interface = new MatrixInterface<Complex<int>>(std::make_pair(data[1], data[2]), static_cast<MatrixOptions>(subTask));
-//            break;
+        case Set::Zn:
+            interface = new MatrixInterface<Zn>(std::make_pair(data[1], data[2]), static_cast<MatrixOptions>(subTask));
+            break;
+        case Set::Zp:
+            interface = new MatrixInterface<Zp>(std::make_pair(data[1], data[2]), static_cast<MatrixOptions>(subTask));
+            break;
+        case Set::C:
+            interface = new MatrixInterface<Complex<double>>(std::make_pair(data[1], data[2]), static_cast<MatrixOptions>(subTask));
+            break;
+        case Set::Z_i:
+            interface = new MatrixInterface<Complex<int>>(std::make_pair(data[1], data[2]), static_cast<MatrixOptions>(subTask));
+            break;
         default:
             break;
         }

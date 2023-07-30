@@ -1,8 +1,8 @@
 #ifndef TEST_MODE_H
 #define TEST_MODE_H
-
 #include "dialogtesttimer.h"
 #include "dialogresults.h"
+#include "environment.h"
 #include "texengine.h"
 
 namespace Ui {

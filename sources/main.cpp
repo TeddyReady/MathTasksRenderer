@@ -1,7 +1,3 @@
-#include <QSplashScreen>
-#include <QApplication>
-#include <QThread>
-
 #include "generatorwindow.h"
 
 int main(int argc, char *argv[])
@@ -13,12 +9,12 @@ int main(int argc, char *argv[])
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
     QSplashScreen *splash = new QSplashScreen;
-    splash->setPixmap(QPixmap(":/general/img/splash.png"));
+    splash->setPixmap(QPixmap(RSC::pics::splash));
     splash->show();
 
     Qt::Alignment location = Qt::AlignBottom | Qt::AlignCenter;
     splash->showMessage("Устанавливаем таблицу CSS...", location, Qt::black);
-    QFile styleFile(":/general/style.css");
+    QFile styleFile(RSC::general::style);
     styleFile.open(QFile::ReadOnly);
     app.setStyleSheet(styleFile.readAll());
     styleFile.close();

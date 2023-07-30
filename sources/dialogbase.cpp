@@ -53,32 +53,32 @@ GenWidget::GenWidget(AllTasks task, const QString &optionName, QWidget *parent) 
 void BaseWidget::setExoticOptions(const ExoticWidget &type)
 {
     switch (type) {
-//    case ExoticWidget::Transposition:
-//        exoticOption = static_cast<int>(ViewMode::None);
-//        pb = new QPushButton("Выбрать вид...", this);
-//        pb->setMenu(new QMenu(pb));
-//        pb->menu()->addAction(new QAction("Канонический вид", pb->menu()));
-//        pb->menu()->addAction(new QAction("Циклический вид", pb->menu()));
-//        pb->setDisabled(true);
-//        layout()->addWidget(pb);
-//        connect(cb, &QCheckBox::clicked, [&](){
-//            if (cb->isChecked()) pb->setEnabled(true);
-//            else pb->setDisabled(true);
-//            sb->setDisabled(true);
-//            sb->setValue(0);
-//        });
-//        connect(pb->menu()->actions().at(0), &QAction::triggered, [&](){
-//            pb->setText("Канонический вид");
-//            exoticOption = static_cast<int>(ViewMode::Standart);
-//            sb->setEnabled(true);
-//            sb->setValue(1);
-//        });
-//        connect(pb->menu()->actions().at(1), &QAction::triggered, [&](){
-//            pb->setText("Циклический вид");
-//            exoticOption = static_cast<int>(ViewMode::Cycle);
-//            sb->setEnabled(true);
-//            sb->setValue(1);
-//        });
+    case ExoticWidget::Transposition:
+        exoticOption = static_cast<int>(ViewMode::None);
+        pb = new QPushButton("Выбрать вид...", this);
+        pb->setMenu(new QMenu(pb));
+        pb->menu()->addAction(new QAction("Канонический вид", pb->menu()));
+        pb->menu()->addAction(new QAction("Циклический вид", pb->menu()));
+        pb->setDisabled(true);
+        layout()->addWidget(pb);
+        connect(cb, &QCheckBox::clicked, [&](){
+            if (cb->isChecked()) pb->setEnabled(true);
+            else pb->setDisabled(true);
+            sb->setDisabled(true);
+            sb->setValue(0);
+        });
+        connect(pb->menu()->actions().at(0), &QAction::triggered, [&](){
+            pb->setText("Канонический вид");
+            exoticOption = static_cast<int>(ViewMode::Standart);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        connect(pb->menu()->actions().at(1), &QAction::triggered, [&](){
+            pb->setText("Циклический вид");
+            exoticOption = static_cast<int>(ViewMode::Cycle);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
         break;
     case ExoticWidget::Matrix:
         exoticOption = static_cast<int>(Set::N);

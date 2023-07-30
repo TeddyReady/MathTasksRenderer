@@ -1,6 +1,6 @@
 #ifndef DIALOGRESULTS_H
 #define DIALOGRESULTS_H
-#include "libs/mathlib/include.h"
+#include "include.h"
 
 enum class SupCommands {
     Number, Transposition, CycleType, Even,

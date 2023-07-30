@@ -1,15 +1,10 @@
 #ifndef DIALOGBASE_H
 #define DIALOGBASE_H
-
-//#include "libs/mathlib/transpositiongroup.h"
-//#include "libs/mathlib/algebrastructures.h"
-//#include "libs/mathlib/groupproperties.h"
-#include "libs/mathlib/isymbollegandre.h"
-#include "libs/mathlib/imebiusfunction.h"
-#include "libs/mathlib/ieulerfunction.h"
-//#include "libs/mathlib/ringofmembers.h"
-//#include "libs/mathlib/ringresidue.h"
-#include "libs/mathlib/imatrix.tpp"
+#include "itranspositiongroup.h"
+#include "isymbollegandre.h"
+#include "imebiusfunction.h"
+#include "ieulerfunction.h"
+#include "imatrix.tpp"
 
 enum class AllTasks {
     EulerFunction, MebiusFunction,

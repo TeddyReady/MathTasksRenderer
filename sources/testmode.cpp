@@ -10,7 +10,7 @@ TestMode::TestMode(tasks_type &tasksForTest, QTime time, QWidget *parent) :
     engine = new TeXEngine(ui->taskView);
     isPressed = false;
     tasks = std::move(tasksForTest);
-    QAction *reloadAction = new QAction(QPixmap("://img/reload.png"), "Reload task", ui->toolBar);
+    QAction *reloadAction = new QAction(QPixmap(RSC::pics::reload), "Reload task", ui->toolBar);
     connect(reloadAction, &QAction::triggered, [&](){
         engine->TeX2SVG(std::get<0>(tasks[curTask - 1]), true);
     }); ui->toolBar->addAction(reloadAction);

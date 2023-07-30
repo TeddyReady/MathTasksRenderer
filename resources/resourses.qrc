@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/general">
+        <file>style.css</file>
+    </qresource>
+    <qresource prefix="/theory">
+        <file>theory/theory.pdf</file>
+    </qresource>
+    <qresource prefix="/pics">
+        <file>pics/unchecked_hover.png</file>
+        <file>pics/splash.png</file>
+        <file>pics/reload.png</file>
+        <file>pics/quit.png</file>
+        <file>pics/printer.png</file>
+        <file>pics/manual.png</file>
+        <file>pics/font-size.png</file>
+        <file>pics/clearTasks.png</file>
+        <file>pics/checked_hover.png</file>
+        <file>pics/checked.png</file>
+        <file>pics/checkAnswers.png</file>
+        <file>pics/appIcon.png</file>
+    </qresource>
+    <qresource prefix="/data">
+        <file>data/set.csv</file>
+        <file>data/groups.csv</file>
+    </qresource>
+</RCC>

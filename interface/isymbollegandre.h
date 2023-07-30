@@ -3,7 +3,7 @@
 #include "interface.h"
 #include "symbollegandre.h"
 #include "basemath.h"
-#include <memory>
+#include "include.h"
 
 enum class SymbolLegandreOptions {
     Default, Primes,

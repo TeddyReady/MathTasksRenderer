@@ -1,7 +1,7 @@
 #ifndef DIALOGLATEXPRINTER_H
 #define DIALOGLATEXPRINTER_H
 
-#include "libs/mathlib/environment.h"
+#include "environment.h"
 #include "texengine.h"
 
 namespace Ui {

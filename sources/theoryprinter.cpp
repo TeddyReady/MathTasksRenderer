@@ -3,7 +3,7 @@
 
 void GeneratorWindow::createTheoryImages()
 {
-    QFile pdfSource(RSC::theoryPath);
+    QFile pdfSource(RSC::theory::theory);
     if (!pdfSource.open(QFile::ReadOnly)) return;
     Poppler::Document *document = Poppler::Document::loadFromData(pdfSource.readAll());
     pdfSource.close();

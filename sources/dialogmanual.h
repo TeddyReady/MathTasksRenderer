@@ -1,9 +1,7 @@
 #ifndef DIALOGMANUAL_H
 #define DIALOGMANUAL_H
-
-//#include "libs/mathlib/algebrastructures.h"
 #include "texengine.h"
-#include "libs/mathlib/include.h"
+#include "include.h"
 
 namespace Ui {
 class DialogManual;
