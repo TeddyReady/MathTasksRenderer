@@ -2,6 +2,8 @@
 #define ENVIRONMENT_H
 #include "include.h"
 
+/* NAMESPACES */
+
 /* App */
 namespace App {
     const QString AppName = QString("Algebra Madness");
@@ -68,6 +70,31 @@ namespace LaTeX {
     const QString tableBegin =    "\\begin{array}{|r|l|}\\hline\n";
     const QString tableEnd =      "\\hline\\end{array}\n";
 }
+
+/* ENUM */
+
+/* All task types in Algebra Madness */
+enum class AllTasks {
+    EulerFunction       ,
+    MebiusFunction      ,
+    SymbolLegandre      ,
+    SymbolJacobi        ,
+    TranspositionGroup  ,
+    Matrix              ,
+    Set                 ,
+    GroupProperties     ,
+    RingResidue         ,
+    RingOfMembers       ,
+};
+
+enum class ExoticOption {
+    None            ,
+    Transposition   ,
+    MatrixDefault   ,
+    MatrixInverse   ,
+    ResidueDefault  ,
+    ResidueAll      ,
+};
 
 /* Main ToolBar Structure */
 enum ToolBarOptions {

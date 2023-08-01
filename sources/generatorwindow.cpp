@@ -274,14 +274,12 @@ void GeneratorWindow::runTaskManager(const QString &task, bool closeMode)
         window = new DialogBase(AllTasks::SymbolLegandre, closeMode, this);
     else if (task == "Символ Якоби")
         window = new DialogBase(AllTasks::SymbolJacobi, closeMode, this);
-    else if (task == "Алгебраические Структуры")
-        window = new DialogBase(AllTasks::Set, closeMode, this);
-    else if (task == "Группы и их свойства")
-        window = new DialogBase(AllTasks::GroupProperties, closeMode, this);
+//    else if (task == "Алгебраические Структуры")
+//        window = new DialogBase(AllTasks::Set, closeMode, this);
+//    else if (task == "Группы и их свойства")
+//        window = new DialogBase(AllTasks::GroupProperties, closeMode, this);
     else if (task == "Матрицы")
         window = new DialogBase(AllTasks::Matrix, closeMode, this);
-    else if (task == "Группы и их свойства")
-        window = new DialogBase(AllTasks::GroupProperties, closeMode, this);
     else if (task == "Кольцо Вычетов")
         window = new DialogBase(AllTasks::RingResidue, closeMode, this);
     else if (task == "Кольцо Многочленов")
@@ -366,9 +364,9 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
         }
 
         break;
-//    case AllTasks::RingResidue:
-//        runRingResidue(data[0], data[1], data[2], static_cast<RingResidueOptions>(subTask));
-//        break;
+    case AllTasks::RingResidue:
+        interface = new RingResidueInterface(data[1], data[2], static_cast<RingResidueOptions>(subTask), static_cast<ResidueType>(optional));
+        break;
 //    case AllTasks::RingOfMembers:
 //        runRingOfMembers(data[0], std::make_pair(data[1], data[2]), std::make_pair(data[3], data[4]),
 //                static_cast<RingOfMembersOptions>(subTask));

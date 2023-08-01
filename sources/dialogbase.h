@@ -4,19 +4,9 @@
 #include "isymbollegandre.h"
 #include "imebiusfunction.h"
 #include "ieulerfunction.h"
+#include "iringresidue.h"
 #include "imatrix.tpp"
-
-enum class AllTasks {
-    EulerFunction, MebiusFunction,
-    SymbolLegandre, SymbolJacobi,
-    TranspositionGroup, Set,
-    GroupProperties, Matrix,
-    RingResidue, RingOfMembers
-};
-
-enum class ExoticWidget {
-    None, Transposition, Matrix
-};
+#include "environment.h"
 
 enum WidgetRole { Gen, Base };
 
@@ -38,7 +28,7 @@ protected slots:
     void reject();
 private:
     void uploadUI();
-    void addItem(WidgetRole role, const QString &name = "", ExoticWidget type = ExoticWidget::None);
+    void addItem(WidgetRole role, const QString &name = "", ExoticOption type = ExoticOption::None);
     bool isHaveMoreGens();
 
     AllTasks task;
@@ -51,9 +41,9 @@ private:
 class BaseWidget : public QWidget {
     Q_OBJECT
 public:
-    explicit BaseWidget(const QString &cbName, ExoticWidget type = ExoticWidget::None, QWidget *parent = nullptr);
+    explicit BaseWidget(const QString &cbName, ExoticOption type = ExoticOption::None, QWidget *parent = nullptr);
 
-    void setExoticOptions(const ExoticWidget &type);
+    void setExoticOptions(const ExoticOption &type);
     int getCount() const { return sb->value(); }
     int getExoticOption() const { return exoticOption; }
     bool isChecked() const { return cb->isChecked(); }
@@ -65,7 +55,7 @@ private:
     QSpinBox *sb;
     QPushButton *pb;
     int exoticOption;
-    ExoticWidget type;
+    ExoticOption type;
 };
 
 class GenWidget : public QWidget {

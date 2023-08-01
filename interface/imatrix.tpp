@@ -191,36 +191,7 @@ public:
                 matrix.set(i, j, Complex<double>(static_cast<double>(gen->bounded(-20, 20)), static_cast<double>(gen->bounded(-20, 20))));
     }
 
-    QString stringFromT(const int &param) const
-    {
-        return QString::number(param);
-    }
-
-    QString stringFromT(const double &param) const
-    {
-        return QString::number(param);
-    }
-
-    QString stringFromT(const Zn &param) const
-    {
-        return QString::fromStdString(std::string(param));
-    }
-
-    QString stringFromT(const Zp &param) const
-    {
-        return QString::fromStdString(std::string(param));
-    }
-
-    QString stringFromT(const Complex<int> &param) const
-    {
-        return QString::fromStdString(std::string(param));
-    }
-
-    QString stringFromT(const Complex<double> &param) const
-    {
-        return QString::fromStdString(std::string(param));
-    }
-
+    QString stringFromT(const T &param) const;
     QString getType();
 };
 
