@@ -6,34 +6,10 @@ RingResidueInterface::~RingResidueInterface() { gen = nullptr; }
 
 void RingResidueInterface::create()
 {
-    switch (option)
-    {
-    case RingResidueOptions::GenCount:
-        if (static_cast<bool>(gen->bounded(0, 2)))
-            operation = "+";
-        else
-            operation = "*";
-        break;
-
-//    case RingResidueOptions::A_in_M:
-//        return;
-
-//    case RingResidueOptions::A_X_equal_B:
-//        return;
-
-//    case RingResidueOptions::Order:
-//        return;
-
-//    case RingResidueOptions::XX_equal_p:
-//        return;
-
-//    case RingResidueOptions::XX_equal_pq:
-//        return;
-
-
-    default:
-        break;
-    }
+    if (static_cast<bool>(gen->bounded(0, 2)))
+        operation = "+";
+    else
+        operation = "*";
 
     switch (type) {
     case ResidueType::Zn:
@@ -46,7 +22,7 @@ void RingResidueInterface::create()
         else
             module = static_cast<int>(gen->bounded(minNum, maxNum));
 
-        n = static_cast<int>(gen->bounded(0, module));
+        n = static_cast<int>(gen->bounded(2, module));
         break;
 
     case ResidueType::Zp:
@@ -54,12 +30,36 @@ void RingResidueInterface::create()
             module = static_cast<int>(gen->bounded(minNum, maxNum));
         } while (not isPrime(module));
 
-        n = static_cast<int>(gen->bounded(0, module));
+        n = static_cast<int>(gen->bounded(2, module));
         break;
 
     case ResidueType::MultiGroup_Zn:
         module = static_cast<int>(gen->bounded(minNum, maxNum));
-        n = static_cast<int>(gen->bounded(0, module));
+        do {
+            n = static_cast<int>(gen->bounded(2, module));
+        } while(GCD(n, module) != 1);
+
+        operation = "*";
+        break;
+    }
+
+    switch (option)
+    {
+    case RingResidueOptions::A_in_M:
+        degree = static_cast<int>(gen->bounded(2, 15));
+        break;
+
+//    case RingResidueOptions::A_X_equal_B:
+//        return;
+
+//    case RingResidueOptions::XX_equal_p:
+//        return;
+
+//    case RingResidueOptions::XX_equal_pq:
+//        return;
+
+
+    default:
         break;
     }
 }
@@ -69,22 +69,22 @@ QString RingResidueInterface::description()
     switch (option)
     {
     case RingResidueOptions::GenCount:
-            return QString("Вычислите количество образующих элементов группы Вычетов");
+        return QString("Вычислите количество образующих элементов группы Вычетов");
 
     case RingResidueOptions::A_in_M:
-            return QString("Найдите значение выражения");
+        return QString("Найдите значение выражения");
 
     case RingResidueOptions::A_X_equal_B:
-            return QString("Решите линейное сравнение");
+        return QString("Решите линейное сравнение");
 
     case RingResidueOptions::Order:
-            return QString("Вычислите порядок элемента");
+        return QString("Вычислите порядок элемента");
 
     case RingResidueOptions::XX_equal_p:
-            return QString("Решите квадратичное сравнение по простому модулю");
+        return QString("Решите квадратичное сравнение по простому модулю");
 
     case RingResidueOptions::XX_equal_pq:
-            return QString("Решите квадратичное сравнение по составному модулю");
+        return QString("Решите квадратичное сравнение по составному модулю");
 
 
     default:
@@ -97,16 +97,16 @@ QString RingResidueInterface::task()
     switch (option)
     {
     case RingResidueOptions::GenCount:
-            return printResidue(operation) + "=~?";
+        return printResidue(operation) + "=~?";
 
-//    case RingResidueOptions::A_in_M:
-//            return QString("Найдите значение выражения");
+    case RingResidueOptions::A_in_M:
+        return printResidue(operation) + ":" + QString::number(n) + "^{" + QString::number(degree) + "}=~?";
 
 //    case RingResidueOptions::A_X_equal_B:
 //            return QString("Решите линейное сравнение");
 
-//    case RingResidueOptions::Order:
-//            return QString("Вычислите порядок элемента");
+    case RingResidueOptions::Order:
+        return printResidue(operation) + ":" + QString::number(n) + "=~?";
 
 //    case RingResidueOptions::XX_equal_p:
 //            return QString("Решите квадратичное сравнение по простому модулю");
@@ -125,24 +125,22 @@ QString RingResidueInterface::answer()
     switch (option)
     {
     case RingResidueOptions::GenCount:
-        qDebug() << n << module;
-            return QString::number(RingResidue(n, module, type).countOfGenerators(operation));
+        return QString::number(RingResidue(n, module, type).countOfGenerators(operation));
 
-//    case RingResidueOptions::A_in_M:
-//            return QString("Найдите значение выражения");
+    case RingResidueOptions::A_in_M:
+        return QString::number(RingResidue(n, module, type).pow(degree, operation));
 
 //    case RingResidueOptions::A_X_equal_B:
-//            return QString("Решите линейное сравнение");
+//           return QString::number(RingResidue(n, module, type).pow(degree, operation));
 
-//    case RingResidueOptions::Order:
-//            return QString("Вычислите порядок элемента");
+    case RingResidueOptions::Order:
+        return QString::number(RingResidue(n, module, type).order(operation));
 
 //    case RingResidueOptions::XX_equal_p:
 //            return QString("Решите квадратичное сравнение по простому модулю");
 
 //    case RingResidueOptions::XX_equal_pq:
-//            return QString("Решите квадратичное сравнение по составному модулю");
-
+//            return QString("Решите eквадратичное сравнение по составному модулю");
 
     default:
         return QString("");

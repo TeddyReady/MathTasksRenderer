@@ -19,7 +19,7 @@ private:
     RingResidueOptions option;
     QRandomGenerator *gen;
     ResidueType type;
-    int n, module;
+    int n, module, degree;
     const char *operation;
 
 public:
