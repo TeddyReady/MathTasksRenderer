@@ -32,7 +32,7 @@ private:
     bool isHaveMoreGens();
 
     AllTasks task;
-    bool deleteMode;
+    bool deleteMode, isNeedEmptyColumn;
     std::vector<std::pair<int, int>> ranges;
     std::vector<BaseWidget*> widgets;
     Ui::DialogBase *ui;

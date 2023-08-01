@@ -46,11 +46,12 @@ void RingResidueInterface::create()
     switch (option)
     {
     case RingResidueOptions::A_in_M:
-        degree = static_cast<int>(gen->bounded(2, 15));
+        optional = static_cast<int>(gen->bounded(2, 15));
         break;
 
-//    case RingResidueOptions::A_X_equal_B:
-//        return;
+    case RingResidueOptions::A_X_equal_B:
+        optional = static_cast<int>(gen->bounded(1, module));
+        break;
 
 //    case RingResidueOptions::XX_equal_p:
 //        return;
@@ -100,19 +101,19 @@ QString RingResidueInterface::task()
         return printResidue(operation) + "=~?";
 
     case RingResidueOptions::A_in_M:
-        return printResidue(operation) + ":" + QString::number(n) + "^{" + QString::number(degree) + "}=~?";
+        return printResidue(operation) + ":" + QString::number(n) + "^{" + QString::number(optional) + "}=~?";
 
-//    case RingResidueOptions::A_X_equal_B:
-//            return QString("Решите линейное сравнение");
+    case RingResidueOptions::A_X_equal_B:
+        return QString("%1x\\equiv %2~mod(%3)\\Rightarrow?").arg(QString::number(n)).arg(QString::number(optional)).arg(QString::number(module));
 
     case RingResidueOptions::Order:
         return printResidue(operation) + ":" + QString::number(n) + "=~?";
 
 //    case RingResidueOptions::XX_equal_p:
-//            return QString("Решите квадратичное сравнение по простому модулю");
+//      return QString("Решите квадратичное сравнение по простому модулю");
 
 //    case RingResidueOptions::XX_equal_pq:
-//            return QString("Решите квадратичное сравнение по составному модулю");
+//      return QString("Решите квадратичное сравнение по составному модулю");
 
 
     default:
@@ -128,10 +129,10 @@ QString RingResidueInterface::answer()
         return QString::number(RingResidue(n, module, type).countOfGenerators(operation));
 
     case RingResidueOptions::A_in_M:
-        return QString::number(RingResidue(n, module, type).pow(degree, operation));
+        return QString::number(RingResidue(n, module, type).pow(optional, operation));
 
-//    case RingResidueOptions::A_X_equal_B:
-//           return QString::number(RingResidue(n, module, type).pow(degree, operation));
+    case RingResidueOptions::A_X_equal_B:
+           return printAnswers(RingResidue::solveLinear(n, optional, module));
 
     case RingResidueOptions::Order:
         return QString::number(RingResidue(n, module, type).order(operation));
@@ -163,4 +164,19 @@ QString RingResidueInterface::printResidue(const char *operation) const
      default:
         return QString("");
     }
+}
+
+QString RingResidueInterface::printAnswers(const std::vector<int> &answers) const
+{
+    if (answers.at(0) == -1)
+        return QString("Нет~корней");
+
+    QString result;
+    for(size_t i = 0; i < answers.size(); ++i)
+    {
+        result += QString::number(answers[i]);
+        if (i + 1 != answers.size())
+            result += ",";
+    }
+    return result;
 }

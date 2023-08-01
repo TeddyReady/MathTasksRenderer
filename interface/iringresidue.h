@@ -19,7 +19,7 @@ private:
     RingResidueOptions option;
     QRandomGenerator *gen;
     ResidueType type;
-    int n, module, degree;
+    int n, module, optional;
     const char *operation;
 
 public:
@@ -27,6 +27,7 @@ public:
     ~RingResidueInterface();
 
     QString printResidue(const char *operation) const;
+    QString printAnswers(const std::vector<int> &answers) const;
 
     void create();
     QString description();

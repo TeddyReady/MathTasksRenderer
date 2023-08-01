@@ -1,7 +1,7 @@
 #include "dialogbase.h"
 #include "ui_dialogbase.h"
-DialogBase::DialogBase(AllTasks curTask, bool deleteMode, QWidget *parent) :
-    task(curTask), deleteMode(deleteMode), QDialog(parent), ui(new Ui::DialogBase)
+DialogBase::DialogBase(AllTasks curTask, bool deleteMode, QWidget *parent) : QDialog(parent),
+    task(curTask), deleteMode(deleteMode), isNeedEmptyColumn(false), ui(new Ui::DialogBase)
 {
     ui->setupUi(this);
     setWindowTitle("Выберите настройки генерации");
@@ -189,7 +189,7 @@ void DialogBase::uploadUI()
         break;
     case AllTasks::Matrix:
         ui->baseWidgetLayout->addWidget(new QLabel("Количество"), 0, 2);
-        dynamic_cast<QLabel *>(ui->baseWidgetLayout->itemAt(1)->widget())->setText("Поле");
+        dynamic_cast<QLabel *>(ui->baseWidgetLayout->itemAt(1)->widget())->setText("Алгебраическая структура");
         addItem(Gen, "Размер", ExoticOption::MatrixDefault);
         addItem(Base, "Сумма матриц", ExoticOption::MatrixDefault);
         addItem(Base, "Разность матриц", ExoticOption::MatrixDefault);
@@ -198,15 +198,17 @@ void DialogBase::uploadUI()
         addItem(Base, "Вычислить детерминант матрицы", ExoticOption::MatrixDefault);
         break;
     case AllTasks::RingResidue:
+        isNeedEmptyColumn = true;
         ui->baseWidgetLayout->addWidget(new QLabel("Количество"), 0, 2);
         dynamic_cast<QLabel *>(ui->baseWidgetLayout->itemAt(1)->widget())->setText("Алгебраическая структура");
         addItem(Gen);
         addItem(Base, "Количество образующих", ExoticOption::ResidueDefault);
         addItem(Base, "Возведение числа в степень по модулю", ExoticOption::ResidueAll);
         addItem(Base, "Вычисление порядка элемента", ExoticOption::ResidueAll);
-        addItem(Base, "Линейное сравнение", ExoticOption::ResidueDefault);
-        addItem(Base, "Квадратичное сравнение по простому модулю", ExoticOption::ResidueDefault);
-        addItem(Base, "Квадратичное сравнение по составному модулю", ExoticOption::ResidueDefault);
+        addItem(Base, "Линейное сравнение");
+        addItem(Base, "Квадратичное сравнение по простому модулю");
+        addItem(Base, "Квадратичное сравнение по составному модулю");
+        isNeedEmptyColumn = false;
         break;
     case AllTasks::RingOfMembers:
         addItem(Gen, "Степень");
@@ -230,6 +232,7 @@ void DialogBase::addItem(WidgetRole role, const QString &name, ExoticOption type
         BaseWidget *pWidget = new BaseWidget(name, type, this);
         ui->baseWidgetLayout->addWidget(pWidget->getCheckBox());
         if (type != ExoticOption::None) ui->baseWidgetLayout->addWidget(pWidget->getPushButton());
+        else if (isNeedEmptyColumn) ui->baseWidgetLayout->addWidget(new QWidget(this));
         ui->baseWidgetLayout->addWidget(pWidget->getSpinBox());
         widgets.emplace_back(pWidget);
         break;
