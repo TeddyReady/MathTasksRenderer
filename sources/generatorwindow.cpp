@@ -201,6 +201,12 @@ void GeneratorWindow::switchTab(int index)
 {
     switch (index) {
     case 2:
+        {
+        QMessageBox::warning(this, "Внимание тестировщикам!", "Тестовый режим находится на этапе разработки.\n"
+                                   "Убедительная просьба не использовать данный режим для генерации заданий.");
+        ui->tabWidget->setCurrentIndex(0);
+        return;
+        }
         mode = 1;
         ui->toolBar->actions().at(Check)->setVisible(false);
         ui->toolBar->actions().at(Clear)->setVisible(false);
@@ -230,12 +236,6 @@ void GeneratorWindow::switchTab(int index)
 
 void GeneratorWindow::runTest()
 {
-    {
-        QMessageBox::warning(this, "Внимание тестировщикам!", "Тестовый режим находится на этапе разработки.\n"
-                                                              "Убедительная просьба не использовать данный режим для генерации заданий.");
-        return;
-    }
-
     if (tasksForTest.isEmpty())
         statusBar()->showMessage("Перед запуском теста, необходимо сгенерировать задания!", 1500);
     else {
