@@ -163,12 +163,22 @@ void GeneratorWindow::clearTasks()
 
 void GeneratorWindow::printTasks()
 {
+    {
+        QMessageBox::warning(this, "Внимание тестировщикам!", "Печать тестов средствами LaTeX временно недоступна, находится на этапе разработки.\n"
+                                                              "Убедительная просьба не использовать данный режим для печати заданий.");
+        return;
+    }
     DialogLatexPrinter *latexDialog = new DialogLatexPrinter(descriptions, tasks, answers, this);
     latexDialog->exec();
 }
 
 void GeneratorWindow::openManual()
 {
+    {
+        QMessageBox::warning(this, "Внимание тестировщикам!", "Условные обозначения временно недоступны, находится на этапе разработки.\n"
+                                                              "Убедительная просьба не использовать данную опцию.");
+        return;
+    }
     DialogManual *manDialog = new DialogManual(taskFontSize, mathFontSize, this);
     manDialog->show();
 }
@@ -220,6 +230,12 @@ void GeneratorWindow::switchTab(int index)
 
 void GeneratorWindow::runTest()
 {
+    {
+        QMessageBox::warning(this, "Внимание тестировщикам!", "Тестовый режим находится на этапе разработки.\n"
+                                                              "Убедительная просьба не использовать данный режим для генерации заданий.");
+        return;
+    }
+
     if (tasksForTest.isEmpty())
         statusBar()->showMessage("Перед запуском теста, необходимо сгенерировать задания!", 1500);
     else {
@@ -274,16 +290,32 @@ void GeneratorWindow::runTaskManager(const QString &task, bool closeMode)
         window = new DialogBase(AllTasks::SymbolLegandre, closeMode, this);
     else if (task == "Символ Якоби")
         window = new DialogBase(AllTasks::SymbolJacobi, closeMode, this);
-//    else if (task == "Алгебраические Структуры")
+    else if (task == "Алгебраические Структуры")
 //        window = new DialogBase(AllTasks::Set, closeMode, this);
-//    else if (task == "Группы и их свойства")
+    {
+        QMessageBox::warning(this, "Внимание тестировщикам!", "Задания категории 'Алгебраические Структуры' находятся на этапе разработки.");
+        return;
+    }
+    else if (task == "Группы и их свойства")
 //        window = new DialogBase(AllTasks::GroupProperties, closeMode, this);
+    {
+        QMessageBox::warning(this, "Внимание тестировщикам!", "Задания категории 'Группы и их свойства' находятся на этапе разработки.");
+        return;
+    }
     else if (task == "Матрицы")
+    {
+        QMessageBox::warning(this, "Внимание тестировщикам!", "Задание категории 'Найти обратную к матрице' находятся на этапе разработки."
+                                   "\nУбедительная просьба, во избежание некорректного поведения программы не используйте данный метод генерации.");
         window = new DialogBase(AllTasks::Matrix, closeMode, this);
+    }
     else if (task == "Кольцо Вычетов")
         window = new DialogBase(AllTasks::RingResidue, closeMode, this);
     else if (task == "Кольцо Многочленов")
-        window = new DialogBase(AllTasks::RingOfMembers, closeMode, this);
+//        window = new DialogBase(AllTasks::RingOfMembers, closeMode, this);
+    {
+        QMessageBox::warning(this, "Внимание тестировщикам!", "Задания категории 'Кольцо Многочленов' находятся на этапе разработки.");
+        return;
+    }
     else return;
 
     connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);

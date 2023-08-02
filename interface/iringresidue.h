@@ -5,12 +5,15 @@
 #include "basemath.h"
 
 enum class RingResidueOptions {
-    GenCount,
-    A_in_M,
-    Order,
-    A_X_equal_B,
-    XX_equal_p,
-    XX_equal_pq
+    GenCount            ,
+    A_in_M              ,
+    Order               ,
+    Count_A_X_equal_B   ,
+    A_X_equal_B         ,
+    Count_XX_equal_p   ,
+    XX_equal_p          ,
+    Count_XX_equal_pq   ,
+    XX_equal_pq         ,
 };
 
 class RingResidueInterface : public TaskInterface {

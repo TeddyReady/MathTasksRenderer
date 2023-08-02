@@ -205,8 +205,11 @@ void DialogBase::uploadUI()
         addItem(Base, "Количество образующих", ExoticOption::ResidueDefault);
         addItem(Base, "Возведение числа в степень по модулю", ExoticOption::ResidueAll);
         addItem(Base, "Вычисление порядка элемента", ExoticOption::ResidueAll);
+        addItem(Base, "Число решений линейного сравнения");
         addItem(Base, "Линейное сравнение");
+        addItem(Base, "Число решений квадратичного сравнения по простому модулю");
         addItem(Base, "Квадратичное сравнение по простому модулю");
+        addItem(Base, "Число решений квадратичного сравнения по составному модулю");
         addItem(Base, "Квадратичное сравнение по составному модулю");
         isNeedEmptyColumn = false;
         break;
