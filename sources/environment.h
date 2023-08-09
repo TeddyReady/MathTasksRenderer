@@ -94,6 +94,8 @@ enum class ExoticOption {
     MatrixInverse   ,
     ResidueDefault  ,
     ResidueAll      ,
+    MembersAll      ,
+    MembersFields   ,
 };
 
 /* Main ToolBar Structure */

@@ -163,11 +163,6 @@ void GeneratorWindow::clearTasks()
 
 void GeneratorWindow::printTasks()
 {
-    {
-        QMessageBox::warning(this, "Внимание тестировщикам!", "Печать тестов средствами LaTeX временно недоступна, находится на этапе разработки.\n"
-                                                              "Убедительная просьба не использовать данный режим для печати заданий.");
-        return;
-    }
     DialogLatexPrinter *latexDialog = new DialogLatexPrinter(descriptions, tasks, answers, this);
     latexDialog->exec();
 }
@@ -311,11 +306,7 @@ void GeneratorWindow::runTaskManager(const QString &task, bool closeMode)
     else if (task == "Кольцо Вычетов")
         window = new DialogBase(AllTasks::RingResidue, closeMode, this);
     else if (task == "Кольцо Многочленов")
-//        window = new DialogBase(AllTasks::RingOfMembers, closeMode, this);
-    {
-        QMessageBox::warning(this, "Внимание тестировщикам!", "Задания категории 'Кольцо Многочленов' находятся на этапе разработки.");
-        return;
-    }
+        window = new DialogBase(AllTasks::RingOfMembers, closeMode, this);
     else return;
 
     connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);

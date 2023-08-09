@@ -12,8 +12,4 @@ enum class Set {
     V_nD, Zp, Z_i, MultiGroup_Zn
 };
 
-enum class RingOfMembersOptions {
-    Summary, Multiply, Divide, GCD
-};
-
 #endif // ENUM_H

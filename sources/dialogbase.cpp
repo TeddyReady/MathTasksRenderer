@@ -140,6 +140,7 @@ void DialogBase::uploadUI()
         addItem(Base, "Произведение взаимно простых");
         addItem(Base, "Произведение степеней простых");
         break;
+
     case AllTasks::MebiusFunction:
         addItem(Gen);
         addItem(Base, "По умолчанию");
@@ -148,6 +149,7 @@ void DialogBase::uploadUI()
         addItem(Base, "Произведение нечётного числа различных простых");
         addItem(Base, "Встречается степень простого числа");
         break;
+
     case AllTasks::SymbolLegandre:
     case AllTasks::SymbolJacobi:
         addItem(Gen, "a");
@@ -158,6 +160,7 @@ void DialogBase::uploadUI()
         addItem(Base, "В качестве а = 2");
         addItem(Base, "a и p взаимно просты и нечетны");
         break;
+
     case AllTasks::TranspositionGroup:
         ui->baseWidgetLayout->addWidget(new QLabel("Количество"), 0, 2);
         dynamic_cast<QLabel *>(ui->baseWidgetLayout->itemAt(1)->widget())->setText("Вид перестановки");
@@ -172,6 +175,7 @@ void DialogBase::uploadUI()
         addItem(Base, "Разложить перестановку в произведение транспозиций", ExoticOption::Transposition);
         addItem(Base, "Разложить в произведение транспозиций соседних элементов", ExoticOption::Transposition);
         break;
+
     case AllTasks::Set:
         addItem(Base, "Описание алгебраической структуры");
         addItem(Base, "Проверка операции на множестве");
@@ -179,6 +183,7 @@ void DialogBase::uploadUI()
         addItem(Base, "Ассоциативность операции");
         addItem(Base, "Существование нейтрального");
         break;
+
     case AllTasks::GroupProperties:
         addItem(Gen, "n");
         addItem(Base, "Перечислить подгруппы");
@@ -187,16 +192,18 @@ void DialogBase::uploadUI()
         addItem(Base, "Вычислить порядок группы");
         addItem(Base, "Вычислить экспоненту группы");
         break;
+
     case AllTasks::Matrix:
         ui->baseWidgetLayout->addWidget(new QLabel("Количество"), 0, 2);
         dynamic_cast<QLabel *>(ui->baseWidgetLayout->itemAt(1)->widget())->setText("Алгебраическая структура");
-        addItem(Gen, "Размер", ExoticOption::MatrixDefault);
-        addItem(Base, "Сумма матриц", ExoticOption::MatrixDefault);
-        addItem(Base, "Разность матриц", ExoticOption::MatrixDefault);
-        addItem(Base, "Умножение матриц", ExoticOption::MatrixDefault);
-        addItem(Base, "Найти обратную к матрице", ExoticOption::MatrixInverse);
-        addItem(Base, "Вычислить детерминант матрицы", ExoticOption::MatrixDefault);
+        addItem(Gen, "Размер");
+        addItem(Base, "Сумма матриц"        , ExoticOption::MatrixDefault);
+        addItem(Base, "Разность матриц"     , ExoticOption::MatrixDefault);
+        addItem(Base, "Умножение матриц"    , ExoticOption::MatrixDefault);
+        addItem(Base, "Обратная матрица"    , ExoticOption::MatrixInverse);
+        addItem(Base, "Детерминант матрицы" , ExoticOption::MatrixDefault);
         break;
+
     case AllTasks::RingResidue:
         isNeedEmptyColumn = true;
         ui->baseWidgetLayout->addWidget(new QLabel("Количество"), 0, 2);
@@ -213,13 +220,17 @@ void DialogBase::uploadUI()
         addItem(Base, "Квадратичное сравнение по составному модулю");
         isNeedEmptyColumn = false;
         break;
+
     case AllTasks::RingOfMembers:
+        ui->baseWidgetLayout->addWidget(new QLabel("Количество"), 0, 2);
+        dynamic_cast<QLabel *>(ui->baseWidgetLayout->itemAt(1)->widget())->setText("Алгебраическая структура");
         addItem(Gen, "Степень");
-        addItem(Gen, "Мощность кольца");
-        addItem(Base, "Сложение многочленов");
-        addItem(Base, "Умножение многочленов");
-        addItem(Base, "Деление многочленов с остатком");
-        addItem(Base, "Вычисление НОД многочленов");
+        addItem(Base, "Сложение многочленов"    , ExoticOption::MembersAll);
+        addItem(Base, "Вычитание многочленов"   , ExoticOption::MembersAll);
+        addItem(Base, "Умножение многочленов"   , ExoticOption::MembersAll);
+        addItem(Base, "Целая часть от деления"  , ExoticOption::MembersFields);
+        addItem(Base, "Деление с остатком"      , ExoticOption::MembersFields);
+        addItem(Base, "НОД многочленов"         , ExoticOption::MembersFields);
         break;
     }
     if (ui->genWidgetLayout->isEmpty()) ui->lblGen->hide();
@@ -247,7 +258,6 @@ bool DialogBase::isHaveMoreGens()
     switch (task) {
     case AllTasks::SymbolLegandre:
     case AllTasks::SymbolJacobi:
-    case AllTasks::RingOfMembers:
         return true;
 
     default:
@@ -382,6 +392,7 @@ void BaseWidget::setExoticOptions(const ExoticOption &type)
             sb->setValue(1);
         });
         break;
+
     case ExoticOption::MatrixInverse:
         exoticOption = static_cast<int>(Set::N);
         pb = new QPushButton("Выбрать поле чисел...", this);
@@ -475,6 +486,111 @@ void BaseWidget::setExoticOptions(const ExoticOption &type)
         connect(pb->menu()->actions().at(1), &QAction::triggered, [&](){
             pb->setText("Поле вычетов");
             exoticOption = static_cast<int>(ResidueType::Zp);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        break;
+
+    case ExoticOption::MembersAll:
+        exoticOption = static_cast<int>(Set::Z);
+        pb = new QPushButton("Выбрать поле чисел...", this);
+        pb->setMenu(new QMenu(pb));
+        pb->menu()->addAction(new QAction("Действительные", pb->menu()));
+        pb->menu()->addAction(new QAction("Целые", pb->menu()));
+        pb->menu()->addAction(new QAction("Кольцо вычетов", pb->menu()));
+        pb->menu()->addAction(new QAction("Мультипликативная группа вычетов", pb->menu()));
+        pb->menu()->addAction(new QAction("Поле вычетов", pb->menu()));
+        pb->menu()->addAction(new QAction("Комплексные", pb->menu()));
+        pb->menu()->addAction(new QAction("Целые Гауссовы", pb->menu()));
+        pb->setDisabled(true);
+        layout()->addWidget(pb);
+        connect(cb, &QCheckBox::clicked, [&](){
+            if (cb->isChecked()) pb->setEnabled(true);
+            else pb->setDisabled(true);
+            sb->setDisabled(true);
+            sb->setValue(0);
+        });
+        connect(pb->menu()->actions().at(0), &QAction::triggered, [&](){
+            pb->setText("Действительные");
+            exoticOption = static_cast<int>(Set::R);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        connect(pb->menu()->actions().at(1), &QAction::triggered, [&](){
+            pb->setText("Целые");
+            exoticOption = static_cast<int>(Set::Z);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        connect(pb->menu()->actions().at(2), &QAction::triggered, [&](){
+            pb->setText("Кольцо вычетов");
+            exoticOption = static_cast<int>(Set::Zn);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        connect(pb->menu()->actions().at(3), &QAction::triggered, [&](){
+            pb->setText("Мультипликативная группа кольца вычетов");
+            exoticOption = static_cast<int>(Set::MultiGroup_Zn);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        connect(pb->menu()->actions().at(4), &QAction::triggered, [&](){
+            pb->setText("Поле вычетов");
+            exoticOption = static_cast<int>(Set::Zp);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        connect(pb->menu()->actions().at(5), &QAction::triggered, [&](){
+            pb->setText("Комплексные");
+            exoticOption = static_cast<int>(Set::C);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        connect(pb->menu()->actions().at(6), &QAction::triggered, [&](){
+            pb->setText("Целые Гауссовы");
+            exoticOption = static_cast<int>(Set::Z_i);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        break;
+
+    case ExoticOption::MembersFields:
+        exoticOption = static_cast<int>(Set::R);
+        pb = new QPushButton("Выбрать поле чисел...", this);
+        pb->setMenu(new QMenu(pb));
+        pb->menu()->addAction(new QAction("Действительные", pb->menu()));
+        pb->menu()->addAction(new QAction("Мультипликативная группа вычетов", pb->menu()));
+        pb->menu()->addAction(new QAction("Поле вычетов", pb->menu()));
+        pb->menu()->addAction(new QAction("Комплексные", pb->menu()));
+        pb->setDisabled(true);
+        layout()->addWidget(pb);
+        connect(cb, &QCheckBox::clicked, [&](){
+            if (cb->isChecked()) pb->setEnabled(true);
+            else pb->setDisabled(true);
+            sb->setDisabled(true);
+            sb->setValue(0);
+        });
+        connect(pb->menu()->actions().at(0), &QAction::triggered, [&](){
+            pb->setText("Действительные");
+            exoticOption = static_cast<int>(Set::R);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        connect(pb->menu()->actions().at(1), &QAction::triggered, [&](){
+            pb->setText("Мультипликативная группа вычетов");
+            exoticOption = static_cast<int>(Set::MultiGroup_Zn);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        connect(pb->menu()->actions().at(2), &QAction::triggered, [&](){
+            pb->setText("Поле вычетов");
+            exoticOption = static_cast<int>(Set::Zp);
+            sb->setEnabled(true);
+            sb->setValue(1);
+        });
+        connect(pb->menu()->actions().at(3), &QAction::triggered, [&](){
+            pb->setText("Комплексные");
+            exoticOption = static_cast<int>(Set::C);
             sb->setEnabled(true);
             sb->setValue(1);
         });

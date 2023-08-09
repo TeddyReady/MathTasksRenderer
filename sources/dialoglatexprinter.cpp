@@ -3,7 +3,7 @@
 
 DialogLatexPrinter::DialogLatexPrinter(const QVector<QString> &descriptions,
     const QVector<QVector<QString>> &tasks, const QVector<QString> &answers, QWidget *parent)
-    : QDialog(parent), descriptions(descriptions), tasks(tasks), answers(answers), ui(new Ui::DialogLatexPrinter)
+    : QDialog(parent), tasks(tasks), descriptions(descriptions), answers(answers), ui(new Ui::DialogLatexPrinter)
 {
     ui->setupUi(this);
     ui->lineTitle->setText("Контрольная Работа №1");
