@@ -34,6 +34,7 @@
 #include <QSplashScreen>
 #include <QStandardItemModel>
 #include <QString>
+#include <QStyleFactory>
 #include <QThread>
 #include <QTextBrowser>
 #include <QTextDocument>

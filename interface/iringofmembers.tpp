@@ -33,8 +33,14 @@ public:
 
         switch (option) {
         default:
-            createMembers(member_1, static_cast<int>(gen->bounded(minDeg, maxDeg)));
-            createMembers(member_2, static_cast<int>(gen->bounded(minDeg, maxDeg)));
+            do
+                createMembers(member_1, static_cast<int>(gen->bounded(minDeg, maxDeg)));
+            while(member_1.isZero());
+
+            do
+                createMembers(member_2, static_cast<int>(gen->bounded(minDeg, maxDeg)));
+            while(member_2.isZero());
+
             break;
         }
     }
@@ -75,7 +81,7 @@ public:
         case RingOfMembersOptions::Divide:
             return QString("%1(%2)/(%3)=~?").arg(getType()).arg(printMembers(member_1)).arg(printMembers(member_2));
         case RingOfMembersOptions::Ostat:
-            return QString("%1(%2)%(%3)=~?").arg(getType()).arg(printMembers(member_1)).arg(printMembers(member_2));
+            return QString("%1(%2)~mod~(%3)=~?").arg(getType()).arg(printMembers(member_1)).arg(printMembers(member_2));
         case RingOfMembersOptions::GCD:
             return QString("%1НОД(%2,%3)=~?").arg(getType()).arg(printMembers(member_1)).arg(printMembers(member_2));
         default:
