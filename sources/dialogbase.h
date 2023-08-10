@@ -1,6 +1,7 @@
 #ifndef DIALOGBASE_H
 #define DIALOGBASE_H
 #include "itranspositiongroup.h"
+#include "iringofmembers.tpp"
 #include "isymbollegandre.h"
 #include "imebiusfunction.h"
 #include "ieulerfunction.h"

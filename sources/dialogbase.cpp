@@ -498,7 +498,6 @@ void BaseWidget::setExoticOptions(const ExoticOption &type)
         pb->menu()->addAction(new QAction("Действительные", pb->menu()));
         pb->menu()->addAction(new QAction("Целые", pb->menu()));
         pb->menu()->addAction(new QAction("Кольцо вычетов", pb->menu()));
-        pb->menu()->addAction(new QAction("Мультипликативная группа вычетов", pb->menu()));
         pb->menu()->addAction(new QAction("Поле вычетов", pb->menu()));
         pb->menu()->addAction(new QAction("Комплексные", pb->menu()));
         pb->menu()->addAction(new QAction("Целые Гауссовы", pb->menu()));
@@ -529,24 +528,18 @@ void BaseWidget::setExoticOptions(const ExoticOption &type)
             sb->setValue(1);
         });
         connect(pb->menu()->actions().at(3), &QAction::triggered, [&](){
-            pb->setText("Мультипликативная группа кольца вычетов");
-            exoticOption = static_cast<int>(Set::MultiGroup_Zn);
-            sb->setEnabled(true);
-            sb->setValue(1);
-        });
-        connect(pb->menu()->actions().at(4), &QAction::triggered, [&](){
             pb->setText("Поле вычетов");
             exoticOption = static_cast<int>(Set::Zp);
             sb->setEnabled(true);
             sb->setValue(1);
         });
-        connect(pb->menu()->actions().at(5), &QAction::triggered, [&](){
+        connect(pb->menu()->actions().at(4), &QAction::triggered, [&](){
             pb->setText("Комплексные");
             exoticOption = static_cast<int>(Set::C);
             sb->setEnabled(true);
             sb->setValue(1);
         });
-        connect(pb->menu()->actions().at(6), &QAction::triggered, [&](){
+        connect(pb->menu()->actions().at(5), &QAction::triggered, [&](){
             pb->setText("Целые Гауссовы");
             exoticOption = static_cast<int>(Set::Z_i);
             sb->setEnabled(true);
@@ -559,7 +552,6 @@ void BaseWidget::setExoticOptions(const ExoticOption &type)
         pb = new QPushButton("Выбрать поле чисел...", this);
         pb->setMenu(new QMenu(pb));
         pb->menu()->addAction(new QAction("Действительные", pb->menu()));
-        pb->menu()->addAction(new QAction("Мультипликативная группа вычетов", pb->menu()));
         pb->menu()->addAction(new QAction("Поле вычетов", pb->menu()));
         pb->menu()->addAction(new QAction("Комплексные", pb->menu()));
         pb->setDisabled(true);
@@ -577,18 +569,12 @@ void BaseWidget::setExoticOptions(const ExoticOption &type)
             sb->setValue(1);
         });
         connect(pb->menu()->actions().at(1), &QAction::triggered, [&](){
-            pb->setText("Мультипликативная группа вычетов");
-            exoticOption = static_cast<int>(Set::MultiGroup_Zn);
-            sb->setEnabled(true);
-            sb->setValue(1);
-        });
-        connect(pb->menu()->actions().at(2), &QAction::triggered, [&](){
             pb->setText("Поле вычетов");
             exoticOption = static_cast<int>(Set::Zp);
             sb->setEnabled(true);
             sb->setValue(1);
         });
-        connect(pb->menu()->actions().at(3), &QAction::triggered, [&](){
+        connect(pb->menu()->actions().at(2), &QAction::triggered, [&](){
             pb->setText("Комплексные");
             exoticOption = static_cast<int>(Set::C);
             sb->setEnabled(true);

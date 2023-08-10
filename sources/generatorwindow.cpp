@@ -390,10 +390,31 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
     case AllTasks::RingResidue:
         interface = new RingResidueInterface(data[1], data[2], static_cast<RingResidueOptions>(subTask), static_cast<ResidueType>(optional));
         break;
-//    case AllTasks::RingOfMembers:
-//        runRingOfMembers(data[0], std::make_pair(data[1], data[2]), std::make_pair(data[3], data[4]),
-//                static_cast<RingOfMembersOptions>(subTask));
-//        break;
+    case AllTasks::RingOfMembers:
+        switch (static_cast<Set>(optional))
+        {
+        case Set::R:
+            interface = new RingOfMembersInterface<double>(data[1], data[2], static_cast<RingOfMembersOptions>(subTask));
+            break;
+        case Set::Z:
+            interface = new RingOfMembersInterface<int>(data[1], data[2], static_cast<RingOfMembersOptions>(subTask));
+            break;
+        case Set::Zn:
+            interface = new RingOfMembersInterface<Zn>(data[1], data[2], static_cast<RingOfMembersOptions>(subTask));
+            break;
+        case Set::Zp:
+            interface = new RingOfMembersInterface<Zp>(data[1], data[2], static_cast<RingOfMembersOptions>(subTask));
+            break;
+        case Set::C:
+            interface = new RingOfMembersInterface<Complex<double>>(data[1], data[2], static_cast<RingOfMembersOptions>(subTask));
+            break;
+        case Set::Z_i:
+            interface = new RingOfMembersInterface<Complex<int>>(data[1], data[2], static_cast<RingOfMembersOptions>(subTask));
+            break;
+        default:
+            break;
+        }
+        break;
     }
 
     for (int i = 0; i < data[0]; ++i) {

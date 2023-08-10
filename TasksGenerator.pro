@@ -10,7 +10,7 @@ DEFINES  += QT_DEPRECATED_WARNINGS
 LIBS  += -L/usr/local/lib -lpoppler-qt5
 
 HEADERS  +=                                         \
-    interface/iringofmembers.h \
+    interface/iringofmembers.tpp \
     interface/iringresidue.h \
     sources/dialogmanual.h                          \
     sources/dialogbase.h                            \
@@ -34,6 +34,7 @@ HEADERS  +=                                         \
 
 SOURCES  +=                                         \
     interface/imatrix.cpp \
+    interface/iringofmembers.cpp \
     interface/iringresidue.cpp \
     sources/dialogmanual.cpp                        \
     sources/dialogbase.cpp                          \
