@@ -10,6 +10,7 @@ DEFINES  += QT_DEPRECATED_WARNINGS
 LIBS  += -L/usr/local/lib -lpoppler-qt5
 
 HEADERS  +=                                         \
+    interface/icomplex.tpp \
     interface/iringofmembers.tpp \
     interface/iringresidue.h \
     sources/dialogmanual.h                          \
@@ -33,6 +34,7 @@ HEADERS  +=                                         \
     interface/itranspositiongroup.h                 \
 
 SOURCES  +=                                         \
+    interface/icomplex.cpp \
     interface/imatrix.cpp \
     interface/iringofmembers.cpp \
     interface/iringresidue.cpp \

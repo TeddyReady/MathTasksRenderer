@@ -6,6 +6,7 @@
 #include "imebiusfunction.h"
 #include "ieulerfunction.h"
 #include "iringresidue.h"
+#include "icomplex.tpp"
 #include "imatrix.tpp"
 #include "environment.h"
 

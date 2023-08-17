@@ -24,6 +24,7 @@ private:
     ResidueType type;
     int n, module, optional;
     const char *operation;
+    bool isGroup;
 
 public:
     explicit RingResidueInterface(int minNum, int maxNum, RingResidueOptions option, ResidueType type);

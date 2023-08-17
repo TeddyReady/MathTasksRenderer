@@ -1,11 +1,12 @@
 #include "iringresidue.h"
 
 RingResidueInterface::RingResidueInterface(int minNum, int maxNum, RingResidueOptions option, ResidueType type)
-    : minNum(minNum), maxNum(maxNum), option(option), gen(QRandomGenerator::global()), type(type) {}
+    : minNum(minNum), maxNum(maxNum), option(option), gen(QRandomGenerator::global()), type(type), isGroup(false) {}
 RingResidueInterface::~RingResidueInterface() { gen = nullptr; }
 
 void RingResidueInterface::create()
 {
+    isGroup = false;
     if (static_cast<bool>(gen->bounded(0, 2)))
         operation = "+";
     else
@@ -48,6 +49,24 @@ void RingResidueInterface::create()
 
     switch (option)
     {
+    case RingResidueOptions::GenCount:
+        isGroup = true;
+        optional = static_cast<int>(gen->bounded(2, 15));
+        switch (type) {
+        case ResidueType::Zn:
+            operation = "+";
+            module = static_cast<int>(gen->bounded(minNum, maxNum));
+            break;
+
+        case ResidueType::MultiGroup_Zn:
+            operation = "*";
+            type = ResidueType::Zp;
+            do {
+                module = static_cast<int>(gen->bounded(minNum, maxNum));
+            } while(not isPrime(module));
+            break;
+        }
+
     case RingResidueOptions::A_in_M:
         optional = static_cast<int>(gen->bounded(2, 15));
         break;
@@ -85,7 +104,7 @@ QString RingResidueInterface::description()
     switch (option)
     {
     case RingResidueOptions::GenCount:
-        return QString("Вычислите количество образующих элементов группы Вычетов");
+        return QString("Вычислите количество образующих элементов группы вычетов");
 
     case RingResidueOptions::A_in_M:
         return QString("Найдите значение выражения");
@@ -180,19 +199,37 @@ QString RingResidueInterface::answer()
 
 QString RingResidueInterface::printResidue(const char *operation) const
 {
-    switch (type) {
-    case ResidueType::Zn:
-    case ResidueType::Zp:
-        if (not strcmp(operation, "+"))
-            return QString("\\left(\\mathbb{Z}_{" + QString::number(module) + "}, +\\right)");
-        else
-            return QString("\\left(\\mathbb{Z}_{" + QString::number(module) + "}, \\cdot\\right)");
+    if (isGroup)
+    {
+        switch (type) {
+            case ResidueType::Zn:
+            case ResidueType::Zp:
+                if (not strcmp(operation, "+"))
+                    return QString("\\left(\\mathbb{Z}_{" + QString::number(module) + "}, +\\right)");
+                else
+                    return QString("\\left(\\mathbb{Z}_{" + QString::number(module) + "}^{*}, \\cdot\\right)");
 
-    case ResidueType::MultiGroup_Zn:
-        return QString("\\left(\\mathbb{Z}_{" + QString::number(module) + "}^{*}, \\cdot\\right)");
+            case ResidueType::MultiGroup_Zn:
+                return QString("\\mathbb{Z}_{" + QString::number(module) + "}^{*}");
 
-     default:
-        return QString("");
+            default:
+                return QString("");
+        }
+    } else {
+        switch (type) {
+            case ResidueType::Zn:
+            case ResidueType::Zp:
+                if (not strcmp(operation, "+"))
+                    return QString("\\mathbb{Z}_{" + QString::number(module) + "}");
+                else
+                    return QString("\\mathbb{Z}_{" + QString::number(module) + "}^{*}");
+
+            case ResidueType::MultiGroup_Zn:
+                return QString("\\mathbb{Z}_{" + QString::number(module) + "}^{*}");
+
+            default:
+                return QString("");
+        }
     }
 }
 

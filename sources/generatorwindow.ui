@@ -78,6 +78,11 @@
           </item>
           <item>
            <property name="text">
+            <string>Комплексные Числа</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>Матрицы</string>
            </property>
           </item>

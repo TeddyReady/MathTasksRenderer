@@ -85,6 +85,7 @@ enum class AllTasks {
     GroupProperties     ,
     RingResidue         ,
     RingOfMembers       ,
+    Complex             ,
 };
 
 enum class ExoticOption {
@@ -93,9 +94,11 @@ enum class ExoticOption {
     MatrixDefault   ,
     MatrixInverse   ,
     ResidueDefault  ,
+    ResidueGroups   ,
     ResidueAll      ,
     MembersAll      ,
     MembersFields   ,
+    Complex         ,
 };
 
 /* Main ToolBar Structure */

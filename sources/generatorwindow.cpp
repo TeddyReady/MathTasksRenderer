@@ -307,6 +307,8 @@ void GeneratorWindow::runTaskManager(const QString &task, bool closeMode)
         window = new DialogBase(AllTasks::RingResidue, closeMode, this);
     else if (task == "Кольцо Многочленов")
         window = new DialogBase(AllTasks::RingOfMembers, closeMode, this);
+    else if (task == "Комплексные Числа")
+        window = new DialogBase(AllTasks::Complex, closeMode, this);
     else return;
 
     connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
@@ -415,6 +417,18 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
             break;
         }
         break;
+    case AllTasks::Complex:
+        switch (static_cast<Set>(optional))
+        {
+        case Set::C:
+            interface = new ComplexInterface<Complex<double>>(data[1], data[2], static_cast<ComplexOptions>(subTask));
+            break;
+        case Set::Z_i:
+            interface = new ComplexInterface<Complex<int>>(data[1], data[2], static_cast<ComplexOptions>(subTask));
+            break;
+        default:
+            break;
+        }
     }
 
     for (int i = 0; i < data[0]; ++i) {
