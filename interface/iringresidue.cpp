@@ -217,7 +217,7 @@ QString RingResidueInterface::printResidue(const char *operation) const
 QString RingResidueInterface::printAnswers(const std::vector<int> &answers) const
 {
     if (answers.at(0) == -1)
-        return QString("Нет~корней");
+        return QString("-");
 
     QString result;
     for(size_t i = 0; i < answers.size(); ++i)
