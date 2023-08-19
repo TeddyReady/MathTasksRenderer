@@ -1,12 +1,11 @@
 #include "iringresidue.h"
 
 RingResidueInterface::RingResidueInterface(int minNum, int maxNum, RingResidueOptions option, ResidueType type)
-    : minNum(minNum), maxNum(maxNum), option(option), gen(QRandomGenerator::global()), type(type), isGroup(false) {}
+    : minNum(minNum), maxNum(maxNum), option(option), gen(QRandomGenerator::global()), type(type) {}
 RingResidueInterface::~RingResidueInterface() { gen = nullptr; }
 
 void RingResidueInterface::create()
 {
-    isGroup = false;
     if (static_cast<bool>(gen->bounded(0, 2)))
         operation = "+";
     else
@@ -50,7 +49,6 @@ void RingResidueInterface::create()
     switch (option)
     {
     case RingResidueOptions::GenCount:
-        isGroup = true;
         optional = static_cast<int>(gen->bounded(2, 15));
         switch (type) {
         case ResidueType::Zn:
@@ -60,15 +58,19 @@ void RingResidueInterface::create()
 
         case ResidueType::MultiGroup_Zn:
             operation = "*";
-            type = ResidueType::Zp;
             do {
                 module = static_cast<int>(gen->bounded(minNum, maxNum));
             } while(not isPrime(module));
             break;
         }
+        break;
 
     case RingResidueOptions::A_in_M:
         optional = static_cast<int>(gen->bounded(2, 15));
+        module = static_cast<int>(gen->bounded(minNum, maxNum));
+        n = static_cast<int>(gen->bounded(2, module));
+        operation = "+";
+        type = ResidueType::Zn;
         break;
 
     case RingResidueOptions::A_X_equal_B:
@@ -148,7 +150,7 @@ QString RingResidueInterface::task()
         return QString("%1x\\equiv %2~mod(%3)\\Rightarrow?").arg(QString::number(n)).arg(QString::number(optional)).arg(QString::number(module));
 
     case RingResidueOptions::Order:
-        return printResidue(operation) + ":" + QString::number(n) + "=~?";
+        return QString("%1:ord_{%2}(%3)=?").arg(printResidue(operation)).arg(operation).arg(n);
 
     case RingResidueOptions::XX_equal_p:
     case RingResidueOptions::XX_equal_pq:
@@ -169,7 +171,7 @@ QString RingResidueInterface::answer()
         return QString::number(RingResidue(n, module, type).countOfGenerators(operation));
 
     case RingResidueOptions::A_in_M:
-        return QString::number(RingResidue(n, module, type).pow(optional, operation));
+        return QString::number(RingResidue(n, module, type).pow(optional));
 
     case RingResidueOptions::Order:
         return QString::number(RingResidue(n, module, type).order(operation));
@@ -199,37 +201,16 @@ QString RingResidueInterface::answer()
 
 QString RingResidueInterface::printResidue(const char *operation) const
 {
-    if (isGroup)
-    {
-        switch (type) {
-            case ResidueType::Zn:
-            case ResidueType::Zp:
-                if (not strcmp(operation, "+"))
-                    return QString("\\left(\\mathbb{Z}_{" + QString::number(module) + "}, +\\right)");
-                else
-                    return QString("\\left(\\mathbb{Z}_{" + QString::number(module) + "}^{*}, \\cdot\\right)");
+    switch (type) {
+        case ResidueType::Zn:
+        case ResidueType::Zp:
+            return QString("\\mathbb{Z}_{" + QString::number(module) + "}");
 
-            case ResidueType::MultiGroup_Zn:
-                return QString("\\mathbb{Z}_{" + QString::number(module) + "}^{*}");
+        case ResidueType::MultiGroup_Zn:
+            return QString("\\mathbb{Z}_{" + QString::number(module) + "}^{*}");
 
-            default:
-                return QString("");
-        }
-    } else {
-        switch (type) {
-            case ResidueType::Zn:
-            case ResidueType::Zp:
-                if (not strcmp(operation, "+"))
-                    return QString("\\mathbb{Z}_{" + QString::number(module) + "}");
-                else
-                    return QString("\\mathbb{Z}_{" + QString::number(module) + "}^{*}");
-
-            case ResidueType::MultiGroup_Zn:
-                return QString("\\mathbb{Z}_{" + QString::number(module) + "}^{*}");
-
-            default:
-                return QString("");
-        }
+        default:
+            return QString("");
     }
 }
 
