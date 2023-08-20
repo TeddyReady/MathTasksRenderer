@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<algebra>
+    <set name="\\mathbb{N}">
+        <description>Множество натуральных чисел</description>
+        
+        <operation type="+">
+            <structure>Полугруппа</structure>
+            <abel>Да</abel>
+            <associative>Да</associative>
+        </operation>
+
+        <operation type="-">
+            <structure>Не является операцией на заданном множестве</structure>
+        </operation>
+
+        <operation type="*">
+            <structure>Моноид</structure>
+            <abel>Да</abel>
+            <associative>Да</associative>
+        </operation>
+
+        <operation type="/">
+            <structure>Не является операцией на заданном множестве</structure>
+        </operation>
+    </set>
+
+    <set name="\\mathbb{N_0}">
+        <description>Множество натуральных чисел с нулем</description>
+        
+        <operation type="+">
+            <structure>Моноид</structure>
+            <abel>Да</abel>
+            <associative>Да</associative>
+        </operation>
+
+        <operation type="-">
+            <structure>Не является операцией на заданном множестве</structure>
+        </operation>
+
+        <operation type="*">
+            <structure>Моноид</structure>
+            <abel>Да</abel>
+            <associative>Да</associative>
+        </operation>
+
+        <operation type="/">
+            <structure>Не является операцией на заданном множестве</structure>
+        </operation>
+    </set>
+
+    <set name="\\mathbb{Z}">
+        <description>Множество целых чисел</description>
+        
+        <operation type="+">
+            <structure>Группа</structure>
+            <abel>Да</abel>
+            <associative>Да</associative>
+        </operation>
+
+        <operation type="-">
+            <structure>Группоид</structure>
+            <abel>Нет</abel>
+            <associative>Нет</associative>
+        </operation>
+
+        <operation type="*">
+            <structure>Моноид</structure>
+            <abel>Да</abel>
+            <associative>Да</associative>
+        </operation>
+
+        <operation type="/">
+            <structure>Не является операцией на заданном множестве</structure>
+        </operation>
+    </set>
+
+    <set name="\\mathbb{Z}\\backslash\\{0\\}">
+        <description>Множество целых чисел без нуля</description>
+        
+        <operation type="+">
+            <structure>Не является операцией на заданном множестве</structure>
+        </operation>
+
+        <operation type="-">
+            <structure>Не является операцией на заданном множестве</structure>
+        </operation>
+
+        <operation type="*">
+            <structure>Моноид</structure>
+            <abel>Да</abel>
+            <associative>Да</associative>
+        </operation>
+
+        <operation type="/">
+            <structure>Не является операцией на заданном множестве</structure>
+        </operation>
+    </set>
+
+    <set name="\\mathbb{Q}">
+        <description>Множество рациональных чисел</description>
+        
+        <operation type="+">
+            <structure>Группа</structure>
+            <abel>Да</abel>
+            <associative>Да</associative>
+        </operation>
+
+        <operation type="-">
+            <structure>Группоид</structure>
+            <abel>Нет</abel>
+            <associative>Нет</associative>
+        </operation>
+
+        <operation type="*">
+            <structure>Моноид</structure>
+            <abel>Да</abel>
+            <associative>Да</associative>
+        </operation>
+
+        <operation type="/">
+            <structure>Не является операцией на заданном множестве</structure>
+        </operation>
+    </set>
+
+    <set name="\\mathbb{Q}\\backslash\\{0\\}">
+        <description>Множество рациональных чисел без нуля</description>
+        
+        <operation type="+">
+            <structure>Не является операцией на заданном множестве</structure>
+        </operation>
+
+        <operation type="-">
+            <structure>Не является операцией на заданном множестве</structure>
+        </operation>
+
+        <operation type="*">
+            <structure>Группа</structure>
+            <abel>Да</abel>
+            <associative>Да</associative>
+        </operation>
+
+        <operation type="/">
+            <structure>Группоид</structure>
+            <abel>Нет</abel>
+            <associative>Нет</associative>
+        </operation>
+    </set>
+
+    <set name="\\mathbb{R}">
+        <description>Множество действительных чисел</description>
+        
+        <operation type="+">
+            <structure>Группа</structure>
+            <abel>Да</abel>
+            <associative>Да</associative>
+        </operation>
+
+        <operation type="-">
+            <structure>Группоид</structure>
+            <abel>Нет</abel>
+            <associative>Нет</associative>
+        </operation>
+
+        <operation type="*">
+            <structure>Моноид</structure>
+            <abel>Да</abel>
+            <associative>Да</associative>
+        </operation>
+
+        <operation type="/">
+            <structure>Не является операцией на заданном множестве</structure>
+        </operation>
+    </set>
+
+    <set name="\\mathbb{R}\\backslash\\{0\\}">
+        <description>Множество действительных чисел без нуля</description>
+        
+        <operation type="+">
+            <structure>Не является операцией на заданном множестве</structure>
+        </operation>
+
+        <operation type="-">
+            <structure>Не является операцией на заданном множестве</structure>
+        </operation>
+
+        <operation type="*">
+            <structure>Группа</structure>
+            <abel>Да</abel>
+            <associative>Да</associative>
+        </operation>
+
+        <operation type="/">
+            <structure>Группоид</structure>
+            <abel>Нет</abel>
+            <associative>Нет</associative>
+        </operation>
+    </set>
+
+    <set name="\\mathbb{C}">
+        <description>Множество комплексных чисел</description>
+        
+        <operation type="+">
+            <structure>Группа</structure>
+            <abel>Да</abel>
+            <associative>Да</associative>
+        </operation>
+
+        <operation type="-">
+            <structure>Группоид</structure>
+            <abel>Нет</abel>
+            <associative>Нет</associative>
+        </operation>
+
+        <operation type="*">
+            <structure>Моноид</structure>
+            <abel>Да</abel>
+            <associative>Да</associative>
+        </operation>
+
+        <operation type="/">
+            <structure>Не является операцией на заданном множестве</structure>
+        </operation>
+    </set>
+
+    <set name="\\mathbb{S_n}">
+        <description>Группа перестановок</description>
+        
+        <operation type="\\cdot">
+            <structure>Группа</structure>
+            <abel>Нет</abel>
+            <associative>Да</associative>
+        </operation>
+    </set>
+
+    <set name="\\mathbb{D_n}">
+        <description>Группа диэдра</description>
+        
+        <operation type="\\cdot">
+            <structure>Группа</structure>
+            <abel>Нет</abel>
+            <associative>Да</associative>
+        </operation>
+    </set>
+
+    <set name="\\mathbb{A_n}">
+        <description>Знакопеременная группа</description>
+        
+        <operation type="\\cdot">
+            <structure>Группа</structure>
+            <abel>Нет</abel>
+            <associative>Да</associative>
+        </operation>
+    </set>
+
+    <set name="\\mathbb{V_4}">
+        <description>Четвертная группа Клейна</description>
+        
+        <operation type="\\cdot">
+            <structure>Группа</structure>
+            <abel>Да</abel>
+            <associative>Да</associative>
+        </operation>
+    </set>
+
+    <set name="\\mathbb{Q_8}">
+        <description>Группа Кватернионов</description>
+        
+        <operation type="\\cdot">
+            <structure>Группа</structure>
+            <abel>Нет</abel>
+            <associative>Да</associative>
+        </operation>
+    </set>
+</algebra>
