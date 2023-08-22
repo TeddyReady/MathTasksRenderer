@@ -1,0 +1,3 @@
+[submodule "libs/CppMathLib"]
+	path = libs/CppMathLib
+	url = https://github.com/TeddyReady/CppMathLib.git
