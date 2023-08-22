@@ -1,24 +1,29 @@
+#####################################################
+#########      PROJECT    SUBMODULES       ##########
+#####################################################
 include(libs/qtmathjax/qtmathjax.pri)
 include(libs/CppMathLib/sources/cppmathlib.pri)
 
-QT       += core gui webkitwidgets widgets
-TARGET    = Algebra_Madness
-TEMPLATE  = app
-CONFIG   += c++17
+#####################################################
+#########      PROJECT   CONFIGURATION     ##########
+#####################################################
+QT          += core gui webkitwidgets widgets
+TARGET       = Algebra_Madness
+TEMPLATE     = app
+CONFIG      += c++17
 INCLUDEPATH += $$PWD/interface $$PWD/sources
-DEFINES  += QT_DEPRECATED_WARNINGS
-LIBS  += -L/usr/local/lib -lpoppler-qt5
+DEFINES     += QT_DEPRECATED_WARNINGS
+LIBS        += -L/usr/local/lib -lpoppler-qt5
 
+#####################################################
+#########       PROJECT    SOURCES         ##########
+#####################################################
 HEADERS  +=                                         \
-    interface/icomplex.tpp \
-    interface/iringofmembers.tpp \
-    interface/iringresidue.h \
     sources/dialogmanual.h                          \
     sources/dialogbase.h                            \
     sources/dialoglatexprinter.h                    \
     sources/dialogtesttimer.h                       \
     sources/dialogresults.h                         \
-    sources/enum.h                                  \
     sources/environment.h                           \
     sources/generatorwindow.h                       \
     sources/testmode.h                              \
@@ -26,18 +31,18 @@ HEADERS  +=                                         \
     sources/metatype.h                              \
     sources/include.h                               \
                                                     \
+    interface/ialgebrastructures.h                  \
     interface/ieulerfunction.h                      \
     interface/imatrix.tpp                           \
     interface/imebiusfunction.h                     \
     interface/interface.h                           \
     interface/isymbollegandre.h                     \
     interface/itranspositiongroup.h                 \
+    interface/icomplex.tpp                          \
+    interface/iringofmembers.tpp                    \
+    interface/iringresidue.h                        \
 
 SOURCES  +=                                         \
-    interface/icomplex.cpp \
-    interface/imatrix.cpp \
-    interface/iringofmembers.cpp \
-    interface/iringresidue.cpp \
     sources/dialogmanual.cpp                        \
     sources/dialogbase.cpp                          \
     sources/dialoglatexprinter.cpp                  \
@@ -49,10 +54,15 @@ SOURCES  +=                                         \
     sources/dialogfontsize.cpp                      \
     sources/theoryprinter.cpp                       \
                                                     \
+    interface/ialgebrastructures.cpp                \
     interface/ieulerfunction.cpp                    \
     interface/imebiusfunction.cpp                   \
     interface/isymbollegandre.cpp                   \
     interface/itranspositiongroup.cpp               \
+    interface/icomplex.cpp                          \
+    interface/imatrix.cpp                           \
+    interface/iringofmembers.cpp                    \
+    interface/iringresidue.cpp                      \
 
 FORMS  +=                                           \
     sources/dialogbase.ui                           \

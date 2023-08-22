@@ -13,8 +13,7 @@ namespace App {
 /* Resources */
 namespace RSC {
     namespace data {
-        const QString groups            = QString(":/data/data/groups.csv");
-        const QString set               = QString(":/data/data/set.csv");
+        const QString algebra_structures= QString(":/data/data/algebra_structures.xml");
     }
 
     namespace general {
@@ -111,6 +110,18 @@ enum ToolBarOptions {
     Manual  = 5,
     Font    = 6,
     Exit    = 7,
+};
+
+/* Useful algebra sets */
+enum class Set {
+    N,  No, Z,  Z0,
+    Q,  Q0, R,  R0,
+    C,  Sn, Dn, An,
+    V4, O8, Zn, Mm_Z,
+    Mm_R, Mn_Z, Mn_R,
+    _2A, Func_C, Func_D,
+    Pn_X, ABS_C_, V_2D,
+    V_nD, Zp, Z_i, MultiGroup_Zn
 };
 
 #endif // ENVIRONMENT_H
