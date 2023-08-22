@@ -20,8 +20,6 @@
         <file>pics/appIcon.png</file>
     </qresource>
     <qresource prefix="/data">
-        <file>data/set.csv</file>
-        <file>data/groups.csv</file>
         <file>data/algebra_structures.xml</file>
     </qresource>
 </RCC>

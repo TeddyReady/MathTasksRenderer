@@ -80,7 +80,7 @@ enum class AllTasks {
     SymbolJacobi        ,
     TranspositionGroup  ,
     Matrix              ,
-    Set                 ,
+    AlgebraStructures   ,
     GroupProperties     ,
     RingResidue         ,
     RingOfMembers       ,

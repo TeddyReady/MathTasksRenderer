@@ -7,7 +7,7 @@ include(libs/CppMathLib/sources/cppmathlib.pri)
 #####################################################
 #########      PROJECT   CONFIGURATION     ##########
 #####################################################
-QT          += core gui webkitwidgets widgets
+QT          += core gui webkitwidgets widgets xml
 TARGET       = Algebra_Madness
 TEMPLATE     = app
 CONFIG      += c++17

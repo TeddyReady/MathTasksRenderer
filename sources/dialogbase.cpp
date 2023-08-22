@@ -182,12 +182,11 @@ void DialogBase::uploadUI()
         addItem(Base, "Разложить в произведение транспозиций соседних элементов", ExoticOption::Transposition);
         break;
 
-    case AllTasks::Set:
+    case AllTasks::AlgebraStructures:
         addItem(Base, "Описание алгебраической структуры");
         addItem(Base, "Проверка операции на множестве");
-        addItem(Base, "Коммутативность операции");
-        addItem(Base, "Ассоциативность операции");
-        addItem(Base, "Существование нейтрального");
+        addItem(Base, "Проверка коммутативности операции");
+        addItem(Base, "Проверка ассоциативности операции");
         break;
 
     case AllTasks::GroupProperties:
@@ -311,7 +310,7 @@ void DialogBase::accept()
                 data.emplace_back(ranges[0].second);
                 data.emplace_back(ranges[1].first);
                 data.emplace_back(ranges[1].second);
-            } else if (static_cast<AllTasks>(task) != AllTasks::Set) {
+            } else if (static_cast<AllTasks>(task) != AllTasks::AlgebraStructures) {
                 data.emplace_back(ranges[0].first);
                 data.emplace_back(ranges[0].second);
             }

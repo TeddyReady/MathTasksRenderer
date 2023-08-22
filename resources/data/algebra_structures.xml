@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <algebra>
-    <set name="\\mathbb{N}">
+    <set name="\mathbb{N}">
         <description>Множество натуральных чисел</description>
         
         <operation type="+">
@@ -13,7 +13,7 @@
             <structure>None</structure>
         </operation>
 
-        <operation type="*">
+        <operation type="\cdot">
             <structure>Моноид</structure>
             <commutativity>Да</commutativity>
             <associativity>Да</associativity>
@@ -24,7 +24,7 @@
         </operation>
     </set>
 
-    <set name="\\mathbb{N_0}">
+    <set name="\mathbb{N_0}">
         <description>Множество натуральных чисел с нулем</description>
         
         <operation type="+">
@@ -37,7 +37,7 @@
             <structure>None</structure>
         </operation>
 
-        <operation type="*">
+        <operation type="\cdot">
             <structure>Моноид</structure>
             <commutativity>Да</commutativity>
             <associativity>Да</associativity>
@@ -48,7 +48,7 @@
         </operation>
     </set>
 
-    <set name="\\mathbb{Z}">
+    <set name="\mathbb{Z}">
         <description>Множество целых чисел</description>
         
         <operation type="+">
@@ -63,7 +63,7 @@
             <associativity>Нет</associativity>
         </operation>
 
-        <operation type="*">
+        <operation type="\cdot">
             <structure>Моноид</structure>
             <commutativity>Да</commutativity>
             <associativity>Да</associativity>
@@ -74,7 +74,7 @@
         </operation>
     </set>
 
-    <set name="\\mathbb{Z}\\backslash\\{0\\}">
+    <set name="\mathbb{Z}\backslash\{0\}">
         <description>Множество целых чисел без нуля</description>
         
         <operation type="+">
@@ -85,7 +85,7 @@
             <structure>None</structure>
         </operation>
 
-        <operation type="*">
+        <operation type="\cdot">
             <structure>Моноид</structure>
             <commutativity>Да</commutativity>
             <associativity>Да</associativity>
@@ -96,7 +96,7 @@
         </operation>
     </set>
 
-    <set name="\\mathbb{Q}">
+    <set name="\mathbb{Q}">
         <description>Множество рациональных чисел</description>
         
         <operation type="+">
@@ -111,7 +111,7 @@
             <associativity>Нет</associativity>
         </operation>
 
-        <operation type="*">
+        <operation type="\cdot">
             <structure>Моноид</structure>
             <commutativity>Да</commutativity>
             <associativity>Да</associativity>
@@ -122,7 +122,7 @@
         </operation>
     </set>
 
-    <set name="\\mathbb{Q}\\backslash\\{0\\}">
+    <set name="\mathbb{Q}\backslash\{0\}">
         <description>Множество рациональных чисел без нуля</description>
         
         <operation type="+">
@@ -133,7 +133,7 @@
             <structure>None</structure>
         </operation>
 
-        <operation type="*">
+        <operation type="\cdot">
             <structure>Группа</structure>
             <commutativity>Да</commutativity>
             <associativity>Да</associativity>
@@ -146,7 +146,7 @@
         </operation>
     </set>
 
-    <set name="\\mathbb{R}">
+    <set name="\mathbb{R}">
         <description>Множество действительных чисел</description>
         
         <operation type="+">
@@ -161,7 +161,7 @@
             <associativity>Нет</associativity>
         </operation>
 
-        <operation type="*">
+        <operation type="\cdot">
             <structure>Моноид</structure>
             <commutativity>Да</commutativity>
             <associativity>Да</associativity>
@@ -172,7 +172,7 @@
         </operation>
     </set>
 
-    <set name="\\mathbb{R}\\backslash\\{0\\}">
+    <set name="\mathbb{R}\backslash\{0\}">
         <description>Множество действительных чисел без нуля</description>
         
         <operation type="+">
@@ -183,7 +183,7 @@
             <structure>None</structure>
         </operation>
 
-        <operation type="*">
+        <operation type="\cdot">
             <structure>Группа</structure>
             <commutativity>Да</commutativity>
             <associativity>Да</associativity>
@@ -196,7 +196,7 @@
         </operation>
     </set>
 
-    <set name="\\mathbb{C}">
+    <set name="\mathbb{C}">
         <description>Множество комплексных чисел</description>
         
         <operation type="+">
@@ -211,7 +211,7 @@
             <associativity>Нет</associativity>
         </operation>
 
-        <operation type="*">
+        <operation type="\cdot">
             <structure>Моноид</structure>
             <commutativity>Да</commutativity>
             <associativity>Да</associativity>
@@ -222,67 +222,57 @@
         </operation>
     </set>
 
-    <set name="\\mathbb{S_n}">
+    <set name="\mathbb{S_n}">
         <description>Группа перестановок</description>
         
-        <operation type="\\cdot">
+        <operation type="\cdot">
             <structure>Группа</structure>
             <commutativity>Нет</commutativity>
             <associativity>Да</associativity>
         </operation>
     </set>
 
-    <set name="\\mathbb{D_n}">
+    <set name="\mathbb{D_n}">
         <description>Группа диэдра</description>
         
-        <operation type="\\cdot">
+        <operation type="\cdot">
             <structure>Группа</structure>
             <commutativity>Нет</commutativity>
             <associativity>Да</associativity>
         </operation>
     </set>
 
-    <set name="\\mathbb{A_n}">
+    <set name="\mathbb{A_n}">
         <description>Знакопеременная группа</description>
         
-        <operation type="\\cdot">
+        <operation type="\cdot">
             <structure>Группа</structure>
             <commutativity>Нет</commutativity>
             <associativity>Да</associativity>
         </operation>
     </set>
 
-    <set name="\\mathbb{V_4}">
+    <set name="\mathbb{V_4}">
         <description>Четвертная группа Клейна</description>
         
-        <operation type="\\cdot">
+        <operation type="\cdot">
             <structure>Группа</structure>
             <commutativity>Да</commutativity>
             <associativity>Да</associativity>
         </operation>
     </set>
 
-    <set name="\\mathbb{Q_8}">
+    <set name="\mathbb{Q_8}">
         <description>Группа Кватернионов</description>
         
-        <operation type="\\cdot">
+        <operation type="\cdot">
             <structure>Группа</structure>
             <commutativity>Нет</commutativity>
             <associativity>Да</associativity>
         </operation>
     </set>
 
-    <set name="\\mathbb{Q_8}">
-        <description>Группа Кватернионов</description>
-
-        <operation type="\\cdot">
-            <structure>Группа</structure>
-            <commutativity>Нет</commutativity>
-            <associativity>Да</associativity>
-        </operation>
-    </set>
-
-    <set name="\\mathbb{M}_{n\\times n}\\left(\\mathbb{Z}\\right)">
+    <set name="\mathbb{M}_{n\times n}\left(\mathbb{Z}\right)">
         <description>Множество квадратных матриц над кольцом целых чисел</description>
 
         <operation type="+">
@@ -297,7 +287,7 @@
             <associativity>Нет</associativity>
         </operation>
 
-        <operation type="*">
+        <operation type="\cdot">
             <structure>Группоид</structure>
             <commutativity>Нет</commutativity>
             <associativity>Нет</associativity>
@@ -308,7 +298,7 @@
         </operation>
     </set>
 
-    <set name="\\mathbb{M}_{n\\times n}\\left(\\mathbb{R}\\right)">
+    <set name="\mathbb{M}_{n\times n}\left(\mathbb{R}\right)">
         <description>Множество квадратных матриц над полем действительных чисел</description>
 
         <operation type="+">
@@ -323,7 +313,7 @@
             <associativity>Нет</associativity>
         </operation>
 
-        <operation type="*">
+        <operation type="\cdot">
             <structure>Группоид</structure>
             <commutativity>Нет</commutativity>
             <associativity>Нет</associativity>
@@ -334,7 +324,7 @@
         </operation>
     </set>
 
-    <set name="\\mathbb{M}_{n\\times m}\\left(\\mathbb{Z}\\right)">
+    <set name="\mathbb{M}_{n\times m}\left(\mathbb{Z}\right)">
         <description>Множество прямоугольных матриц над кольцом целых чисел</description>
 
         <operation type="+">
@@ -349,7 +339,7 @@
             <associativity>Нет</associativity>
         </operation>
 
-        <operation type="*">
+        <operation type="\cdot">
             <structure>None</structure>
         </operation>
 
@@ -358,7 +348,7 @@
         </operation>
     </set>
 
-    <set name="\\mathbb{M}_{n\\times m}\\left(\\mathbb{R}\\right)">
+    <set name="\mathbb{M}_{n\times m}\left(\mathbb{R}\right)">
         <description>Множество прямоугольных матриц над полем действительных чисел</description>
 
         <operation type="+">
@@ -373,7 +363,7 @@
             <associativity>Нет</associativity>
         </operation>
 
-        <operation type="*">
+        <operation type="\cdot">
             <structure>None</structure>
         </operation>
 
@@ -382,22 +372,22 @@
         </operation>
     </set>
 
-    <set name="\\mathbb{2}^A">
+    <set name="\mathbb{2}^A">
         <description>Множество всех подмножеств множества A</description>
 
-        <operation type="\\cap">
+        <operation type="\cap">
             <structure>Группа</structure>
             <commutativity>Да</commutativity>
             <associativity>Да</associativity>
         </operation>
 
-        <operation type="\\cup">
+        <operation type="\cup">
             <structure>Группоид</structure>
             <commutativity>Нет</commutativity>
             <associativity>Нет</associativity>
         </operation>
 
-        <operation type="\\bigtriangleup">
+        <operation type="\bigtriangleup">
             <structure>Группоид</structure>
             <commutativity>Нет</commutativity>
             <associativity>Нет</associativity>

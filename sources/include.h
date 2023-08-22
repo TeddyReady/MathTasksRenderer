@@ -42,6 +42,7 @@
 #include <QTime>
 #include <QTimer>
 #include <QToolBar>
+#include <QtXml>
 #include <QUrl>
 #include <QVBoxLayout>
 #include <QVector>

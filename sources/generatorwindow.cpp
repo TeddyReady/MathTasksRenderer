@@ -286,11 +286,7 @@ void GeneratorWindow::runTaskManager(const QString &task, bool closeMode)
     else if (task == "Символ Якоби")
         window = new DialogBase(AllTasks::SymbolJacobi, closeMode, this);
     else if (task == "Алгебраические Структуры")
-//        window = new DialogBase(AllTasks::Set, closeMode, this);
-    {
-        QMessageBox::warning(this, "Внимание тестировщикам!", "Задания категории 'Алгебраические Структуры' находятся на этапе разработки.");
-        return;
-    }
+        window = new DialogBase(AllTasks::AlgebraStructures, closeMode, this);
     else if (task == "Группы и их свойства")
 //        window = new DialogBase(AllTasks::GroupProperties, closeMode, this);
     {
@@ -357,9 +353,9 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
     case AllTasks::TranspositionGroup:
         interface = new TranspositionGroupInterface(data[1], data[2], static_cast<TranspositionGroupOptions>(subTask), static_cast<ViewMode>(optional));
         break;
-//    case AllTasks::Set:
-//        runSet(data[0], static_cast<SetOptions>(subTask));
-//        break;
+    case AllTasks::AlgebraStructures:
+        interface = new AlgebraStructuresInterface(static_cast<AlgebraStructuresOptions>(subTask));
+        break;
 //    case AllTasks::GroupProperties:
 //        runGroupProperties(data[0], data[1], data[2], static_cast<GroupPropertiesOptions>(subTask));
 //        break;
@@ -429,6 +425,9 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
         default:
             break;
         }
+    default:
+        qDebug() << "Incorrect AllTasks type! Cannot catch it!";
+        return;
     }
 
     for (int i = 0; i < data[0]; ++i) {

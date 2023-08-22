@@ -13,9 +13,10 @@ enum class AlgebraStructuresOptions {
 
 class AlgebraStructuresInterface : public TaskInterface {
 private:
-    QMap<QString, QString> structures, commutativity, associativity;
+    QVector<QPair<QString, QString>> structures, commutativity, associativity;
     AlgebraStructuresOptions option;
     QRandomGenerator *gen;
+    int taskLocation;
 
 public:
     explicit AlgebraStructuresInterface(AlgebraStructuresOptions option);
