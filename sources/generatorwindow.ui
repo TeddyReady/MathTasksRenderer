@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="0">
+    <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -109,7 +109,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QWebView" name="taskView"/>
+         <widget class="QWebView" name="taskView" native="true"/>
         </item>
         <item row="1" column="0" colspan="2">
          <widget class="QPushButton" name="genButton">
@@ -120,40 +120,13 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tabTheory">
+      <widget class="QWidget" name="tabLibrary">
        <attribute name="title">
-        <string>Теория</string>
+        <string>Библиотека</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="1" column="2">
-         <widget class="QPushButton" name="nextPage">
-          <property name="text">
-           <string>-&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QPushButton" name="prevPage">
-          <property name="text">
-           <string>&lt;-</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0" colspan="3">
-         <widget class="QGraphicsView" name="graphicsView"/>
-        </item>
-        <item row="1" column="1">
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
+       <layout class="QGridLayout" name="gridLayout_7">
+        <item row="0" column="0">
+         <layout class="QGridLayout" name="libraryLayout"/>
         </item>
        </layout>
       </widget>

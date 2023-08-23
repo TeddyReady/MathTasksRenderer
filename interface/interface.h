@@ -1,6 +1,6 @@
 #ifndef INTERFACE_H
 #define INTERFACE_H
-#include "metatype.h"
+#include "include.h"
 
 /* Iterface for math classes */
 class TaskInterface {

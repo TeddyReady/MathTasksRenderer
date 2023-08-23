@@ -5,6 +5,7 @@
 #include "dialogmanual.h"
 #include "environment.h"
 #include "dialogbase.h"
+#include "pdfviewer.h"
 #include "testmode.h"
 
 QT_BEGIN_NAMESPACE
@@ -19,7 +20,6 @@ private:
     void uploadSettings();
     void getConnection();
     void isReadyRender();
-    void createTheoryImages();
 public:
     explicit GeneratorWindow(QWidget *parent = nullptr);
     ~GeneratorWindow();
@@ -41,14 +41,11 @@ private slots:
     void switchTask(const QString &task);
     void switchTab(int index);
     void runTest();
-
-    void prevTheoryPage();
-    void nextTheoryPage();
 private:
     //Main parser
     void runTaskManager(const QString &task, bool closeMode);
 
-    int totalTestTasks, lastSizeCount, pageNumber;
+    int totalTestTasks, lastSizeCount;
     bool mode;
     QVector<QString> descriptions, answers;
     QVector<QVector<QString>> tasks;
@@ -56,8 +53,6 @@ private:
     QString taskForTeX, taskFontSize, mathFontSize;
     QRandomGenerator *random;
     TeXEngine *engine;
-    QGraphicsScene *scene;
-    QVector<QImage> images;
     Ui::GeneratorWindow *ui;
 };
 

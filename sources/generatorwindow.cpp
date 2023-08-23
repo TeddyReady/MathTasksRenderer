@@ -2,12 +2,11 @@
 #include "ui_generatorwindow.h"
 
 GeneratorWindow::GeneratorWindow(QWidget *parent)
-    : QMainWindow(parent), totalTestTasks(0), lastSizeCount(0), pageNumber(0), mode(false),
+    : QMainWindow(parent), totalTestTasks(0), lastSizeCount(0), mode(false),
       random(QRandomGenerator::global()), ui(new Ui::GeneratorWindow)
 {
     uploadSettings();
     uploadUI();
-    createTheoryImages();
     getConnection();
 
     showMaximized();
@@ -32,11 +31,12 @@ void GeneratorWindow::uploadUI()
     ui->genButton->setCursor(Qt::PointingHandCursor);
     ui->testButton->setCursor(Qt::PointingHandCursor);
     ui->tabWidget->tabBar()->setCursor(Qt::PointingHandCursor);
+    ui->tabWidget->setCurrentIndex(0);
     ui->taskView->setCursor(Qt::BlankCursor);
     ui->taskView->setContextMenuPolicy(Qt::CustomContextMenu);
     engine = new TeXEngine(ui->taskView);
-    scene = new QGraphicsScene(this);
-    ui->graphicsView->setScene(scene);
+
+    ui->libraryLayout->addWidget(new PDFViewer(RSC::theory::theory));
 
     ui->toolBar->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::checkAnswers), "Показать ответы", ui->toolBar));
@@ -74,10 +74,6 @@ void GeneratorWindow::saveSettings()
     settings.setValue("taskFontSize", taskFontSize);
     settings.setValue("mathFontSize", mathFontSize);
     settings.endGroup();
-
-    settings.beginGroup("Theory");
-    settings.setValue("numberOfPage", pageNumber);
-    settings.endGroup();
 }
 
 void GeneratorWindow::uploadSettings()
@@ -91,10 +87,6 @@ void GeneratorWindow::uploadSettings()
     settings.beginGroup("Style");
     taskFontSize = settings.value("taskFontSize", "\\normalsize").toString();
     mathFontSize = settings.value("mathFontSize", "\\normalsize").toString();
-    settings.endGroup();
-
-    settings.beginGroup("Theory");
-    pageNumber = settings.value("numberOfPage").toInt();
     settings.endGroup();
 }
 
@@ -112,9 +104,6 @@ void GeneratorWindow::getConnection()
 
     connect(ui->taskBox, &QComboBox::currentTextChanged, this, &GeneratorWindow::switchTask);
     connect(ui->testButton, &QPushButton::clicked, this, &GeneratorWindow::runTest);
-
-    connect(ui->prevPage, &QPushButton::clicked, this, &GeneratorWindow::prevTheoryPage);
-    connect(ui->nextPage, &QPushButton::clicked, this, &GeneratorWindow::nextTheoryPage);
 }
 
 void GeneratorWindow::isReadyRender()
@@ -209,6 +198,7 @@ void GeneratorWindow::switchTab(int index)
         ui->toolBar->actions().at(Print)->setVisible(false);
         ui->toolBar->actions().at(Sep_2)->setVisible(false);
         break;
+
     default:
         mode = 0;
         if (index == 0) {

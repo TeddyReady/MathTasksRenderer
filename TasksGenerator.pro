@@ -26,9 +26,9 @@ HEADERS  +=                                         \
     sources/dialogresults.h                         \
     sources/environment.h                           \
     sources/generatorwindow.h                       \
+    sources/pdfviewer.h \
     sources/testmode.h                              \
     sources/dialogfontsize.h                        \
-    sources/metatype.h                              \
     sources/include.h                               \
                                                     \
     interface/ialgebrastructures.h                  \
@@ -50,9 +50,9 @@ SOURCES  +=                                         \
     sources/dialogresults.cpp                       \
     sources/main.cpp                                \
     sources/generatorwindow.cpp                     \
+    sources/pdfviewer.cpp \
     sources/testmode.cpp                            \
     sources/dialogfontsize.cpp                      \
-    sources/theoryprinter.cpp                       \
                                                     \
     interface/ialgebrastructures.cpp                \
     interface/ieulerfunction.cpp                    \

@@ -12,6 +12,7 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QGraphicsScene>
+#include <QGraphicsView>
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QImage>
@@ -29,6 +30,7 @@
 #include <QRandomGenerator>
 #include <QRegExp>
 #include <QSettings>
+#include <QSizePolicy>
 #include <QSpacerItem>
 #include <QSpinBox>
 #include <QSplashScreen>

@@ -70,6 +70,11 @@ namespace LaTeX {
     const QString tableEnd =      "\\hline\\end{array}\n";
 }
 
+namespace Symbols {
+    const QString arror_left  = "\u2190";
+    const QString arror_right = "\u2192";
+}
+
 /* ENUM */
 
 /* All task types in Algebra Madness */
