@@ -5,9 +5,13 @@
 class PDFBook : public QWidget {
 private:
     QLabel *icon, *label;
-    QGridLayout *layout;
+    QVBoxLayout *layout;
+    bool selected;
 public:
     explicit PDFBook(QString pdfFile = "default.pdf", QWidget *parent = nullptr);
+
+protected:
+    void mouseMoveEvent(QMouseEvent *event);
 };
 
 #endif // PDFBOOK_H

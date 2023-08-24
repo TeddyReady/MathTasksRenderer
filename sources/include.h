@@ -9,6 +9,7 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QDialog>
+#include <QEvent>
 #include <QFile>
 #include <QFileDialog>
 #include <QGraphicsScene>

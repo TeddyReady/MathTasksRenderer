@@ -25,6 +25,7 @@ public:
     ~GeneratorWindow();
 protected:
     void closeEvent(QCloseEvent *event);
+    bool eventFilter(QObject *target, QEvent *event);
 public slots:
     void receivedMetaInfo(int countOfTasks);
     void receivedData(std::vector<int> data, AllTasks task, int subTask, int optional);
