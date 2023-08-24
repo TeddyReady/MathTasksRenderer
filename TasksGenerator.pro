@@ -26,6 +26,8 @@ HEADERS  +=                                         \
     sources/dialogresults.h                         \
     sources/environment.h                           \
     sources/generatorwindow.h                       \
+    sources/librarywidget.h \
+    sources/pdfbook.h \
     sources/pdfviewer.h \
     sources/testmode.h                              \
     sources/dialogfontsize.h                        \
@@ -48,8 +50,10 @@ SOURCES  +=                                         \
     sources/dialoglatexprinter.cpp                  \
     sources/dialogtesttimer.cpp                     \
     sources/dialogresults.cpp                       \
+    sources/librarywidget.cpp \
     sources/main.cpp                                \
     sources/generatorwindow.cpp                     \
+    sources/pdfbook.cpp \
     sources/pdfviewer.cpp \
     sources/testmode.cpp                            \
     sources/dialogfontsize.cpp                      \

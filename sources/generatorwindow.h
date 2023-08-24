@@ -2,8 +2,8 @@
 #define GENERATORWINDOW_H
 #include "dialoglatexprinter.h"
 #include "dialogfontsize.h"
+#include "librarywidget.h"
 #include "dialogmanual.h"
-#include "environment.h"
 #include "dialogbase.h"
 #include "pdfviewer.h"
 #include "testmode.h"

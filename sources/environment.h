@@ -8,6 +8,7 @@
 namespace App {
     const QString AppName = QString("Algebra Madness");
     const QString OrgName = QString("Teddy's Corp");
+    const QString LibPath = QString("../library");
 }
 
 /* Resources */
@@ -33,6 +34,7 @@ namespace RSC {
         const QString reload            = QString(":/pics/pics/reload.png");
         const QString splash            = QString(":/pics/pics/splash.png");
         const QString unchecked_hover   = QString(":/pics/pics/unchecked_hover.png");
+        const QString pdf               = QString(":/pics/pics/pdf.png");
     }
 
     namespace theory {

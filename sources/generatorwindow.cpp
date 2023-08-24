@@ -36,7 +36,10 @@ void GeneratorWindow::uploadUI()
     ui->taskView->setContextMenuPolicy(Qt::CustomContextMenu);
     engine = new TeXEngine(ui->taskView);
 
-    ui->libraryLayout->addWidget(new PDFViewer(RSC::theory::theory));
+//    ui->libraryLayout->addWidget(new PDFViewer(RSC::theory::theory));
+    ui->libraryLayout->addWidget(new LibraryWidget);
+    PDFBook *book = new PDFBook("Пример.txt", this);
+    book->show();
 
     ui->toolBar->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::checkAnswers), "Показать ответы", ui->toolBar));
