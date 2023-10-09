@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<algebra>
+
+    <group name="\mathbb{Z}" operation="+">
+        <description>Множество целых чисел</description>
+        <commutativity>Да</commutativity>
+        <subgroups>n\mathbb{Z}, n\in\mathbb{Z}</subgroups>
+        <exponent>\infty</exponent>
+        <order>\infty</order>
+    </group>
+
+    <group name="\mathbb{S_n}" operation="\cdot">
+        <description>Группа перестановок</description>
+        <commutativity>Нет</commutativity>
+        <subgroups></subgroups>
+        <exponent>n!</exponent>
+        <order>n!</order>
+    </group>
+
+    <group name="\mathbb{D_n}" operation="\cdot">
+        <description>Группа диэдра</description>
+        <commutativity>Нет</commutativity>
+        <subgroups></subgroups>
+        <exponent>n!</exponent>
+        <order>n!</order>
+    </group>
+
+    <group name="\mathbb{A_n}" operation="\cdot">
+        <description>Знакопеременная группа</description>
+        <commutativity>Нет</commutativity>
+        <subgroups></subgroups>
+        <exponent>n!</exponent>
+        <order>n!</order>
+    </group>
+
+    <group name="\mathbb{V_4}" operation="\cdot">
+        <description>Четвертная группа Клейна</description>
+        <commutativity>Да</commutativity>
+        <subgroups>{e,a},{e,b},{e,c}</subgroups>
+        <exponent>2</exponent>
+        <order>4</order>
+    </group>
+
+    <group name="\mathbb{Q_8}" operation="\cdot">
+        <description>Группа Кватернионов</description>
+        <commutativity>Нет</commutativity>
+    </group>
+
+    <group name="\mathbb{M}_{n\times n}\left(\mathbb{Z}\right)" operation="+">
+        <description>Множество квадратных матриц над кольцом целых чисел</description>
+        <commutativity>Да</commutativity>
+    </group>
+
+    <group name="\mathbb{M}_{n\times n}\left(\mathbb{R}\right)" operation="+">
+        <description>Множество квадратных матриц над полем действительных чисел</description>        
+        <commutativity>Да</commutativity>
+    </group>
+
+    <group name="\mathbb{M}_{n\times m}\left(\mathbb{Z}\right)" operation="+">
+        <description>Множество прямоугольных матриц над кольцом целых чисел</description>
+        <commutativity>Да</commutativity>
+    </group>
+
+    <group name="\mathbb{M}_{n\times m}\left(\mathbb{R}\right)" operation="+">
+        <description>Множество прямоугольных матриц над полем действительных чисел</description>    
+        <commutativity>Да</commutativity>
+    </group>
+
+    <group name="\mathbb{2}^A">
+        <description>Множество всех подмножеств множества A</description>
+
+        <operation type="\cap">
+            <commutativity>Да</commutativity>
+
+        <operation type="\cup">
+            <commutativity>Нет</commutativity>
+
+        <operation type="\bigtriangleup">
+            <commutativity>Нет</commutativity>
+        
+    </group>
+</algebra>

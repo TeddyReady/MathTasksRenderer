@@ -18,6 +18,8 @@
         <file>pics/checked.png</file>
         <file>pics/checkAnswers.png</file>
         <file>pics/appIcon.png</file>
+        <file>pics/compile.png</file>
+        <file>pics/reference_manual.png</file>
     </qresource>
     <qresource prefix="/data">
         <file>data/algebra_structures.xml</file>

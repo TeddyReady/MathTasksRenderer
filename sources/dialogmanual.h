@@ -1,7 +1,7 @@
 #ifndef DIALOGMANUAL_H
 #define DIALOGMANUAL_H
+#include "environment.h"
 #include "texengine.h"
-#include "include.h"
 
 namespace Ui {
 class DialogManual;

@@ -33,6 +33,8 @@ namespace RSC {
         const QString reload            = QString(":/pics/pics/reload.png");
         const QString splash            = QString(":/pics/pics/splash.png");
         const QString unchecked_hover   = QString(":/pics/pics/unchecked_hover.png");
+        const QString compile           = QString(":/pics/pics/compile.png");
+        const QString reference_manual  = QString(":/pics/pics/reference_manual.png");
     }
 
     namespace theory {
@@ -107,14 +109,24 @@ enum class ExoticOption {
 
 /* Main ToolBar Structure */
 enum ToolBarOptions {
-    Check   = 0,
-    Clear   = 1,
-    Sep_1   = 2,
-    Print   = 3,
-    Sep_2   = 4,
-    Manual  = 5,
-    Font    = 6,
-    Exit    = 7,
+    Check   ,
+    Clear   ,
+    Sep_1   ,
+    Print   ,
+    Sep_2   ,
+    Compile ,
+    MNRInfo ,
+    Spacer  ,
+    Manual  ,
+    Font    ,
+    Exit    ,
+};
+
+enum class TabBarModes {
+    Tasks           ,
+    Library         ,
+    TestMode        ,
+    TuringMachine   ,
 };
 
 /* Useful algebra sets */

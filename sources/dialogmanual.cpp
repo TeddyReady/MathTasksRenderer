@@ -9,23 +9,28 @@ DialogManual::DialogManual(QString taskFontSize, QString mathFontSize, QWidget *
     engine = new TeXEngine(ui->webView);
     ui->label->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-//    AlgebraStructures AS;
-//    QString result;
-//    for (int i = 0; i < AS.getSetsCount(); ++i)
-//    {
-//        result.append("{" + mathFontSize + AS.getCode(static_cast<Set>(i)) + "}\\Rightarrow{" +
-//                      taskFontSize + AS.getSetName(static_cast<Set>(i)) + "}\\\\");
-//    }
-//    engine->TeX2SVG("\\begin{aligned}\\color{sienna}{" + result + "}\\end{aligned}", true);
+    QDomDocument document;
+    QFile xmlFile(RSC::data::algebra_structures);
+    if (!xmlFile.open(QIODevice::ReadOnly ))
+    {
+       qDebug() << "Cannot open xml file:" << RSC::data::algebra_structures;
+       return;
+    }
+    document.setContent(&xmlFile);
+    xmlFile.close();
 
-//    connect(ui->btnExit, &QPushButton::clicked, [&](){ deleteLater(); });
-//    connect(ui->btnReload, &QPushButton::clicked, [=](){
-//        engine->TeX2SVG("\\begin{aligned}\\color{sienna}{" + result + "}\\end{aligned}", true);
-//    });
+    QDomNodeList dataSet = document.elementsByTagName(QString("set"));
 
-//    setMinimumWidth(1280);
-//    setMinimumHeight(720);
-//    setWindowTitle("Руководство по условным обозначениям");
+    QString info;
+    for (int setCounter = 0; setCounter < dataSet.count(); ++setCounter)
+    {
+        if (dataSet.item(setCounter).isElement())
+        {
+            QDomElement description = dataSet.item(setCounter).firstChildElement();
+            info += QString("%1:%2").arg(dataSet.item(setCounter).toElement().attribute("name")).arg(description.text().replace(" ", "~")) + "\\\\";
+        }
+    }
+    engine->TeX2SVG(MathJax::startConf + info + MathJax::endConf, true);
 }
 
 DialogManual::~DialogManual()

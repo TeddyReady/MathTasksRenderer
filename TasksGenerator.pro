@@ -19,6 +19,7 @@ LIBS        += -L/usr/local/lib -lpoppler-qt5
 #########       PROJECT    SOURCES         ##########
 #####################################################
 HEADERS  +=                                         \
+    sources/codeeditor.h \
     sources/dialogmanual.h                          \
     sources/dialogbase.h                            \
     sources/dialoglatexprinter.h                    \
@@ -27,6 +28,8 @@ HEADERS  +=                                         \
     sources/environment.h                           \
     sources/generatorwindow.h                       \
     sources/pdfviewer.h \
+    sources/registerspainter.h \
+    sources/registerwidget.h \
     sources/testmode.h                              \
     sources/dialogfontsize.h                        \
     sources/include.h                               \
@@ -41,8 +44,10 @@ HEADERS  +=                                         \
     interface/icomplex.tpp                          \
     interface/iringofmembers.tpp                    \
     interface/iringresidue.h                        \
+    sources/turingmachine.h                         \
 
 SOURCES  +=                                         \
+    sources/codeeditor.cpp \
     sources/dialogmanual.cpp                        \
     sources/dialogbase.cpp                          \
     sources/dialoglatexprinter.cpp                  \
@@ -51,6 +56,8 @@ SOURCES  +=                                         \
     sources/main.cpp                                \
     sources/generatorwindow.cpp                     \
     sources/pdfviewer.cpp \
+    sources/registerspainter.cpp \
+    sources/registerwidget.cpp \
     sources/testmode.cpp                            \
     sources/dialogfontsize.cpp                      \
                                                     \
@@ -63,6 +70,7 @@ SOURCES  +=                                         \
     interface/imatrix.cpp                           \
     interface/iringofmembers.cpp                    \
     interface/iringresidue.cpp                      \
+    sources/turingmachine.cpp                       \
 
 FORMS  +=                                           \
     sources/dialogbase.ui                           \

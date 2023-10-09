@@ -32,29 +32,41 @@ void GeneratorWindow::uploadUI()
     ui->testButton->setCursor(Qt::PointingHandCursor);
     ui->tabWidget->tabBar()->setCursor(Qt::PointingHandCursor);
     ui->tabWidget->setCurrentIndex(0);
+    ui->tabWidget->addTab(new TuringMachine, tr("Машина Тьюринга"));
     ui->taskView->setCursor(Qt::BlankCursor);
     ui->taskView->setContextMenuPolicy(Qt::CustomContextMenu);
     engine = new TeXEngine(ui->taskView);
 
     ui->libraryLayout->addWidget(new PDFViewer(RSC::theory::theory));
 
+    /* Left Alignment */
     ui->toolBar->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::checkAnswers), "Показать ответы", ui->toolBar));
     ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::clearTasks), "Очистить задачи", ui->toolBar));
     ui->toolBar->addSeparator();
     ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::printer), "Подготовить печатный вариант...", ui->toolBar));
     ui->toolBar->addSeparator();
+    ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::compile), "Запустить программу", ui->toolBar));
+    ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::reference_manual), "Справка по программированию", ui->toolBar));
+
+
+    ui->toolBar->actions().at(Check)->setDisabled(true);
+    ui->toolBar->actions().at(Clear)->setDisabled(true);
+    ui->toolBar->actions().at(Print)->setDisabled(true);
+    ui->toolBar->actions().at(Compile)->setVisible(false);
+    ui->toolBar->actions().at(MNRInfo)->setVisible(false);
+
+    QWidget *spacer = new QWidget;
+    spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    ui->toolBar->addWidget(spacer);
+
+    /* Right Alignment */
     ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::manual), "Справочник", ui->toolBar));
-    ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::font_size), "Настройки шрифта", ui->toolBar));
-    ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::quit), "Выход...", ui->toolBar));
-    ui->toolBar->actions().at(0)->setDisabled(true);
-    ui->toolBar->actions().at(1)->setDisabled(true);
-    ui->toolBar->actions().at(3)->setDisabled(true);
+    ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::font_size), "Настройки шрифта...", ui->toolBar));
+    ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::quit), "Выход", ui->toolBar));
 
     for (int i = 0; i < ui->tasksList->count(); ++i)
-    {
         ui->taskBox->addItem(ui->tasksList->item(i)->text());
-    }
 
     setCursor(Qt::ArrowCursor);
     setAttribute(Qt::WA_DeleteOnClose);
@@ -97,6 +109,8 @@ void GeneratorWindow::getConnection()
     connect(ui->toolBar->actions().at(Print), &QAction::triggered, this, &GeneratorWindow::printTasks);
     connect(ui->toolBar->actions().at(Manual), &QAction::triggered, this, &GeneratorWindow::openManual);
     connect(ui->toolBar->actions().at(Font), &QAction::triggered, this, &GeneratorWindow::changeFontSize);
+    connect(ui->toolBar->actions().at(Compile), &QAction::triggered, dynamic_cast<TuringMachine *>(ui->tabWidget->widget(3)), &TuringMachine::do_compile);
+    connect(ui->toolBar->actions().at(MNRInfo), &QAction::triggered, dynamic_cast<TuringMachine *>(ui->tabWidget->widget(3)), &TuringMachine::do_info);
     connect(ui->toolBar->actions().at(Exit), &QAction::triggered, [&](){qApp->closeAllWindows();});
 
     connect(ui->genButton, &QPushButton::clicked, this, &GeneratorWindow::generateTask);
@@ -158,11 +172,6 @@ void GeneratorWindow::printTasks()
 
 void GeneratorWindow::openManual()
 {
-    {
-        QMessageBox::warning(this, "Внимание тестировщикам!", "Условные обозначения временно недоступны, находится на этапе разработки.\n"
-                                                              "Убедительная просьба не использовать данную опцию.");
-        return;
-    }
     DialogManual *manDialog = new DialogManual(taskFontSize, mathFontSize, this);
     manDialog->show();
 }
@@ -183,8 +192,8 @@ void GeneratorWindow::changeFontSize()
 
 void GeneratorWindow::switchTab(int index)
 {
-    switch (index) {
-    case 2:
+    switch (static_cast<TabBarModes>(index)) {
+    case TabBarModes::TestMode:
         {
         QMessageBox::warning(this, "Внимание тестировщикам!", "Тестовый режим находится на этапе разработки.\n"
                                    "Убедительная просьба не использовать данный режим для генерации заданий.");
@@ -197,24 +206,41 @@ void GeneratorWindow::switchTab(int index)
         ui->toolBar->actions().at(Sep_1)->setVisible(false);
         ui->toolBar->actions().at(Print)->setVisible(false);
         ui->toolBar->actions().at(Sep_2)->setVisible(false);
+        ui->toolBar->actions().at(Compile)->setVisible(false);
+        ui->toolBar->actions().at(MNRInfo)->setVisible(false);
         break;
 
-    default:
+    case TabBarModes::Tasks:
         mode = 0;
-        if (index == 0) {
-            ui->toolBar->actions().at(Check)->setVisible(true);
-            ui->toolBar->actions().at(Clear)->setVisible(true);
-            ui->toolBar->actions().at(Sep_1)->setVisible(true);
-            ui->toolBar->actions().at(Print)->setVisible(true);
-            ui->toolBar->actions().at(Sep_2)->setVisible(true);
-        }
-        else {
-            ui->toolBar->actions().at(Check)->setVisible(false);
-            ui->toolBar->actions().at(Clear)->setVisible(false);
-            ui->toolBar->actions().at(Sep_1)->setVisible(false);
-            ui->toolBar->actions().at(Print)->setVisible(false);
-            ui->toolBar->actions().at(Sep_2)->setVisible(false);
-        }
+        ui->toolBar->actions().at(Check)->setVisible(true);
+        ui->toolBar->actions().at(Clear)->setVisible(true);
+        ui->toolBar->actions().at(Sep_1)->setVisible(true);
+        ui->toolBar->actions().at(Print)->setVisible(true);
+        ui->toolBar->actions().at(Sep_2)->setVisible(true);
+        ui->toolBar->actions().at(Compile)->setVisible(false);
+        ui->toolBar->actions().at(MNRInfo)->setVisible(false);
+        break;
+
+    case TabBarModes::Library:
+        mode = 0;
+        ui->toolBar->actions().at(Check)->setVisible(false);
+        ui->toolBar->actions().at(Clear)->setVisible(false);
+        ui->toolBar->actions().at(Sep_1)->setVisible(false);
+        ui->toolBar->actions().at(Print)->setVisible(false);
+        ui->toolBar->actions().at(Sep_2)->setVisible(false);
+        ui->toolBar->actions().at(Compile)->setVisible(false);
+        ui->toolBar->actions().at(MNRInfo)->setVisible(false);
+        break;
+
+    case TabBarModes::TuringMachine:
+        mode = 0;
+        ui->toolBar->actions().at(Check)->setVisible(false);
+        ui->toolBar->actions().at(Clear)->setVisible(false);
+        ui->toolBar->actions().at(Sep_1)->setVisible(false);
+        ui->toolBar->actions().at(Print)->setVisible(false);
+        ui->toolBar->actions().at(Sep_2)->setVisible(false);
+        ui->toolBar->actions().at(Compile)->setVisible(true);
+        ui->toolBar->actions().at(MNRInfo)->setVisible(true);
         break;
     }
 }

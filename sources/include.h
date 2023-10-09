@@ -26,6 +26,7 @@
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QPixmap>
+#include <QPlainTextEdit>
 #include <QPushButton>
 #include <QRandomGenerator>
 #include <QRegExp>
@@ -39,6 +40,7 @@
 #include <QStyleFactory>
 #include <QThread>
 #include <QTextBrowser>
+#include <QTextBlock>
 #include <QTextDocument>
 #include <QTextStream>
 #include <QTime>
