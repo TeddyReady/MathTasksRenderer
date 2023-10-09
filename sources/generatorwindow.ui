@@ -33,7 +33,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideNone</enum>
@@ -54,6 +54,11 @@
           <item>
            <property name="text">
             <string>Алгебраические Структуры</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Булевые Функции</string>
            </property>
           </item>
           <item>

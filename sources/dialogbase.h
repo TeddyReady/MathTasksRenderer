@@ -2,6 +2,7 @@
 #define DIALOGBASE_H
 #include "itranspositiongroup.h"
 #include "ialgebrastructures.h"
+#include "ibooleanfunction.h"
 #include "iringofmembers.tpp"
 #include "isymbollegandre.h"
 #include "imebiusfunction.h"

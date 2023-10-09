@@ -92,6 +92,7 @@ enum class AllTasks {
     RingResidue         ,
     RingOfMembers       ,
     Complex             ,
+    BooleanFunction     ,
 };
 
 enum class ExoticOption {

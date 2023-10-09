@@ -19,6 +19,7 @@ LIBS        += -L/usr/local/lib -lpoppler-qt5
 #########       PROJECT    SOURCES         ##########
 #####################################################
 HEADERS  +=                                         \
+    interface/ibooleanfunction.h \
     sources/codeeditor.h \
     sources/dialogmanual.h                          \
     sources/dialogbase.h                            \
@@ -47,6 +48,7 @@ HEADERS  +=                                         \
     sources/turingmachine.h                         \
 
 SOURCES  +=                                         \
+    interface/ibooleanfunction.cpp \
     sources/codeeditor.cpp \
     sources/dialogmanual.cpp                        \
     sources/dialogbase.cpp                          \

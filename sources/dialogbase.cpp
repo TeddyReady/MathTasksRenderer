@@ -50,8 +50,6 @@ GenWidget::GenWidget(AllTasks task, const QString &optionName, QWidget *parent) 
     connect(sbMax, &QSpinBox::editingFinished, [&](){ sbMin->setMaximum(sbMax->value()); });
 }
 
-
-
 void GenWidget::loadSettings(AllTasks task, const QString &optionName)
 {
     switch (task) {
@@ -119,6 +117,12 @@ void GenWidget::loadSettings(AllTasks task, const QString &optionName)
         sbMax->setMaximum(99);
         sbMin->setValue(-10);
         sbMax->setValue(20);
+        return;
+    case AllTasks::BooleanFunction:
+        sbMin->setMinimum(2);
+        sbMax->setMaximum(4);
+        sbMin->setValue(3);
+        sbMax->setValue(4);
         return;
     default:
         return;
@@ -196,6 +200,11 @@ void DialogBase::uploadUI()
         addItem(Base, "Нахождение центра группы");
         addItem(Base, "Вычислить порядок группы");
         addItem(Base, "Вычислить экспоненту группы");
+        break;
+
+    case AllTasks::BooleanFunction:
+        addItem(Gen, "n");
+        addItem(Base, "Полином Жегалкина");
         break;
 
     case AllTasks::Matrix:

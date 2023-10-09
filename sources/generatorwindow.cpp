@@ -321,6 +321,8 @@ void GeneratorWindow::runTaskManager(const QString &task, bool closeMode)
         window = new DialogBase(AllTasks::RingOfMembers, closeMode, this);
     else if (task == "Комплексные Числа")
         window = new DialogBase(AllTasks::Complex, closeMode, this);
+    else if (task == "Булевые Функции")
+        window = new DialogBase(AllTasks::BooleanFunction, closeMode, this);
     else return;
 
     connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
@@ -441,6 +443,11 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
         default:
             break;
         }
+        break;
+    case AllTasks::BooleanFunction:
+        interface = new BooleanFunctionInterface(data[1], data[2],
+                static_cast<BooleanFunctionOptions>(subTask));
+        break;
     default:
         qDebug() << "Incorrect AllTasks type! Cannot catch it!";
         return;
