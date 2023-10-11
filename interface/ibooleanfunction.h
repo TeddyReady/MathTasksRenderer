@@ -4,7 +4,14 @@
 #include "booleanfunction.h"
 
 enum class BooleanFunctionOptions {
-    PolinomJegalkina,
+    PolinomJegalkina    ,
+    FunctionFromJegalkin,
+    S_functions         ,
+    L_functions         ,
+    M_functions         ,
+    T1_functions        ,
+    T0_functions        ,
+    FullSystem          ,
 };
 
 class BooleanFunctionInterface : public TaskInterface {
@@ -13,6 +20,7 @@ private:
     BooleanFunctionOptions option;
     QRandomGenerator *gen;
     BooleanFunction function;
+    std::vector<BooleanFunction> system;
 
 public:
     explicit BooleanFunctionInterface(int minNum, int maxNum, BooleanFunctionOptions option);

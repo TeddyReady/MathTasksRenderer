@@ -205,6 +205,13 @@ void DialogBase::uploadUI()
     case AllTasks::BooleanFunction:
         addItem(Gen, "n");
         addItem(Base, "Полином Жегалкина");
+        addItem(Base, "Выразить функцию");
+        addItem(Base, "Самодвойственные функции");
+        addItem(Base, "Линейные функции");
+        addItem(Base, "Монотонные функции");
+        addItem(Base, "Функции класса T1");
+        addItem(Base, "Функции класса T0");
+        addItem(Base, "Полная система");
         break;
 
     case AllTasks::Matrix:
