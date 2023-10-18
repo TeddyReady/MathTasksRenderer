@@ -4,12 +4,7 @@
 #include "ringofmembers.tpp"
 #include "basemath.h"
 
-#define MIN_MEMBERS_COUNT 2
-#define MAX_MEMBERS_COUNT 4
-#define MIN_R_SIZE 1
-#define MAX_R_SIZE 2
-#define MIN_B_SIZE MAX_R_SIZE
-#define MAX_B_SIZE MAX_R_SIZE + 1
+#define GCD_MAX_CHAIN 3
 
 enum class RingOfMembersOptions {
     Summary ,
@@ -38,6 +33,7 @@ public:
     void create()
     {
         module = 0;
+        members.clear();
 
         switch (option)
         {
@@ -55,26 +51,45 @@ public:
             break;
 
         case RingOfMembersOptions::Divide:
+        case RingOfMembersOptions::Ostat:
         {
-            int members_count = gen->bounded(MIN_MEMBERS_COUNT, MAX_MEMBERS_COUNT);
+            int result_deg = gen->bounded(minDeg, maxDeg);
+            int members_count = gen->bounded(1, result_deg);
+
             for (int i = 0; i < members_count; ++i)
             {
                 RingOfMembers<T> tmp;
-                do createMembers(tmp, 1); while (tmp.isZero());
+                do createMembers(tmp, 2); while (tmp.isZero());
                 members.push_back(tmp);
             }
 
-            do createMembers(member_1, gen->bounded(MIN_R_SIZE, MAX_R_SIZE));
-            while (member_1.isZero());
+            do createMembers(member_2, gen->bounded(2, result_deg - members_count + 2));
+            while (member_2.isZero());
 
-            do createMembers(member_2, gen->bounded(MIN_B_SIZE, MAX_B_SIZE));
-            while (member_2.isZero() || member_2.getDeg() <= member_1.getDeg());
+
+            do createMembers(member_1, gen->bounded(1, result_deg - members_count - static_cast<int>(member_2.getDeg()) + 2));
+            while (member_1.isZero());
+            break;
         }
-        case RingOfMembersOptions::Ostat:
         case RingOfMembersOptions::GCD:
 
-            if (member_1.getDeg() < member_2.getDeg())
-                std::swap(member_1, member_2);
+            int result_deg = gen->bounded(minDeg, maxDeg);
+            int members_count = gen->bounded(1, result_deg);
+
+            for (int i = 0; i < members_count; ++i)
+            {
+                RingOfMembers<T> tmp;
+                do createMembers(tmp, 2); while (tmp.isZero());
+                members.push_back(tmp);
+            }
+
+            do createMembers(member_2, gen->bounded(2, result_deg - members_count + 2));
+            while (member_2.isZero());
+
+
+            do createMembers(member_1, gen->bounded(2, result_deg - members_count + 2));
+            while (member_1.isZero());
+
             break;
         }
     }
@@ -115,9 +130,9 @@ public:
         case RingOfMembersOptions::Divide:
             return QString("%1(%2)/(%3)=~?").arg(getType()).arg(printMembers(calculateMembers()*member_2 + member_1)).arg(printMembers(member_2));
         case RingOfMembersOptions::Ostat:
-            return QString("%1(%2)~mod~(%3)=~?").arg(getType()).arg(printMembers(member_1)).arg(printMembers(member_2));
+            return QString("%1(%2)~mod~(%3)=~?").arg(getType()).arg(printMembers(calculateMembers()*member_2 + member_1)).arg(printMembers(member_2));
         case RingOfMembersOptions::GCD:
-            return QString("%1НОД(%2,%3)=~?").arg(getType()).arg(printMembers(member_1)).arg(printMembers(member_2));
+            return QString("%1НОД(%2,%3)=~?").arg(getType()).arg(printMembers(member_1 * calculateMembers())).arg(printMembers(member_2 * calculateMembers()));
         default:
             break;
         }
@@ -138,9 +153,9 @@ public:
         case RingOfMembersOptions::Divide:
             return printMembers(calculateMembers());
         case RingOfMembersOptions::Ostat:
-            return printMembers(member_1 % member_2);
+            return printMembers(member_1);
         case RingOfMembersOptions::GCD:
-            return printMembers(GCD(member_1, member_2));
+            return printMembers(calculateMembers());
         default:
             break;
         }
@@ -148,7 +163,10 @@ public:
 
     QString printMembers(const RingOfMembers<T> &other) const
     {
-        return QString::fromStdString(std::string(other));
+        QString members = QString::fromStdString(std::string(other));
+        if (members.at(members.size() - 1) == '+')
+            members.chop(1);
+        return members;
     }
 
     void createMembers(RingOfMembers<T> &members, int deg)
@@ -165,7 +183,7 @@ public:
     {
         RingOfMembers<T> tmp = members.first();
 
-        for (int i = 1; i < members.size() - 1; ++i)
+        for (int i = 1; i < members.size(); ++i)
             tmp *= members.at(i);
 
         return tmp;

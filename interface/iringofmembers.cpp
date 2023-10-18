@@ -3,13 +3,13 @@
 template <>
 int RingOfMembersInterface<int>::generateValue()
 {
-    return static_cast<int>(gen->bounded(-20, 20));
+    return static_cast<int>(gen->bounded(-4, 4));
 }
 
 template <>
 double RingOfMembersInterface<double>::generateValue()
 {
-    return gen->bounded(-20, 20);
+    return gen->bounded(-4, 4);
 }
 
 template <>
@@ -35,13 +35,13 @@ Zp RingOfMembersInterface<Zp>::generateValue()
 template <>
 Complex<int> RingOfMembersInterface<Complex<int>>::generateValue()
 {
-    return Complex<int>(static_cast<int>(gen->bounded(-20, 20)), static_cast<int>(gen->bounded(-20, 20)));
+    return Complex<int>(static_cast<int>(gen->bounded(-4, 4)), static_cast<int>(gen->bounded(-4, 4)));
 }
 
 template <>
 Complex<double> RingOfMembersInterface<Complex<double>>::generateValue()
 {
-    return Complex<double>(gen->bounded(-20, 20), gen->bounded(-20, 20));
+    return Complex<double>(gen->bounded(-4, 4), gen->bounded(-4, 4));
 }
 
 template <>
