@@ -4,6 +4,13 @@
 #include "ringofmembers.tpp"
 #include "basemath.h"
 
+#define MIN_MEMBERS_COUNT 2
+#define MAX_MEMBERS_COUNT 4
+#define MIN_R_SIZE 1
+#define MAX_R_SIZE 2
+#define MIN_B_SIZE MAX_R_SIZE
+#define MAX_B_SIZE MAX_R_SIZE + 1
+
 enum class RingOfMembersOptions {
     Summary ,
     Diff    ,
@@ -20,6 +27,7 @@ private:
     RingOfMembersOptions option;
     QRandomGenerator *gen;
     RingOfMembers<T> member_1, member_2;
+    QVector<RingOfMembers<T>> members;
     int module;
 
 public:
@@ -31,8 +39,12 @@ public:
     {
         module = 0;
 
-        switch (option) {
-        default:
+        switch (option)
+        {
+        case RingOfMembersOptions::Summary:
+        case RingOfMembersOptions::Diff:
+        case RingOfMembersOptions::Multiply:
+
             do
                 createMembers(member_1, static_cast<int>(gen->bounded(minDeg, maxDeg)));
             while(member_1.isZero());
@@ -40,7 +52,29 @@ public:
             do
                 createMembers(member_2, static_cast<int>(gen->bounded(minDeg, maxDeg)));
             while(member_2.isZero());
+            break;
 
+        case RingOfMembersOptions::Divide:
+        {
+            int members_count = gen->bounded(MIN_MEMBERS_COUNT, MAX_MEMBERS_COUNT);
+            for (int i = 0; i < members_count; ++i)
+            {
+                RingOfMembers<T> tmp;
+                do createMembers(tmp, 1); while (tmp.isZero());
+                members.push_back(tmp);
+            }
+
+            do createMembers(member_1, gen->bounded(MIN_R_SIZE, MAX_R_SIZE));
+            while (member_1.isZero());
+
+            do createMembers(member_2, gen->bounded(MIN_B_SIZE, MAX_B_SIZE));
+            while (member_2.isZero() || member_2.getDeg() <= member_1.getDeg());
+        }
+        case RingOfMembersOptions::Ostat:
+        case RingOfMembersOptions::GCD:
+
+            if (member_1.getDeg() < member_2.getDeg())
+                std::swap(member_1, member_2);
             break;
         }
     }
@@ -79,7 +113,7 @@ public:
         case RingOfMembersOptions::Multiply:
             return QString("%1(%2)\\cdot(%3)=~?").arg(getType()).arg(printMembers(member_1)).arg(printMembers(member_2));
         case RingOfMembersOptions::Divide:
-            return QString("%1(%2)/(%3)=~?").arg(getType()).arg(printMembers(member_1)).arg(printMembers(member_2));
+            return QString("%1(%2)/(%3)=~?").arg(getType()).arg(printMembers(calculateMembers()*member_2 + member_1)).arg(printMembers(member_2));
         case RingOfMembersOptions::Ostat:
             return QString("%1(%2)~mod~(%3)=~?").arg(getType()).arg(printMembers(member_1)).arg(printMembers(member_2));
         case RingOfMembersOptions::GCD:
@@ -102,7 +136,7 @@ public:
         case RingOfMembersOptions::Multiply:
             return printMembers(member_1 * member_2);
         case RingOfMembersOptions::Divide:
-            return printMembers(member_1 / member_2);
+            return printMembers(calculateMembers());
         case RingOfMembersOptions::Ostat:
             return printMembers(member_1 % member_2);
         case RingOfMembersOptions::GCD:
@@ -125,6 +159,16 @@ public:
             data.push_back(generateValue());
 
         members = RingOfMembers<T>(data);
+    }
+
+    RingOfMembers<T> calculateMembers()
+    {
+        RingOfMembers<T> tmp = members.first();
+
+        for (int i = 1; i < members.size() - 1; ++i)
+            tmp *= members.at(i);
+
+        return tmp;
     }
 
     QString getType();
