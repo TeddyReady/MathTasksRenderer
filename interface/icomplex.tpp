@@ -20,7 +20,7 @@ private:
     int minNum, maxNum;
     ComplexOptions option;
     QRandomGenerator *gen;
-    T num_1, num_2;
+    Complex<T> num_1, num_2, extra_num;
 
 public:
     explicit ComplexInterface(int minNum, int maxNum, ComplexOptions option)
@@ -30,6 +30,12 @@ public:
     void create()
     {
         switch (option) {
+        case ComplexOptions::Ostat:
+        case ComplexOptions::GCD:
+            num_1 = generateValue();
+            num_2 = generateValue();
+            do {extra_num = generateValue();} while(extra_num.norm() > num_1.norm());
+            break;
         default:
             num_1 = generateValue();
             num_2 = generateValue();
@@ -71,9 +77,9 @@ public:
         case ComplexOptions::Divide:
             return QString("%1(%2)/(%3)=~?").arg(getType()).arg(printNum(num_1)).arg(printNum(num_2));
         case ComplexOptions::Ostat:
-            return QString("%1(%2)~mod~(%3)=~?").arg(getType()).arg(printNum(num_1)).arg(printNum(num_2));
+            return QString("%1(%2)~mod~(%3)=~?").arg(getType()).arg(printNum(num_1*num_2 + extra_num)).arg(printNum(num_1));
         case ComplexOptions::GCD:
-            return QString("%1НОД(%2,%3)=~?").arg(getType()).arg(printNum(num_1)).arg(printNum(num_2));
+            return QString("%1НОД(%2,%3)=~?").arg(getType()).arg(printNum(num_1*extra_num)).arg(printNum(num_2*extra_num));
         default:
             break;
         }
@@ -93,22 +99,22 @@ public:
             return printNum(num_1 * num_2);
         case ComplexOptions::Divide:
             return printNum(num_1 / num_2);
-//        case ComplexOptions::Ostat:
-//            return printNum(num_1 % num_2);
-//        case ComplexOptions::GCD:
-//            return printNum(GCD(num_1, num_2));
+        case ComplexOptions::Ostat:
+            return printNum(extra_num);
+        case ComplexOptions::GCD:
+            return printNum(extra_num);
         default:
             return QString("");
         }
     }
 
-    QString printNum(const T &other) const
+    QString printNum(const Complex<T> &other) const
     {
-        return QString::fromStdString(std::string(other));
+        return "["+ QString::fromStdString(std::string(other)) + "]";
     }
 
     QString getType();
-    T generateValue();
+    Complex<T> generateValue();
 };
 
 #endif // ComplexInterface_H

@@ -255,6 +255,7 @@ void DialogBase::uploadUI()
         break;
 
     case AllTasks::Complex:
+        isNeedEmptyColumn = true;
         ui->baseWidgetLayout->addWidget(new QLabel("Количество"), 0, 2);
         dynamic_cast<QLabel *>(ui->baseWidgetLayout->itemAt(1)->widget())->setText("Алгебраическая структура");
         addItem(Gen, "Числа");
@@ -262,8 +263,9 @@ void DialogBase::uploadUI()
         addItem(Base, "Вычитание чисел"   , ExoticOption::Complex);
         addItem(Base, "Умножение чисел"   , ExoticOption::Complex);
         addItem(Base, "Целая часть от деления"  , ExoticOption::Complex);
-        addItem(Base, "Деление с остатком"      , ExoticOption::Complex);
-        addItem(Base, "НОД чисел"         , ExoticOption::Complex);
+        addItem(Base, "Деление с остатком");
+        addItem(Base, "НОД чисел");
+        isNeedEmptyColumn = false;
         break;
     }
     if (ui->genWidgetLayout->isEmpty()) ui->lblGen->hide();

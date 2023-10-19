@@ -435,12 +435,10 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
         switch (static_cast<Set>(optional))
         {
         case Set::C:
-            interface = new ComplexInterface<Complex<double>>(data[1], data[2], static_cast<ComplexOptions>(subTask));
-            break;
-        case Set::Z_i:
-            interface = new ComplexInterface<Complex<int>>(data[1], data[2], static_cast<ComplexOptions>(subTask));
-            break;
+            interface = new ComplexInterface<double>(data[1], data[2], static_cast<ComplexOptions>(subTask));
+            break;            
         default:
+            interface = new ComplexInterface<int>(data[1], data[2], static_cast<ComplexOptions>(subTask));
             break;
         }
         break;
