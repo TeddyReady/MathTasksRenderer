@@ -457,7 +457,7 @@ void BaseWidget::setExoticOptions(const ExoticOption &type)
         });
         connect(pb->menu()->actions().at(2), &QAction::triggered, [&](){
             pb->setText("Комплексные");
-            exoticOption = static_cast<int>(Set::C);
+            exoticOption = static_cast<int>(Set::Z_i);
             sb->setEnabled(true);
             sb->setValue(1);
         });

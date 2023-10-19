@@ -103,8 +103,8 @@ public:
             return printMatrix(matrix_1 - matrix_2);
         case MatrixOptions::Multy:
             return printMatrix(matrix_1 * matrix_2);
-//        case MatrixOptions::Inverse:
-//            return QString("\\frac{1}{" + QString::number(matrix_1.det()) + "}") + printMatrix(Matrix<T>(~matrix_1));
+        case MatrixOptions::Inverse:
+            return QString("\\frac{1}{%1}%2").arg(stringFromT(matrix_1.det())).arg(printMatrix(Matrix<T>(~matrix_1)));
         case MatrixOptions::Det:
             return stringFromT(matrix_1.det());
         default:

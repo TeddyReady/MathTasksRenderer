@@ -310,11 +310,7 @@ void GeneratorWindow::runTaskManager(const QString &task, bool closeMode)
         return;
     }
     else if (task == "Матрицы")
-    {
-        QMessageBox::warning(this, "Внимание тестировщикам!", "Задание категории 'Найти обратную к матрице' находятся на этапе разработки."
-                                   "\nУбедительная просьба, во избежание некорректного поведения программы не используйте данный метод генерации.");
         window = new DialogBase(AllTasks::Matrix, closeMode, this);
-    }
     else if (task == "Кольцо Вычетов")
         window = new DialogBase(AllTasks::RingResidue, closeMode, this);
     else if (task == "Кольцо Многочленов")
