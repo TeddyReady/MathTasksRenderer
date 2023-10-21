@@ -124,6 +124,12 @@ void GenWidget::loadSettings(AllTasks task, const QString &optionName)
         sbMin->setValue(3);
         sbMax->setValue(4);
         return;
+    case AllTasks::KeliTable:
+        sbMin->setMinimum(3);
+        sbMax->setMaximum(6);
+        sbMin->setValue(3);
+        sbMax->setValue(5);
+        return;
     default:
         return;
     }
@@ -267,7 +273,14 @@ void DialogBase::uploadUI()
         addItem(Base, "НОД чисел");
         isNeedEmptyColumn = false;
         break;
+
+    case AllTasks::KeliTable:
+        addItem(Gen, "n");
+        addItem(Base, "Изоморфизм структур");
+        addItem(Base, "Абелевость структуры");
+        break;
     }
+
     if (ui->genWidgetLayout->isEmpty()) ui->lblGen->hide();
 }
 

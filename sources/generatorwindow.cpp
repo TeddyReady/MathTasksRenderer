@@ -319,6 +319,8 @@ void GeneratorWindow::runTaskManager(const QString &task, bool closeMode)
         window = new DialogBase(AllTasks::Complex, closeMode, this);
     else if (task == "Булевые Функции")
         window = new DialogBase(AllTasks::BooleanFunction, closeMode, this);
+    else if (task == "Таблица Кэлли")
+        window = new DialogBase(AllTasks::KeliTable, closeMode, this);
     else return;
 
     connect(window, &DialogBase::sendingMetaInfo, this, &GeneratorWindow::receivedMetaInfo);
@@ -441,6 +443,10 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
     case AllTasks::BooleanFunction:
         interface = new BooleanFunctionInterface(data[1], data[2],
                 static_cast<BooleanFunctionOptions>(subTask));
+        break;
+    case AllTasks::KeliTable:
+        interface = new KeliTableInterface(data[1], data[2],
+                static_cast<KeliTableOptions>(subTask));
         break;
     default:
         qDebug() << "Incorrect AllTasks type! Cannot catch it!";

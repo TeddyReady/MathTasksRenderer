@@ -9,6 +9,7 @@
 #include "ieulerfunction.h"
 #include "iringresidue.h"
 #include "icomplex.tpp"
+#include "ikelitable.h"
 #include "imatrix.tpp"
 #include "environment.h"
 

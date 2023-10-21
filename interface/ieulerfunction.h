@@ -4,7 +4,8 @@
 #include "eulerfunction.h"
 #include "basemath.h"
 
-enum class EulerFunctionOptions {
+enum class EulerFunctionOptions
+{
     Default, Primes,
     PrimesDegrees, MultiplyPrimes,
     MultiplyPrimesDegrees

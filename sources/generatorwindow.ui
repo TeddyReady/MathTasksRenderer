@@ -103,6 +103,11 @@
           </item>
           <item>
            <property name="text">
+            <string>Таблица Кэлли</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>Функция Мёбиуса</string>
            </property>
           </item>

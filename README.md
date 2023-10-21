@@ -12,6 +12,9 @@ In this project released next themes:
 6. Matrix ring;
 7. Jacobi and Legandre symbols;
 8. Euler and Mebius functions;
+9. Boolean Functions;
+10. Keli Tables;
+11. Turing Machine code simulator; 
 
 At this moment, project have only **russian** localization.
 

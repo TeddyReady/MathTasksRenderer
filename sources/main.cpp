@@ -1,5 +1,5 @@
 #include "generatorwindow.h"
-
+#include "kelitable.h"
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -26,4 +26,5 @@ int main(int argc, char *argv[])
 
     QApplication::restoreOverrideCursor();
     return app.exec();
+    return 0;
 }

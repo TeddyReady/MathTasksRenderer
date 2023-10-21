@@ -93,6 +93,7 @@ enum class AllTasks {
     RingOfMembers       ,
     Complex             ,
     BooleanFunction     ,
+    KeliTable           ,
 };
 
 enum class ExoticOption {

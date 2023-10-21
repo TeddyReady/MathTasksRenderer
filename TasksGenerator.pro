@@ -20,6 +20,7 @@ LIBS        += -L/usr/local/lib -lpoppler-qt5
 #####################################################
 HEADERS  +=                                         \
     interface/ibooleanfunction.h \
+    interface/ikelitable.h \
     sources/codeeditor.h \
     sources/dialogmanual.h                          \
     sources/dialogbase.h                            \
@@ -49,6 +50,7 @@ HEADERS  +=                                         \
 
 SOURCES  +=                                         \
     interface/ibooleanfunction.cpp \
+    interface/ikelitable.cpp \
     sources/codeeditor.cpp \
     sources/dialogmanual.cpp                        \
     sources/dialogbase.cpp                          \
