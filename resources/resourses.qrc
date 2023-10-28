@@ -4,6 +4,7 @@
     </qresource>
     <qresource prefix="/theory">
         <file>theory/theory.pdf</file>
+        <file>theory/turing-machine_reference-manual.pdf</file>
     </qresource>
     <qresource prefix="/pics">
         <file>pics/unchecked_hover.png</file>

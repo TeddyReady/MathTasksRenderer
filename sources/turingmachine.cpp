@@ -61,5 +61,6 @@ void TuringMachine::do_compile()
 
 void TuringMachine::do_info()
 {
-    qDebug() << "do_info()...";
+    PDFViewer *window = new PDFViewer(RSC::theory::MNR);
+    window->show();
 }

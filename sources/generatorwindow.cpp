@@ -49,7 +49,6 @@ void GeneratorWindow::uploadUI()
     ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::compile), "Запустить программу", ui->toolBar));
     ui->toolBar->addAction(new QAction(QPixmap(RSC::pics::reference_manual), "Справка по программированию", ui->toolBar));
 
-
     ui->toolBar->actions().at(Check)->setDisabled(true);
     ui->toolBar->actions().at(Clear)->setDisabled(true);
     ui->toolBar->actions().at(Print)->setDisabled(true);
@@ -194,12 +193,6 @@ void GeneratorWindow::switchTab(int index)
 {
     switch (static_cast<TabBarModes>(index)) {
     case TabBarModes::TestMode:
-        {
-        QMessageBox::warning(this, "Внимание тестировщикам!", "Тестовый режим находится на этапе разработки.\n"
-                                   "Убедительная просьба не использовать данный режим для генерации заданий.");
-        ui->tabWidget->setCurrentIndex(0);
-        return;
-        }
         mode = 1;
         ui->toolBar->actions().at(Check)->setVisible(false);
         ui->toolBar->actions().at(Clear)->setVisible(false);
@@ -319,7 +312,7 @@ void GeneratorWindow::runTaskManager(const QString &task, bool closeMode)
         window = new DialogBase(AllTasks::Complex, closeMode, this);
     else if (task == "Булевые Функции")
         window = new DialogBase(AllTasks::BooleanFunction, closeMode, this);
-    else if (task == "Таблица Кэлли")
+    else if (task == "Таблица Кэли")
         window = new DialogBase(AllTasks::KeliTable, closeMode, this);
     else return;
 
@@ -459,7 +452,12 @@ void GeneratorWindow::receivedData(std::vector<int> data, AllTasks task, int sub
         if (!mode) {
             tasks.push_back(interface->task());
             answers.push_back(interface->answer());
-        } else { /* тест */}
+        }
+        else
+        {
+            tasksForTest.push_back(std::make_tuple(interface->task(), interface->answer(),
+                                                   SupCommands::Number, 0));
+        }
     }
     if (!mode) {
         descriptions.push_back(interface->description());

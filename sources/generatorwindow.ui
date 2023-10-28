@@ -33,7 +33,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideNone</enum>
@@ -59,11 +59,6 @@
           <item>
            <property name="text">
             <string>Булевые Функции</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Группы и их свойства</string>
            </property>
           </item>
           <item>
@@ -103,7 +98,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Таблица Кэлли</string>
+            <string>Таблица Кэли</string>
            </property>
           </item>
           <item>
@@ -132,7 +127,7 @@
       </widget>
       <widget class="QWidget" name="tabLibrary">
        <attribute name="title">
-        <string>Библиотека</string>
+        <string>Справочник</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_7">
         <item row="0" column="0">

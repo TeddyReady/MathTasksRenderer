@@ -2,6 +2,7 @@
 #define TURINGMACHINE_H
 #include "registerspainter.h"
 #include "codeeditor.h"
+#include "pdfviewer.h"
 
 class TuringMachine : public QWidget {
     Q_OBJECT

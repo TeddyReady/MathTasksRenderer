@@ -39,6 +39,7 @@ namespace RSC {
 
     namespace theory {
         const QString theory            = QString(":/theory/theory/theory.pdf");
+        const QString MNR               = QString(":/theory/theory/turing-machine_reference-manual.pdf");
     }
 }
 
