@@ -67,10 +67,56 @@ void GeneratorWindow::uploadUI()
     for (int i = 0; i < ui->tasksList->count(); ++i)
         ui->taskBox->addItem(ui->tasksList->item(i)->text());
 
+    /* Tasks List */
+    ui->tasksList->setResizeMode(QListWidget::Adjust);
+    ui->tasksList->setIconSize(QSize(20, 20));
+    uploadListWidget();
+
     setCursor(Qt::ArrowCursor);
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowTitle(App::AppName);
     setWindowIcon(QIcon(RSC::pics::appIcon));
+}
+
+void GeneratorWindow::uploadListWidget()
+{
+    QDomDocument document;
+    QFile tasksFile(RSC::xml::tasks);
+    if (!tasksFile.open(QIODevice::ReadOnly ))
+    {
+        qDebug() << "Cannot open xml file:" << tasksFile;
+        return;
+    }
+    document.setContent(&tasksFile);
+    tasksFile.close();
+
+    QDomNodeList taskNames = document.elementsByTagName(QString("task"));
+
+    for (int taskCounter = 0; taskCounter < taskNames.count(); ++taskCounter)
+    {
+        if (taskNames.item(taskCounter).isElement() && taskNames.item(taskCounter).toElement().attribute("type") == "on")
+        {
+            QDomNodeList subTasks = taskNames.item(taskCounter).toElement().elementsByTagName(QString("subtask"));
+
+            TaskItem *curItem = new TaskItem(taskNames.item(taskCounter).toElement().attribute("name"));
+            curItem->setTextAlignment(Qt::AlignLeft);
+
+            if (subTasks.count() != 0)
+            {
+                curItem->setIcon(QIcon(RSC::pics::listWidget_arrow));
+
+                for (int subCounter = 0; subCounter < subTasks.count(); ++subCounter)
+                {
+                    if (subTasks.item(taskCounter).isElement() && subTasks.item(taskCounter).toElement().attribute("type") == "on")
+                    {
+
+                    }
+                }
+            }
+
+            ui->tasksList->addItem(curItem);
+        }
+    }
 }
 
 void GeneratorWindow::saveSettings()

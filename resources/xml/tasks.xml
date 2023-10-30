@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<list>
+    <task name="Алгебраические Функции"     type="on">
+        <subtask name="Символ Лежандра"     type="on"></subtask>
+        <subtask name="Символ Якоби"        type="on"></subtask>
+        <subtask name="Функция Мёбиуса"     type="on"></subtask>
+        <subtask name="Функция Эйлера"      type="on"></subtask>
+    </task>
+    <task name="Алгебраические Структуры"   type="on"></task>
+    <task name="Булевые Функции"            type="on"></task>
+    <task name="Группы и их свойства"       type="off"></task>
+    <task name="Группа Перестановок"        type="on"></task>
+    <task name="Кольцо Вычетов"             type="on"></task>
+    <task name="Кольцо Многочленов"         type="on"></task>
+    <task name="Комплексные Числа"          type="on"></task>
+    <task name="Матрицы"                    type="on"></task>
+    <task name="Таблица Кэлли"              type="on"></task>
+</list>

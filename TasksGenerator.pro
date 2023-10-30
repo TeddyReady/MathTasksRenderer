@@ -32,6 +32,7 @@ HEADERS  +=                                         \
     sources/pdfviewer.h \
     sources/registerspainter.h \
     sources/registerwidget.h \
+    sources/taskitem.h \
     sources/testmode.h                              \
     sources/dialogfontsize.h                        \
     sources/include.h                               \
@@ -62,6 +63,7 @@ SOURCES  +=                                         \
     sources/pdfviewer.cpp \
     sources/registerspainter.cpp \
     sources/registerwidget.cpp \
+    sources/taskitem.cpp \
     sources/testmode.cpp                            \
     sources/dialogfontsize.cpp                      \
                                                     \

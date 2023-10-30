@@ -51,66 +51,6 @@
             <height>16777215</height>
            </size>
           </property>
-          <item>
-           <property name="text">
-            <string>Алгебраические Структуры</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Булевые Функции</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Группа Перестановок</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Кольцо Вычетов</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Кольцо Многочленов</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Комплексные Числа</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Матрицы</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Символ Лежандра</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Символ Якоби</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Таблица Кэли</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Функция Мёбиуса</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Функция Эйлера</string>
-           </property>
-          </item>
          </widget>
         </item>
         <item row="0" column="1">

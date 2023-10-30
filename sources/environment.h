@@ -35,11 +35,16 @@ namespace RSC {
         const QString unchecked_hover   = QString(":/pics/pics/unchecked_hover.png");
         const QString compile           = QString(":/pics/pics/compile.png");
         const QString reference_manual  = QString(":/pics/pics/reference_manual.png");
+        const QString listWidget_arrow  = QString(":/pics/pics/listWidget_arrow.png");
     }
 
     namespace theory {
         const QString theory            = QString(":/theory/theory/theory.pdf");
         const QString MNR               = QString(":/theory/theory/turing-machine_reference-manual.pdf");
+    }
+
+    namespace xml {
+        const QString tasks             = QString(":/xml/xml/tasks.xml");
     }
 }
 

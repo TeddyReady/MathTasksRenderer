@@ -21,8 +21,12 @@
         <file>pics/appIcon.png</file>
         <file>pics/compile.png</file>
         <file>pics/reference_manual.png</file>
+        <file>pics/listWidget_arrow.png</file>
     </qresource>
     <qresource prefix="/data">
         <file>data/algebra_structures.xml</file>
+    </qresource>
+    <qresource prefix="/xml">
+        <file>xml/tasks.xml</file>
     </qresource>
 </RCC>

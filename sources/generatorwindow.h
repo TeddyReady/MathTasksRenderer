@@ -8,6 +8,7 @@
 #include "dialogbase.h"
 #include "pdfviewer.h"
 #include "testmode.h"
+#include "taskitem.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GeneratorWindow; }
@@ -43,8 +44,8 @@ private slots:
     void switchTab(int index);
     void runTest();
 private:
-    //Main parser
     void runTaskManager(const QString &task, bool closeMode);
+    void uploadListWidget();
 
     int totalTestTasks, lastSizeCount;
     bool mode;
